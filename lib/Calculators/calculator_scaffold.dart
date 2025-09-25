@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'calculator_drawer.dart';
 
 class CalculatorScaffold extends StatelessWidget {
-  const CalculatorScaffold({super.key,required this.child, required this.title});
+  const CalculatorScaffold(
+      {super.key, required this.child, required this.title});
   final Widget child;
   final String title;
 
@@ -17,6 +18,7 @@ class CalculatorScaffold extends StatelessWidget {
           style: TextStyle(color: theme.colorScheme.onPrimary),
         ),
         backgroundColor: theme.colorScheme.primary,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       drawer: const CalculatorDrawer(),
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
@@ -25,4 +27,3 @@ class CalculatorScaffold extends StatelessWidget {
     );
   }
 }
-

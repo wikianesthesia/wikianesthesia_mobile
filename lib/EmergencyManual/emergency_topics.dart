@@ -8,9 +8,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 /// pageTitle is the Markdown file name in assets/EmergencyText
 /// Tags is a list of alternative search tags for Sherlock
 
-const List<Map<String,dynamic>> emergencyTopics = [
+const List<Map<String, dynamic>> emergencyTopics = [
   {
-    'name': 'ACLS-Asystole/PEA',
+    'name': 'Asystole/PEA',
     'pageTitle': 'ACLS-AsystolePEA',
     'tags': 'ACLS,Cardiac Arrest,Code Blue',
     'icon': Icons.heart_broken,
@@ -18,7 +18,7 @@ const List<Map<String,dynamic>> emergencyTopics = [
     'iconColor': Colors.white
   },
   {
-    'name': 'ACLS-VFib/VTach',
+    'name': 'VFib/VTach',
     'pageTitle': 'ACLS-VFVT',
     'tags': 'ACLS Cardiac Arrest Code Blue VT VF',
     'icon': Icons.heart_broken,
@@ -34,7 +34,7 @@ const List<Map<String,dynamic>> emergencyTopics = [
     'iconColor': Colors.white
   },
   {
-    'name': 'ACLS-Bradycardia',
+    'name': 'Bradycardia',
     'pageTitle': 'Brady',
     'tags': 'ACLS Arrythmia Slow heart rate',
     'icon': Icons.monitor_heart,
@@ -42,15 +42,16 @@ const List<Map<String,dynamic>> emergencyTopics = [
     'iconColor': Colors.white
   },
   {
-    'name': 'ACLS-Unstable Tach',
+    'name': 'Unstable Tach',
     'pageTitle': 'UnstableTach',
-    'tags': 'ACLS Arrythmia Fast heart rate hypotension low blood pressure bp tachycardia VT SVT RVR AFib',
+    'tags':
+        'ACLS Arrythmia Fast heart rate hypotension low blood pressure bp tachycardia VT SVT RVR AFib',
     'icon': Icons.monitor_heart,
     'backgroundColor': Colors.red,
     'iconColor': Colors.white
   },
   {
-    'name': 'ACLS-Stable Tach',
+    'name': 'Stable Tach',
     'pageTitle': 'StableTach',
     'tags': 'ACLS Arrythmia Fast heart rate Tachycardia SVT VT AFib RVR',
     'icon': Icons.monitor_heart,
@@ -92,7 +93,8 @@ const List<Map<String,dynamic>> emergencyTopics = [
   {
     'name': 'Embolism',
     'pageTitle': 'PE',
-    'tags': 'Pulmonary Embolism PE VAE venous air embolism cement hypoxia hypoxemia',
+    'tags':
+        'Pulmonary Embolism PE VAE venous air embolism cement hypoxia hypoxemia',
     'icon': FontAwesomeIcons.lungs,
     'backgroundColor': Colors.blue,
     'iconColor': Colors.white
@@ -102,7 +104,7 @@ const List<Map<String,dynamic>> emergencyTopics = [
     'pageTitle': 'AirwayFire',
     'tags': 'red',
     'icon': FontAwesomeIcons.fire,
-    'backgroundColor': Colors.grey,
+    'backgroundColor': Colors.red,
     'iconColor': Colors.white
   },
   {
@@ -110,7 +112,7 @@ const List<Map<String,dynamic>> emergencyTopics = [
     'pageTitle': 'Fire',
     'tags': 'red',
     'icon': Icons.fire_extinguisher,
-    'backgroundColor': Colors.grey,
+    'backgroundColor': Colors.red,
     'iconColor': Colors.white
   },
   {
@@ -148,7 +150,8 @@ const List<Map<String,dynamic>> emergencyTopics = [
   {
     'name': 'Hypotension',
     'pageTitle': 'HOTN',
-    'tags': 'pressor low blood pressure neo phenylephrine levophed norepinephrine anaphylaxis',
+    'tags':
+        'pressor low blood pressure neo phenylephrine levophed norepinephrine anaphylaxis',
     'icon': FontAwesomeIcons.weightScale,
     'backgroundColor': Colors.red,
     'iconColor': Colors.white
@@ -172,7 +175,8 @@ const List<Map<String,dynamic>> emergencyTopics = [
   {
     'name': 'LAST',
     'pageTitle': 'LAST',
-    'tags': 'Lidocaine Local anesthetic systemic toxicity anaesthetic Marcaine Xylocaine',
+    'tags':
+        'Lidocaine Local anesthetic systemic toxicity anaesthetic Marcaine Xylocaine',
     'icon': FontAwesomeIcons.syringe,
     'backgroundColor': Colors.grey,
     'iconColor': Colors.white
@@ -180,7 +184,8 @@ const List<Map<String,dynamic>> emergencyTopics = [
   {
     'name': 'Malignant Hyperthermia',
     'pageTitle': 'MH',
-    'tags': 'High Temperature Dantrolene David Dave Berman fever nms seratonin syndrome',
+    'tags':
+        'High Temperature Dantrolene David Dave Berman fever nms seratonin syndrome',
     'icon': FontAwesomeIcons.temperatureHigh,
     'backgroundColor': Colors.grey,
     'iconColor': Colors.white
@@ -214,7 +219,7 @@ const List<Map<String,dynamic>> emergencyTopics = [
     'pageTitle': 'PowerFailure',
     'tags': 'Outage Electricity Electric Light',
     'icon': Icons.electric_bolt,
-    'backgroundColor': Colors.yellow,
+    'backgroundColor': Color.fromARGB(255, 201, 188, 69),
     'iconColor': Colors.black
   },
   {
@@ -228,7 +233,8 @@ const List<Map<String,dynamic>> emergencyTopics = [
   {
     'name': 'Transfusion Reaction',
     'pageTitle': 'TransfusionRxn',
-    'tags': 'Blood bleed prbc ffp platelet allergy allergic anaphylaxis fever Steve Frank',
+    'tags':
+        'Blood bleed prbc ffp platelet allergy allergic anaphylaxis fever Steve Frank',
     'icon': Icons.bloodtype,
     'backgroundColor': Colors.red,
     'iconColor': Colors.white
@@ -240,5 +246,5 @@ const List<Map<String,dynamic>> emergencyTopics = [
     'icon': FontAwesomeIcons.bone,
     'backgroundColor': Colors.grey,
     'iconColor': Colors.white
-  },]
-;
+  },
+];

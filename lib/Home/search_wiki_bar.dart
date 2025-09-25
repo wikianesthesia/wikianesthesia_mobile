@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
+import 'package:wikianesthesia_mobile/main.dart';
 import 'package:wikianesthesia_mobile/util.dart';
 
 class WikiSearchView extends StatefulWidget {
@@ -12,151 +12,132 @@ class WikiSearchView extends StatefulWidget {
 }
 
 class _WikiSearchViewState extends State<WikiSearchView> {
-  final _debouncedSearch = _debounce<List<SearchResult>, String>(_WikiAPI.search, const Duration(milliseconds: 200));
+  late final _Debounceable<List<SearchResult>, String> _debouncedSearch;
 
   @override
   void initState() {
     super.initState();
+    initWikiAPI();
+  }
+
+  void initWikiAPI() async {
+    // Initialize the WikiAPI and debounced search function
+    _Debounceable<List<SearchResult>, String> search = _debounce<List<SearchResult>, String>(wikiAPI.search, const Duration(milliseconds: 200));
+    setState(() {
+      _debouncedSearch = search;
+    });
+  }
+
+  Widget searchEntry(String query) {
+    if (query.startsWith('PracticeGroup:')) {
+      // If the query starts with 'PracticeGroup:', format it accordingly
+
+      List<String> splitQuery = query.split('/');
+      String practiceGroup = splitQuery[0];
+      String articleTitle = splitQuery[1];
+      practiceGroup = practiceGroup.replaceAll('PracticeGroup:', '');
+
+      return Row(children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Text(practiceGroup, style: const TextStyle(color: Colors.white)),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(child: Text(articleTitle)),
+      ]);
+    } else {
+      // For other queries, just return the query text
+      return Text(query);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const SizedBox(width: 10,),
-        SearchAnchor(
-          builder: (BuildContext context, SearchController controller) {
-            return SearchBar(
-              controller: controller,
-              padding: const WidgetStatePropertyAll<EdgeInsets>(
-                EdgeInsets.symmetric(horizontal: 16.0),
-              ),
-              onTap: () {
-                controller.openView();
-              },
-              onChanged: (_) {
-                controller.openView();
-              },
-              leading: const Icon(Icons.search),
-              hintText: 'Search WikiAnesthesia',
-              constraints: BoxConstraints(
-                minHeight: 50,
-                maxHeight: 50,
-                minWidth: 10,
-                maxWidth: MediaQuery.sizeOf(context).width - 30,
-              ),
-            );
+    return SearchAnchor(
+      builder: (BuildContext context, SearchController controller) {
+        return SearchBar(
+          controller: controller,
+          padding: const WidgetStatePropertyAll<EdgeInsets>(
+            EdgeInsets.symmetric(horizontal: 10.0),
+          ),
+          onTap: () {
+            controller.openView();
           },
-          isFullScreen: true,
-          suggestionsBuilder: (BuildContext context, SearchController controller) async {
-            if (controller.text.isEmpty) {
-              return [];
-            }
+          onChanged: (_) {
+            controller.openView();
+          },
+          leading: const Icon(Icons.search),
+          hintText: 'Search WikiAnesthesia',
+        );
+      },
+      suggestionsBuilder: (BuildContext context, SearchController controller) async {
+        if (controller.text.isEmpty) {
+          return [];
+        }
         
-            return [FutureBuilder<List<SearchResult>?>(future: _debouncedSearch(controller.text),
-              builder: (context,snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const ListTile(
-                    title: Center(
-                      child: LinearProgressIndicator(), // Show loading indicator
-                    ),
-                  ); // Show loading indicator
-                } else if (snapshot.hasError) { // Show Error
-                  return ListTile(
-                      title: Center(
-                        child: Text('Error: ${snapshot.error}')
-                      )
-                    ); 
-                } else if (snapshot.hasData) {
-                  final results = snapshot.data!;
-                  if (results.isEmpty) {
-                    return const Center(child: Text('No suggestions found'));
-                  } else {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: results.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          title: Text(results[index].title),
-                          onTap: () {
-                            goWikiPage(context,results[index].url);
-                          },
-                        );
+        return [FutureBuilder<List<SearchResult>?>(future: _debouncedSearch(controller.text),
+          builder: (context,snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const ListTile(
+                title: Center(
+                  child: LinearProgressIndicator(), // Show loading indicator
+                ),
+              ); // Show loading indicator
+            } else if (snapshot.hasError) { // Show Error
+              return ListTile(
+                  title: Center(
+                    child: Text('Error: ${snapshot.error}')
+                  )
+                ); 
+            } else if (snapshot.hasData) {
+              final results = snapshot.data!;
+              if (results.isEmpty) {
+                return const Center(child: Text('No suggestions found'));
+              } else {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: results.length + 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index == results.length) {
+                      // Add a search option at the end
+                      return ListTile(
+                        title: Text('Search for pages containing "${controller.text}"', style: const TextStyle(fontStyle: FontStyle.italic)),
+                        leading: const Icon(Icons.search),
+                        onTap: () {
+                          goWikiPage(context,'https://wikianesthesia.org/wiki/Special:Search?search=${Uri.encodeComponent(controller.text)}');
+                          controller.closeView(controller.text);
+                        },
+                      );
+                    }
+
+                    return ListTile(
+                      title: searchEntry(results[index].title),
+                      onTap: () {
+                        goWikiPage(context,results[index].url);
+                        controller.closeView(controller.text);
                       },
                     );
-                  }
-                } else {
-                  return const ListTile(
-                      title: Center(
-                        child: Text('No Suggestions Found')
-                      )
-                    );
-                }
-              },
-            )];
+                  },
+                );
+              }
+            } else {
+              return const ListTile(
+                  title: Center(
+                    child: Text('No Suggestions Found')
+                  )
+                );
+            }
           },
-        ),
-        const SizedBox(width: 10,),
-      ],
+        )];
+      },
     );
-  }
-}
-
-// Searches WikiAnesthesia API.
-class _WikiAPI {
-
-  /// Searches WikiAnesthesia API
-  static Future<List<SearchResult>> search(String query) async {
-    if (query == '') {
-      return List<SearchResult>.empty();
-    }
-
-    final queryParams = {
-      'action': 'opensearch',
-      'format': 'json',
-      'search': query,
-    };
-
-    const String baseurl = 'wikianesthesia.org';
-    final uri = Uri.https(baseurl,'/w/api.php', queryParams);
-
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      if (response.body.isEmpty)  {
-        return [];
-      } else {
-        return SearchResult.fromJson(response.body);
-      }
-    } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to access WikiAnesthesia API');
-    }
-
-  }
-}
-
-class SearchResult {
-  final String title;
-  final String url;
-
-  const SearchResult({required this.title, required this.url});
-
-  static List<SearchResult> fromJson(String body) {
-    /// Generates list of SearchResult items from a JSON returned from WikiAnesthesia
-    List<dynamic> resultList = jsonDecode(body);
-    List<dynamic> nameList = resultList[1];
-    List<dynamic> urlList = resultList[3];
-
-    return [for(int i = 0; i<nameList.length; i++)
-      SearchResult(title: nameList[i], url: urlList[i])
-    ];
   }
 }
 

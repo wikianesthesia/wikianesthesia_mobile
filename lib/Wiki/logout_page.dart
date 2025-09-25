@@ -2,20 +2,23 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wikianesthesia_mobile/Home/search_wiki_bar.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
+import 'package:wikianesthesia_mobile/main.dart';
 
-
-class WikiPage extends StatefulWidget {
-  final String url;
-  const WikiPage({super.key, required this.url});
+class LogoutPage extends ConsumerStatefulWidget {
+  const LogoutPage({super.key});
 
   @override
-  State<WikiPage> createState() => _WikiPageState();
+  ConsumerState<LogoutPage> createState() => _LogoutPageState();
 }
 
-class _WikiPageState extends State<WikiPage> {
+class _LogoutPageState extends ConsumerState<LogoutPage> {
   final GlobalKey webViewKey = GlobalKey();
+  final CookieManager cookiesManager = CookieManager.instance();
 
   InAppWebViewController? webViewController;
   InAppWebViewSettings settings = InAppWebViewSettings(
@@ -23,16 +26,20 @@ class _WikiPageState extends State<WikiPage> {
     mediaPlaybackRequiresUserGesture: false,
     allowsInlineMediaPlayback: true,
     iframeAllowFullscreen: true,
+    useShouldOverrideUrlLoading: true,
   );
 
   PullToRefreshController? pullToRefreshController;
   double _progress = 0; // For progress bar
   bool _isLoading = false;
 
+  late PersistCookieJar cookieJar;
+
   @override
   void initState() {
     super.initState();
 
+    // Setup Pull to Refresh Controller
     if (kIsWeb || ![TargetPlatform.iOS, TargetPlatform.android].contains(defaultTargetPlatform)) {
       pullToRefreshController = null;
     } else {
@@ -50,6 +57,14 @@ class _WikiPageState extends State<WikiPage> {
     }
   }
 
+  void clearCookies(){
+    // Clear Cookies from cookie jar
+    wikiAPI.clearCookies(ref);
+
+    // Update the Riverpod provider
+    ref.read(wikiUserNameProvider.notifier).setUserName('');
+  }
+
   
   void removeHeaderFooter(InAppWebViewController controller) async {
     var result = await controller.evaluateJavascript(
@@ -65,15 +80,6 @@ class _WikiPageState extends State<WikiPage> {
         header.id = 'newContentHeader';
         header.style.position = 'relative';
         header.style.top = '0px';
-
-        document.querySelectorAll('*').forEach(element => {
-          // Get the computed style to check for 'position: sticky'
-          const computedStyle = window.getComputedStyle(element);
-          if (computedStyle.position === 'sticky') {
-          // Change the position to 'static' or 'relative' to remove stickiness
-          element.style.position = 'relative'; 
-          }
-});
       ''',
     );
     if (kDebugMode) {
@@ -148,63 +154,68 @@ class _WikiPageState extends State<WikiPage> {
           ),
         ),
       ),
-      body: Expanded(
-        child: Stack(
-          children: [
-            InAppWebView(
-              key: webViewKey,
-              initialUrlRequest: URLRequest(url: WebUri(widget.url)),
-              initialSettings: settings,
-              pullToRefreshController: pullToRefreshController,
-              onWebViewCreated: (controller) {
-                webViewController = controller;
-              },
-              onLoadStart: (controller, url) {
-                _isLoading = true;
-              },
-              onPermissionRequest: (controller, request) async {
-                return PermissionResponse(
-                  resources: request.resources,
-                  action: PermissionResponseAction.GRANT
-                );
-              },
-              onLoadStop: (controller, url) async {
-                pullToRefreshController?.endRefreshing();
-                
-                removeHeaderFooter(controller);
-                setState(() {
-                  _isLoading = false;
-                });
-              },
-              onReceivedError: (controller, request, error) {
-                pullToRefreshController?.endRefreshing();
-              },
-              onProgressChanged: (controller, progress) {
-                if (progress == 100) {
-                  pullToRefreshController?.endRefreshing();
-                }
-
-                setState(() {
-                  _progress = progress / 100;
-                });
-              },
-              onConsoleMessage: (controller, consoleMessage) {
-                if (kDebugMode) {
-                  print(consoleMessage);
-                }
-              },
-            ),
-
-            if (_progress < 1.0 || _isLoading)
-              Expanded(
-                child: Container(
-                  color: Colors.white,
-                  child: Center(child: CircularProgressIndicator(value: _progress)),
+      body: Stack(
+              children: [
+                InAppWebView(
+                  key: webViewKey,
+                  initialUrlRequest: URLRequest(url: WebUri('https://wikianesthesia.org/w/index.php?title=Special:UserLogout&returnto=Asdfasdf')),
+                  initialSettings: settings,
+                  pullToRefreshController: pullToRefreshController,
+                  onWebViewCreated: (controller) {
+                    webViewController = controller;
+                  },
+                  onLoadStart: (controller, url) {
+                    _isLoading = true;
+                  },
+                  onPermissionRequest: (controller, request) async {
+                    return PermissionResponse(
+                      resources: request.resources,
+                      action: PermissionResponseAction.GRANT
+                    );
+                  },
+                  onLoadStop: (controller, url) async {
+                    pullToRefreshController?.endRefreshing();
+                    if (url.toString().contains('wiki/Special:UserLogout'))  {
+                      // If the URL contains 'Special:UserLogout', it means the user is logged out.
+                      // Save cookies and pop to prior page
+                      if (kDebugMode) {
+                        print('User logged out successfully: $url');
+                      }
+                      clearCookies(); // Clear cookies on logout
+                      Navigator.pop(context);
+                    }
+                    
+                    removeHeaderFooter(controller);
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  },
+                  onReceivedError: (controller, request, error) {
+                    pullToRefreshController?.endRefreshing();
+                  },
+                  onProgressChanged: (controller, progress) {
+                    if (progress == 100) {
+                      pullToRefreshController?.endRefreshing();
+                    }
+          
+                    setState(() {
+                      _progress = progress / 100;
+                    });
+                  },
+                  onConsoleMessage: (controller, consoleMessage) {
+                    if (kDebugMode) {
+                      print(consoleMessage);
+                    }
+                  },
                 ),
-              )
-          ],
-        )
-      ),
+          
+                if (_progress < 1.0 || _isLoading)
+                  Container(
+                    color: Colors.white,
+                    child: Center(child: CircularProgressIndicator(value: _progress)),
+                  ),
+              ],
+            )
     );
   }
 }

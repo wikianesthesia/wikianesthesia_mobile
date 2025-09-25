@@ -1,56 +1,63 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wikianesthesia_mobile/Calculators/UniSpecificChecklists/hopkins_checklists.dart';
 import 'package:wikianesthesia_mobile/Calculators/calculator_drawer.dart';
+import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
 import 'package:wikianesthesia_mobile/util.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class PreOp extends StatelessWidget {
+class PreOp extends ConsumerWidget {
   const PreOp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<List<String>> practiceGroups = ref.watch(wikiPracticeGroupsProvider);
+    List<String> dbKeys = practiceGroups.map((subList) => subList[0]).toList(); // Extract the database keys from the practice groups
+
+
     return CollapsibleCard(
       controller: ExpansionTileController(),
       color: Colors.blue,
       heading: 'Pre-Op',
       initiallyExpanded: false,
-      child: const Column(
+      child: Column(
         children: [
-          SizedBox(width: 10,),
-          CheckboxItem(
+          const SizedBox(width: 10,),
+          const CheckboxItem(
             label: 'Review H&P, CPO Note',
             icon: Icon(Icons.person),
           ),
-          CheckboxItem(
+          const CheckboxItem(
             label: 'Review Labs',
             icon: Icon(Icons.bloodtype),
           ),
-          CheckboxItem(
+          const CheckboxItem(
             label: 'Review Cardiology Data (EKG, TTE, Cath)',
             icon: Icon(Icons.favorite),
           ),
-          CheckboxItem(
+          const CheckboxItem(
             label: 'Review Anethestic/Airway History',
             icon: Icon(Icons.history),
           ),
-          CheckboxItem(
+          const CheckboxItem(
             label: 'Call/Text Attending',
             icon: Icon(Icons.phone),
           ),
-          CheckboxItem(
+          const CheckboxItem(
             label: 'Preop Orders',
             icon: Icon(Icons.medication),
           ),
           CheckboxItem(
-            label: 'Email Anesthesia Tech if equipment needed',
-            sublabel: 'accm-or-request@jhmi.edu',
-            icon: Icon(Icons.email),
+            label: 'Notify Anesthesia Tech of equipment needed',
+            sublabel: dbKeys.contains('Hopkins') ? 'accm-or-request@jhmi.edu' : '',
+            icon: const Icon(Icons.email),
           ),
-          CheckboxItem(
+          const CheckboxItem(
             label: 'Write Pre-Op Note',
             icon: Icon(Icons.note),
           ),
-          CheckboxItem(
+          const CheckboxItem(
             label: 'T/S and T/C if necessary',
             icon: Icon(Icons.bloodtype),
           ),
@@ -387,256 +394,48 @@ class Closing extends StatelessWidget {
   }
 }
 
-class Trauma extends StatelessWidget {
-  const Trauma({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return CollapsibleCard(
-      controller: ExpansionTileController(),
-      color: Colors.yellow,
-      heading: 'Trauma Room Setup',
-      initiallyExpanded: false,
-      child: const Column(
-        children: [
-          SizedBox(width: 10,),
-          CheckboxItem(
-            label: 'Basic Room Setup',
-            sublabel: 'Including daily machine check',
-            icon: Icon(Icons.handyman),
-          ),
-          CheckboxItem(
-            label: 'A-Line Setup/Transducer',
-            icon: Icon(FontAwesomeIcons.syringe),
-          ),
-          CheckboxItem(
-            label: 'Airway',
-            sublabel: 'DL, CMAC, Bougie, Oral Airway, ETT',
-            icon: Icon(Icons.air),
-          ),
-          CheckboxItem(
-            label: 'Ultrasound',
-            icon: Icon(Icons.camera),
-          ),
-          CheckboxItem(
-            label: 'Fluid Warmer Setup',
-            sublabel: 'Use Codonics to print timed label for bag',
-            icon: Icon(Icons.local_fire_department),
-          ),
-          CheckboxItem(
-            label: '2-3x PIV Kits (14/16/18G)',
-            icon: Icon(Icons.local_fire_department),
-          ),
-          CheckboxItem(
-            label: 'Push Bag/Freeflow',
-            sublabel: 'Use Codonics to print timed label for bag',
-            icon: Icon(Icons.water),
-          ),
-          CheckboxItem(
-            label: 'Baby Epi (10 mcg/mL)',
-            sublabel: 'Take a 1 mg Vial and dilute into 100 cc bag. Carry a stick w/ you for good luck',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: 'Calcium Chloride',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: '4-5 bags of 5% Albumin',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: 'Epi/Norepi bags',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: 'Cefazolin + Flagyl',
-            sublabel: 'Keep easily available but not drawn up',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: 'Emergency meds',
-            icon: Icon(Icons.medication),
-          ),
-        ],
-      )
-    );
-  }
-}
-
-class Ditzel extends StatelessWidget {
-  const Ditzel({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return CollapsibleCard(
-      controller: ExpansionTileController(),
-      color: Colors.yellow,
-      heading: 'Ditzel Room Setup',
-      initiallyExpanded: false,
-      child: const Column(
-        children: [
-          SizedBox(width: 10,),
-          CheckboxItem(
-            label: 'Basic Room Setup',
-            sublabel: 'Including daily machine check',
-            icon: Icon(Icons.handyman),
-          ),
-          CheckboxItem(
-            label: 'A-Line Setup/Transducer',
-            icon: Icon(FontAwesomeIcons.syringe),
-          ),
-          CheckboxItem(
-            label: '2x 20 cc Syringe for Propofol',
-            sublabel: 'Prelabel Syringe w/ needle packaging and vial nearby',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: '1x 10 cc Syringe for Roc',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: '1x 10 cc Syringe for Fentanyl',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: '1x 3 cc Syringe for Midazolam',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: '1x Lidocaine Syringe',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: '1x Saline Flush for Ancef',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: 'Push Bag/Freeflow',
-            sublabel: "Don't spike, just have components ready",
-            icon: Icon(Icons.water),
-          ),
-        ],
-      )
-    );
-  }
-}
-
-class NIR extends StatelessWidget {
-  const NIR({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return CollapsibleCard(
-      controller: ExpansionTileController(),
-      color: Colors.yellow,
-      heading: 'Neuro IR Setup (aka 316 aka Hell)',
-      initiallyExpanded: false,
-      child: const Column(
-        children: [
-          SizedBox(width: 10,),
-          CheckboxItem(
-            label: 'Basic Room Setup',
-            sublabel: 'Including daily machine check',
-            icon: Icon(Icons.handyman),
-          ),
-          CheckboxItem(
-            label: 'A-Line Setup/Transducer',
-            sublabel: 'Expect to tap into their arterial sheath however',
-            icon: Icon(FontAwesomeIcons.syringe),
-          ),
-          CheckboxItem(
-            label: 'CMAC',
-            icon: Icon(Icons.air),
-          ),
-          CheckboxItem(
-            label: 'Remote Drug Box',
-            sublabel: 'Grab from pharmacy',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: '2x 20 cc Syringe for Propofol',
-            sublabel: 'Prelabel Syringe w/ needle packaging and vial nearby',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: '1x 10 cc Syringe for Roc',
-            sublabel: 'Prelabel Syringe w/ needle packaging and vial nearby',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: '1x 3 cc Syringe for Fentanyl',
-            sublabel: 'Prelabel Syringe w/ needle packaging',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: '1x Lidocaine Syringe',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: '1x 10 cc Syringe for Heparin',
-            sublabel: 'Prelabel Syringe w/ needle packaging',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: 'Nitroglycerin Sticks',
-            sublabel: 'Grab from pharmacy prior to case start',
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: 'Push Bag/Freeflow (use NS)',
-            sublabel: "Attach 3x Extensions",
-            icon: Icon(Icons.water_drop),
-          ),
-          CheckboxItem(
-            label: 'TIVA Tubing',
-            sublabel: "Attach 3x Pressure Tubing Extensions",
-            icon: Icon(Icons.water_drop),
-          ),
-          CheckboxItem(
-            label: 'Carrier Bag (NS)',
-            sublabel: "Program at 200-300 cc/hr",
-            icon: Icon(Icons.water_drop),
-          ),
-          CheckboxItem(
-            label: 'Nicardipine Drip',
-            sublabel: "Program at 5 mg/hr",
-            icon: Icon(Icons.medication),
-          ),
-          CheckboxItem(
-            label: 'Norepinephrine Drip',
-            sublabel: "Program at 0.03 mcg/kg/min",
-            icon: Icon(Icons.medication),
-          ),
-        ],
-      )
-    );
-  }
-}
-
-class CA1Guide extends StatelessWidget {
+class CA1Guide extends ConsumerWidget {
   const CA1Guide({super.key});
 
+  static const Map<String,List<Widget>> practiceGroupSpecificChecklists = {
+    'Hopkins': [
+      HopkinsTrauma(),
+      HopkinsDitzel(),
+      HopkinsNIR(),
+    ]
+  };
+
+  static const List<Widget> defaultChecklists = [
+    PreOp(),
+    StandardSetup(),
+    ALine(),
+    StandardStart(),
+    Closing(),
+  ];
+
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<Widget> checklists = [];
+    checklists.addAll(defaultChecklists);
+
+    List<List<String>> practiceGroups = ref.watch(wikiPracticeGroupsProvider);
+    List<String> dbKeys = practiceGroups.map((subList) => subList[0]).toList(); // Extract the database keys from the practice groups
+    // Check if there are any practice group specific checklists to add
+    for (var dbKey in dbKeys) {
+      checklists.addAll(practiceGroupSpecificChecklists[dbKey] ?? []);
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CA-1 Checklists', style: TextStyle(color: Colors.white)),
+        title: const Text('Checklists', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       drawer: const CalculatorDrawer(),
       body: ListView(
-        children: const [
-          PreOp(),
-          StandardSetup(),
-          ALine(),
-          StandardStart(),
-          Closing(),
-          Trauma(),
-          Ditzel(),
-          NIR(),
-        ],),
+        children: checklists,),
     );
   }
 }

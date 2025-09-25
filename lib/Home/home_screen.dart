@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:go_router/go_router.dart';
+import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
 import 'package:wikianesthesia_mobile/Home/search_wiki_bar.dart';
+import 'package:wikianesthesia_mobile/Wiki/account_widget.dart';
 import '../util.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,131 +12,62 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _aboutString = '';
 
   @override
   void initState() {
     super.initState();
-    getAbout();
   }
 
-  Future<void> _dialogBuilder(BuildContext context){
-    getAbout();
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('About this App'),
-          content: Builder(
-            builder: (context) {
-            // Get available height and width of the build area of this widget. Make a choice depending on the size.                              
-            var height = MediaQuery.of(context).size.height;
-            var width = MediaQuery.of(context).size.width;
-
-            // ignore: sized_box_for_whitespace
-            return Container(
-              height: height - 90,
-              width: width - 50,
-              child: Markdown(
-                data: _aboutString,
-                onTapLink: (text, href, title) {
-                  launchURL(href);
-                },
-              ),
-            );
-            },
-          ),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              child: const Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<String> getAbout() async {
-    final response = await rootBundle.loadString('assets/AboutText.md');
-    setState(() { 
-      _aboutString = response; 
-    }); 
-    return response;
-  }
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: theme.colorScheme.primary,
+        backgroundColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: Colors.white),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.all(4.0),
+            child: AccountWidget(),
+          ),
+        ],
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const WikiSearchView(),
-            Expanded(
-              child: GridView.extent(
-                maxCrossAxisExtent: 300,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                primary: false,
-                padding: const EdgeInsets.all(20),
-                children: <Widget>[
-                  TileButton(
-                    onPressed: () {context.go('/emergency');},
-                    icon: Icons.emergency,
-                    label: 'Emergency Manual',
-                    backgroundColor: theme.colorScheme.error,
-                    iconColor: theme.colorScheme.onError,
-                    labelColor: theme.colorScheme.onError,
+      drawer: const HomeDrawer(),
+      body: SizedBox.expand(
+          child: 
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    primaryColor,
+                    lightColor,
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.8, 1],
+                )
+              ),
+              height: MediaQuery.of(context).size.height * 0.8,
+              child: const Column(
+                children: [
+                  Spacer(flex: 3),
+                  ImageIcon(
+                    AssetImage('assets/wikianesthesia_logo.png'),
+                    color: Colors.white,
+                    size: 64.0,
                   ),
-                  TileButton(
-                    onPressed: () {context.go('/calculator');},
-                    icon: Icons.calculate,
-                    label: 'Calculators',
-                    backgroundColor: theme.colorScheme.primary,
-                    iconColor: theme.colorScheme.onPrimary,
-                    labelColor: theme.colorScheme.onPrimary,
+                  SizedBox(height: 40),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: WikiSearchView(),
                   ),
-                  TileButton(
-                    onPressed: () {context.go('/directory');},
-                    icon: Icons.medical_services,
-                    label: 'Practice Groups',
-                    backgroundColor: theme.colorScheme.secondary,
-                    iconColor: theme.colorScheme.onSecondary,
-                    labelColor: theme.colorScheme.onSecondary,
-                  ),
-                  TileButton(
-                    onPressed: () => _dialogBuilder(context),
-                    icon: Icons.info,
-                    label: 'About',
-                    backgroundColor: theme.colorScheme.tertiary,
-                    iconColor: theme.colorScheme.onTertiary,
-                    labelColor: theme.colorScheme.onTertiary,
-                  ),
-                  TileButton(
-                    onPressed: () {launchURL('https://forms.gle/bNxaLbs9zHLQjwxV8');},
-                    icon: Icons.feedback,
-                    label: 'Submit Feedback',
-                    backgroundColor: theme.colorScheme.primaryFixed,
-                    iconColor: theme.colorScheme.onPrimaryFixed,
-                    labelColor: theme.colorScheme.onPrimaryFixed,
-                  )
+                  Spacer(flex: 3),
                 ],
               ),
-            ),
-          ],
+            )
         )
-      ),
-    );
+      );
   }
 }
 
