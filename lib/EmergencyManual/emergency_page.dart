@@ -216,7 +216,6 @@ class _EmergencyPageState extends State<EmergencyPage> {
               ),
           ]),
       drawer: const EmergencyDrawer(),
-      drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       body: _emergencyPage,
     );
   }

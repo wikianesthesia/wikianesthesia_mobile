@@ -5,7 +5,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wikianesthesia_mobile/Home/search_wiki_bar.dart';
 
-
 class WikiPage extends StatefulWidget {
   final String url;
   const WikiPage({super.key, required this.url});
@@ -33,24 +32,27 @@ class _WikiPageState extends State<WikiPage> {
   void initState() {
     super.initState();
 
-    if (kIsWeb || ![TargetPlatform.iOS, TargetPlatform.android].contains(defaultTargetPlatform)) {
+    if (kIsWeb ||
+        ![TargetPlatform.iOS, TargetPlatform.android]
+            .contains(defaultTargetPlatform)) {
       pullToRefreshController = null;
     } else {
       pullToRefreshController = PullToRefreshController(
-        settings: PullToRefreshSettings(color: Colors.blue,),
+        settings: PullToRefreshSettings(
+          color: Colors.blue,
+        ),
         onRefresh: () async {
           if (defaultTargetPlatform == TargetPlatform.android) {
             webViewController?.reload();
           } else if (defaultTargetPlatform == TargetPlatform.iOS) {
             webViewController?.loadUrl(
-              urlRequest: URLRequest(url: await webViewController?.getUrl()));
+                urlRequest: URLRequest(url: await webViewController?.getUrl()));
           }
         },
       );
     }
   }
 
-  
   void removeHeaderFooter(InAppWebViewController controller) async {
     var result = await controller.evaluateJavascript(
       source: '''
@@ -80,7 +82,6 @@ class _WikiPageState extends State<WikiPage> {
       print(result);
     }
   }
-    
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +136,9 @@ class _WikiPageState extends State<WikiPage> {
         ],
         leading: InkWell(
           onTap: () {
-            context.go('/',);
+            context.go(
+              '/',
+            );
             FocusScope.of(context).unfocus();
           },
           child: const Padding(
@@ -148,64 +151,57 @@ class _WikiPageState extends State<WikiPage> {
           ),
         ),
       ),
-      body: Expanded(
-        child: Stack(
-          children: [
-            InAppWebView(
-              key: webViewKey,
-              initialUrlRequest: URLRequest(url: WebUri(widget.url)),
-              initialSettings: settings,
-              pullToRefreshController: pullToRefreshController,
-              onWebViewCreated: (controller) {
-                webViewController = controller;
-              },
-              onLoadStart: (controller, url) {
-                _isLoading = true;
-              },
-              onPermissionRequest: (controller, request) async {
-                return PermissionResponse(
+      body: Stack(
+        children: [
+          InAppWebView(
+            key: webViewKey,
+            initialUrlRequest: URLRequest(url: WebUri(widget.url)),
+            initialSettings: settings,
+            pullToRefreshController: pullToRefreshController,
+            onWebViewCreated: (controller) {
+              webViewController = controller;
+            },
+            onLoadStart: (controller, url) {
+              _isLoading = true;
+            },
+            onPermissionRequest: (controller, request) async {
+              return PermissionResponse(
                   resources: request.resources,
-                  action: PermissionResponseAction.GRANT
-                );
-              },
-              onLoadStop: (controller, url) async {
-                pullToRefreshController?.endRefreshing();
-                
-                removeHeaderFooter(controller);
-                setState(() {
-                  _isLoading = false;
-                });
-              },
-              onReceivedError: (controller, request, error) {
-                pullToRefreshController?.endRefreshing();
-              },
-              onProgressChanged: (controller, progress) {
-                if (progress == 100) {
-                  pullToRefreshController?.endRefreshing();
-                }
+                  action: PermissionResponseAction.GRANT);
+            },
+            onLoadStop: (controller, url) async {
+              pullToRefreshController?.endRefreshing();
 
-                setState(() {
-                  _progress = progress / 100;
-                });
-              },
-              onConsoleMessage: (controller, consoleMessage) {
-                if (kDebugMode) {
-                  print(consoleMessage);
-                }
-              },
-            ),
+              removeHeaderFooter(controller);
+              setState(() {
+                _isLoading = false;
+              });
+            },
+            onReceivedError: (controller, request, error) {
+              pullToRefreshController?.endRefreshing();
+            },
+            onProgressChanged: (controller, progress) {
+              if (progress == 100) {
+                pullToRefreshController?.endRefreshing();
+              }
 
-            if (_progress < 1.0 || _isLoading)
-              Expanded(
-                child: Container(
-                  color: Colors.white,
-                  child: Center(child: CircularProgressIndicator(value: _progress)),
-                ),
-              )
-          ],
-        )
+              setState(() {
+                _progress = progress / 100;
+              });
+            },
+            onConsoleMessage: (controller, consoleMessage) {
+              if (kDebugMode) {
+                print(consoleMessage);
+              }
+            },
+          ),
+          if (_progress < 1.0 || _isLoading)
+            Container(
+              color: Colors.white,
+              child: Center(child: CircularProgressIndicator(value: _progress)),
+            )
+        ],
       ),
     );
   }
 }
-

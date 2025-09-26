@@ -22,7 +22,9 @@ class _WikiSearchViewState extends State<WikiSearchView> {
 
   void initWikiAPI() async {
     // Initialize the WikiAPI and debounced search function
-    _Debounceable<List<SearchResult>, String> search = _debounce<List<SearchResult>, String>(wikiAPI.search, const Duration(milliseconds: 200));
+    _Debounceable<List<SearchResult>, String> search =
+        _debounce<List<SearchResult>, String>(
+            wikiAPI.search, const Duration(milliseconds: 200));
     setState(() {
       _debouncedSearch = search;
     });
@@ -45,7 +47,8 @@ class _WikiSearchViewState extends State<WikiSearchView> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(6.0),
-            child: Text(practiceGroup, style: const TextStyle(color: Colors.white)),
+            child: Text(practiceGroup,
+                style: const TextStyle(color: Colors.white)),
           ),
         ),
         const SizedBox(width: 8),
@@ -63,6 +66,9 @@ class _WikiSearchViewState extends State<WikiSearchView> {
       builder: (BuildContext context, SearchController controller) {
         return SearchBar(
           controller: controller,
+          onTapOutside: (event) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           padding: const WidgetStatePropertyAll<EdgeInsets>(
             EdgeInsets.symmetric(horizontal: 10.0),
           ),
@@ -76,66 +82,69 @@ class _WikiSearchViewState extends State<WikiSearchView> {
           hintText: 'Search WikiAnesthesia',
         );
       },
-      suggestionsBuilder: (BuildContext context, SearchController controller) async {
+      suggestionsBuilder:
+          (BuildContext context, SearchController controller) async {
         if (controller.text.isEmpty) {
           return [];
         }
-        
-        return [FutureBuilder<List<SearchResult>?>(future: _debouncedSearch(controller.text),
-          builder: (context,snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const ListTile(
-                title: Center(
-                  child: LinearProgressIndicator(), // Show loading indicator
-                ),
-              ); // Show loading indicator
-            } else if (snapshot.hasError) { // Show Error
-              return ListTile(
+
+        return [
+          FutureBuilder<List<SearchResult>?>(
+            future: _debouncedSearch(controller.text),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const ListTile(
                   title: Center(
-                    child: Text('Error: ${snapshot.error}')
-                  )
-                ); 
-            } else if (snapshot.hasData) {
-              final results = snapshot.data!;
-              if (results.isEmpty) {
-                return const Center(child: Text('No suggestions found'));
-              } else {
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: results.length + 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index == results.length) {
-                      // Add a search option at the end
+                    child: LinearProgressIndicator(), // Show loading indicator
+                  ),
+                ); // Show loading indicator
+              } else if (snapshot.hasError) {
+                // Show Error
+                return ListTile(
+                    title: Center(child: Text('Error: ${snapshot.error}')));
+              } else if (snapshot.hasData) {
+                final results = snapshot.data!;
+                if (results.isEmpty) {
+                  return const Center(child: Text('No suggestions found'));
+                } else {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: results.length + 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == results.length) {
+                        // Add a search option at the end
+                        return ListTile(
+                          title: Text(
+                              'Search for pages containing "${controller.text}"',
+                              style:
+                                  const TextStyle(fontStyle: FontStyle.italic)),
+                          leading: const Icon(Icons.search),
+                          onTap: () {
+                            goWikiPage(context,
+                                'https://wikianesthesia.org/wiki/Special:Search?search=${Uri.encodeComponent(controller.text)}');
+                            controller.closeView(controller.text);
+                          },
+                        );
+                      }
+
                       return ListTile(
-                        title: Text('Search for pages containing "${controller.text}"', style: const TextStyle(fontStyle: FontStyle.italic)),
-                        leading: const Icon(Icons.search),
+                        title: searchEntry(results[index].title),
                         onTap: () {
-                          goWikiPage(context,'https://wikianesthesia.org/wiki/Special:Search?search=${Uri.encodeComponent(controller.text)}');
+                          goWikiPage(context, results[index].url);
                           controller.closeView(controller.text);
                         },
                       );
-                    }
-
-                    return ListTile(
-                      title: searchEntry(results[index].title),
-                      onTap: () {
-                        goWikiPage(context,results[index].url);
-                        controller.closeView(controller.text);
-                      },
-                    );
-                  },
-                );
+                    },
+                  );
+                }
+              } else {
+                return const ListTile(
+                    title: Center(child: Text('No Suggestions Found')));
               }
-            } else {
-              return const ListTile(
-                  title: Center(
-                    child: Text('No Suggestions Found')
-                  )
-                );
-            }
-          },
-        )];
+            },
+          )
+        ];
       },
     );
   }
@@ -147,7 +156,8 @@ typedef _Debounceable<S, T> = Future<S?> Function(T parameter);
 ///
 /// This means that the original function will be called only after no calls
 /// have been made for the given Duration.
-_Debounceable<S, T> _debounce<S, T>(_Debounceable<S?, T> function, Duration duration) {
+_Debounceable<S, T> _debounce<S, T>(
+    _Debounceable<S?, T> function, Duration duration) {
   _DebounceTimer? debounceTimer;
 
   return (T parameter) async {

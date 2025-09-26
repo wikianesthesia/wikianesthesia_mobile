@@ -185,15 +185,15 @@ class _EmergencyHomeState extends State<EmergencyHome> {
               Expanded(
                 child: Row(
                   children: [
-                    Flexible(
+                    Expanded(
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: aclsButtons.sublist(0, 3),
                       ),
                     ),
-                    Flexible(
+                    Expanded(
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: aclsButtons.sublist(3),
                       ),
                     ),
@@ -249,6 +249,7 @@ class _EmergencyHomeState extends State<EmergencyHome> {
             ),
             Expanded(
               child: Column(
+                mainAxisSize: MainAxisSize.max,
                 children: otherButtons,
               ),
             ),
@@ -256,11 +257,13 @@ class _EmergencyHomeState extends State<EmergencyHome> {
         ),
       );
 
-      _buttonGrid = ListView(
-        children: [
-          aclsGrid,
-          otherGrid,
-        ],
+      _buttonGrid = SingleChildScrollView(
+        child: Column(
+          children: [
+            aclsGrid,
+            otherGrid,
+          ],
+        ),
       );
     }
   }
@@ -307,7 +310,6 @@ class _EmergencyHomeState extends State<EmergencyHome> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       drawer: const EmergencyDrawer(),
-      drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       drawerEnableOpenDragGesture: true,
       body: Column(
         children: [
@@ -353,12 +355,14 @@ class CaseButton extends StatelessWidget {
       },
       title: Text(label, style: const TextStyle(fontSize: 18)),
       visualDensity: const VisualDensity(vertical: -3),
+      minVerticalPadding: 0,
+      dense: true,
       //contentPadding: EdgeInsets.zero,
       leading: showIcon
           ? Icon(
               icon,
               color: iconColor,
-              size: 25,
+              size: 22,
             )
           : null,
       textColor: labelColor,
@@ -392,22 +396,19 @@ class ACLSCaseButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        onTap: () {
-          onPressed();
-        },
-        title: Text(label, style: const TextStyle(fontSize: 18)),
-        visualDensity: const VisualDensity(vertical: -3),
-        //contentPadding: EdgeInsets.zero,
-        leading: showIcon
-            ? Icon(
-                icon,
-                color: iconColor,
-                size: 25,
-              )
-            : null,
-        textColor: labelColor,
+    return GestureDetector(
+      onTap: () {
+        onPressed();
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
     );
   }
