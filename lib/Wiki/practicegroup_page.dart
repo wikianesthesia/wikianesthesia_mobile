@@ -73,7 +73,7 @@ class PracticeGroupPage extends ConsumerWidget {
           context.push('/practicegroup/phone');
         },
         icon: Icons.phone,
-        label: 'Phone Numbers',
+        label: 'Phone List',
         backgroundColor: theme.colorScheme.secondary,
         iconColor: theme.colorScheme.onSecondary,
         labelColor: theme.colorScheme.onSecondary,

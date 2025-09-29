@@ -52,7 +52,7 @@ class AccountHome extends ConsumerWidget {
               context, 'https://wikianesthesia.org/wiki/Special:UserNotes');
         },
         icon: Icons.note,
-        label: 'Personal Notes',
+        label: 'Notes',
         backgroundColor: theme.colorScheme.primary,
         iconColor: theme.colorScheme.onPrimary,
         labelColor: theme.colorScheme.onPrimary,

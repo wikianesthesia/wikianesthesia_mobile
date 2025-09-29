@@ -36,7 +36,7 @@ const List<Map<String, dynamic>> emergencyTopics = [
   {
     'name': 'Bradycardia',
     'pageTitle': 'Brady',
-    'tags': 'ACLS Arrythmia Slow heart rate',
+    'tags': 'ACLS Arrhythmia Slow heart rate',
     'icon': Icons.monitor_heart,
     'backgroundColor': Colors.red,
     'iconColor': Colors.white
@@ -45,7 +45,7 @@ const List<Map<String, dynamic>> emergencyTopics = [
     'name': 'Unstable Tach',
     'pageTitle': 'UnstableTach',
     'tags':
-        'ACLS Arrythmia Fast heart rate hypotension low blood pressure bp tachycardia VT SVT RVR AFib',
+        'ACLS Arrhythmia Fast heart rate hypotension low blood pressure bp tachycardia VT SVT RVR AFib',
     'icon': Icons.monitor_heart,
     'backgroundColor': Colors.red,
     'iconColor': Colors.white
@@ -53,13 +53,13 @@ const List<Map<String, dynamic>> emergencyTopics = [
   {
     'name': 'Stable Tach',
     'pageTitle': 'StableTach',
-    'tags': 'ACLS Arrythmia Fast heart rate Tachycardia SVT VT AFib RVR',
+    'tags': 'ACLS Arrhythmia Fast heart rate Tachycardia SVT VT AFib RVR',
     'icon': Icons.monitor_heart,
     'backgroundColor': Colors.red,
     'iconColor': Colors.white
   },
   {
-    'name': 'Anyphylaxis',
+    'name': 'Anaphylaxis',
     'pageTitle': 'Anaphylaxis',
     'tags': 'Allergy Allergic hypotension bronchospasm rash epi epipen',
     'icon': FontAwesomeIcons.handDots,
@@ -185,7 +185,7 @@ const List<Map<String, dynamic>> emergencyTopics = [
     'name': 'Malignant Hyperthermia',
     'pageTitle': 'MH',
     'tags':
-        'High Temperature Dantrolene David Dave Berman fever nms seratonin syndrome',
+        'High Temperature Dantrolene David Dave Berman fever nms serotonin syndrome',
     'icon': FontAwesomeIcons.temperatureHigh,
     'backgroundColor': Colors.grey,
     'iconColor': Colors.white

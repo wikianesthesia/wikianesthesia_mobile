@@ -1,6 +1,6 @@
 # Crisis Resources
 * Inform team
-* Identify leader
+* Identify Leader, Timer/Recorder, Chest Compression Line, Meds Administrator
 * Call an anesthesia stat
 * Call for code cart
 
@@ -10,7 +10,7 @@
 * Keep EtCO2 > 10 mmHg and DBP > 20 mmHg
 * Rotate compressors with rhythm check every 2 min. If changes to non-shockable rhythm, see [Asystole/PEA]( ACLS-AsystolePEA)
 * Check pulse ONLY if signs of ROSC (sustained increased EtCO2, spontaneous arterial waveform, rhythm change)
-* Pront CPR at lower edgar of scapula OK if airway secured
+* Prone CPR at lower edge of scapula OK if airway secured
 
 # Airway
 * **100% FiO2 with flows 10-15 L/min**

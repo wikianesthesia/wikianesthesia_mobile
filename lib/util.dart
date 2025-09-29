@@ -38,7 +38,32 @@ class TileButton extends StatelessWidget {
       duration: Duration(milliseconds: animDuration),
       child: ScaleAnimation(
         child: FadeInAnimation(
-            child: ElevatedButton(
+          child: Card(
+              child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              backgroundColor: backgroundColor,
+            ),
+            onPressed: () {
+              onPressed();
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: iconSize, color: iconColor),
+                Text(label, style: TextStyle(color: labelColor, fontSize: 18)),
+              ],
+            ),
+          )),
+        ),
+      ),
+    );
+  }
+}
+
+/* ElevatedButton(
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5.0),
@@ -52,14 +77,23 @@ class TileButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, size: iconSize, color: iconColor),
-              Text(label, style: TextStyle(color: labelColor)),
+              Text(label, style: TextStyle(color: labelColor, fontSize: 16)),
             ],
           ),
-        )),
-      ),
-    );
-  }
-}
+        )), */
+
+/*ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                tileColor: backgroundColor,
+                onTap: () {
+                  onPressed();
+                },
+                leading: Icon(icon, size: iconSize, color: iconColor),
+                title: Text(label,
+                    style: TextStyle(color: labelColor, fontSize: 24)),
+              ),*/
 
 void launchURL(targetUrl) async {
   final Uri url = Uri.parse(targetUrl);

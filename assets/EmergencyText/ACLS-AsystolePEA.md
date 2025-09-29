@@ -1,7 +1,7 @@
 # Crisis Resources
 * Inform team
-* Identify Leader
-* Call an anesthesia stat
+* Identify Leader, Timer/Recorder, Chest Compression Line, Meds Administrator
+* Call for help
 * Call for Code Cart
 * Assign Team Member to Read Cognitive Aid out loud
 
