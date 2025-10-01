@@ -48,12 +48,17 @@ dependencies:
   path_provider: ^2.1.5
   html: ^0.15.6
   worker_manager: ^7.2.6
-  expansion_tile_list: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   cookie_jar: ^4.0.8
+
+flutter_launcher_icons:
+  android: true # or true if using default name
+  ios: true
+  image_path: "assets/wikianesthesia_logo.png"
 
 dev_dependencies:
   flutter_test:
