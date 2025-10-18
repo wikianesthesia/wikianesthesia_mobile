@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import 'package:flutter/foundation.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -32,8 +33,10 @@ class WikiAPI {
   Future<WikiAPI> initialize() async {
     await prepareJar();
 
-    // Initialize the Dio instance with the cookie jar
-    _dio.interceptors.add(CookieManager(cookieJar));
+    if (!kIsWeb) {
+      // Initialize the Dio instance with the cookie jar
+      _dio.interceptors.add(CookieManager(cookieJar));
+    }
 
     // Initialize the secure storage
     secureStorage = const FlutterSecureStorage();
@@ -52,12 +55,18 @@ class WikiAPI {
   }
 
   Future<void> prepareJar() async {
-    final appDocDir = await getApplicationDocumentsDirectory();
-    final String appDocPath = appDocDir.path;
-    cookieJar = PersistCookieJar(
-      storage: FileStorage('$appDocPath/.cookies/'),
-      ignoreExpires: false,
-    );
+    if (kIsWeb) {
+      // Web does not support file storage for cookies
+      cookieJar = PersistCookieJar(ignoreExpires: false);
+      return;
+    } else {
+      final appDocDir = await getApplicationDocumentsDirectory();
+      final String appDocPath = appDocDir.path;
+      cookieJar = PersistCookieJar(
+        storage: FileStorage('$appDocPath/.cookies/'),
+        ignoreExpires: false,
+      );
+    }
   }
 
   /// Load the username from secure storage and update the Riverpod provider
@@ -184,6 +193,7 @@ class WikiAPI {
       'action': 'opensearch',
       'format': 'json',
       'search': query,
+      'origin': '*',
     };
 
     // Construct the URI for the API request

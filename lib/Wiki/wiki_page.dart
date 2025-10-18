@@ -96,44 +96,47 @@ class _WikiPageState extends State<WikiPage> {
         ),
         titleSpacing: 8.0,
         backgroundColor: theme.colorScheme.primary,
-        actions: [
-          FutureBuilder<bool>(
-            future: webViewController?.canGoBack() ?? Future.value(false),
-            builder: (context, snapshot) {
-              final canGoBack = snapshot.data ?? false;
-              return IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                color: Colors.white,
-                disabledColor: Colors.grey,
-                onPressed: canGoBack
-                    ? () {
-                        webViewController?.goBack();
-                      }
-                    : null,
-              );
-            },
-          ),
-          FutureBuilder<bool>(
-            future: webViewController?.canGoForward() ?? Future.value(false),
-            builder: (context, snapshot) {
-              final canGoBack = snapshot.data ?? false;
-              return IconButton(
-                icon: const Icon(Icons.arrow_forward_ios),
-                color: Colors.white,
-                disabledColor: Colors.grey,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                onPressed: canGoBack
-                    ? () {
-                        webViewController?.goForward();
-                      }
-                    : null,
-              );
-            },
-          ),
-        ],
+        actions: kIsWeb
+            ? null
+            : [
+                FutureBuilder<bool>(
+                  future: webViewController?.canGoBack() ?? Future.value(false),
+                  builder: (context, snapshot) {
+                    final canGoBack = snapshot.data ?? false;
+                    return IconButton(
+                      icon: const Icon(Icons.arrow_back_ios),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      color: Colors.white,
+                      disabledColor: Colors.grey,
+                      onPressed: canGoBack
+                          ? () {
+                              webViewController?.goBack();
+                            }
+                          : null,
+                    );
+                  },
+                ),
+                FutureBuilder<bool>(
+                  future:
+                      webViewController?.canGoForward() ?? Future.value(false),
+                  builder: (context, snapshot) {
+                    final canGoBack = snapshot.data ?? false;
+                    return IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios),
+                      color: Colors.white,
+                      disabledColor: Colors.grey,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      onPressed: canGoBack
+                          ? () {
+                              webViewController?.goForward();
+                            }
+                          : null,
+                    );
+                  },
+                ),
+              ],
         leading: InkWell(
           onTap: () {
             context.go(

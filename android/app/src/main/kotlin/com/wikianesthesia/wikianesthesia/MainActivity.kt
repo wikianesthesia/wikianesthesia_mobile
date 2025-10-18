@@ -1,4 +1,4 @@
-package com.example.wikianesthesia_mobile
+package com.wikianesthesia.wikianesthesia
 
 import io.flutter.embedding.android.FlutterActivity
 
