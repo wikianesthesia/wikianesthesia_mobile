@@ -162,7 +162,7 @@ class PatientWidgetNarrow extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
       heading: 'Patient Demographics',
-      controller: ExpansionTileController(),
+      controller: ExpansibleController(),
       initiallyExpanded: false,
       color: Colors.green,
       child: const Row(
@@ -185,7 +185,7 @@ class PatientWidgetWide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CollapsibleCard(
-      controller: ExpansionTileController(),
+      controller: ExpansibleController(),
       color: Colors.green,
       heading: 'Demographics',
       initiallyExpanded: true,

@@ -15,20 +15,20 @@ class AirwayEquipment extends ConsumerWidget {
     return size;
   }
 
-  Map<String,String> getAirwayEquipmentSize(Patient patient) {
-    final Map<String,String> equipmentSize = {};
+  Map<String, String> getAirwayEquipmentSize(Patient patient) {
+    final Map<String, String> equipmentSize = {};
 
     equipmentSize['ETT'] = switch (patient.age ?? -1) {
       < 0 => 'Needs Age',
-      > 0 && < 1.0/12 => switch(patient.weight ?? -1) {
-        < 0 => 'Needs Weight',
-        >= 0 && < 1 => '2.5',
-        >= 1 && < 2 => '2.5-3.0',
-        >= 2 && < 3 => '3.0',
-        >= 3 => '3.0-3.5',
-        _ => 'N/A',
-      },
-      > 1.0/12 && < 0.5 => '3.0-3.5',
+      > 0 && < 1.0 / 12 => switch (patient.weight ?? -1) {
+          < 0 => 'Needs Weight',
+          >= 0 && < 1 => '2.5',
+          >= 1 && < 2 => '2.5-3.0',
+          >= 2 && < 3 => '3.0',
+          >= 3 => '3.0-3.5',
+          _ => 'N/A',
+        },
+      > 1.0 / 12 && < 0.5 => '3.0-3.5',
       < 1 && >= 0.5 => '3.5',
       >= 1 && < 14 => calculateETTSize(patient.age!).toString(),
       >= 14 => '7.0',
@@ -37,32 +37,32 @@ class AirwayEquipment extends ConsumerWidget {
 
     equipmentSize['ETT_Depth'] = switch (patient.age ?? -1) {
       < 0 => 'Needs Age',
-      > 0 && < 1.0/12 => switch(patient.weight ?? -1) {
-        < 0 => 'Needs Weight',
-        >= 0 && < 1 => '7 cm',
-        >= 1 && < 2 => '8 cm',
-        >= 2 && < 3 => '9 cm',
-        >= 3 => '10 cm',
-        _ => 'N/A',
-      },
-      >= 1.0/12 && < 0.5 => '12 cm',
+      > 0 && < 1.0 / 12 => switch (patient.weight ?? -1) {
+          < 0 => 'Needs Weight',
+          >= 0 && < 1 => '7 cm',
+          >= 1 && < 2 => '8 cm',
+          >= 2 && < 3 => '9 cm',
+          >= 3 => '10 cm',
+          _ => 'N/A',
+        },
+      >= 1.0 / 12 && < 0.5 => '12 cm',
       >= 0.5 && < 1 => '13 cm',
       >= 1 => '${calculateETTSize(patient.age ?? -1) * 3} cm',
       _ => 'N/A',
     };
 
-    equipmentSize['DLBlade'] = switch(patient.age ?? -1) {
+    equipmentSize['DLBlade'] = switch (patient.age ?? -1) {
       <= 0 => 'Needs Age',
-      > 0 && < 1.0/12 => switch(patient.weight ?? -1) {
-        < 0 => 'Needs Weight',
-        >= 0 && < 1 => 'Miller 00-0',
-        >= 1 && < 2 => 'Miller 0',
-        >= 2 => 'Miller 0-1',
-        _ => 'N/A',
-      },
-      >= 1.0/12 && < 1 => 'Mil 1/Wis 1',
+      > 0 && < 1.0 / 12 => switch (patient.weight ?? -1) {
+          < 0 => 'Needs Weight',
+          >= 0 && < 1 => 'Miller 00-0',
+          >= 1 && < 2 => 'Miller 0',
+          >= 2 => 'Miller 0-1',
+          _ => 'N/A',
+        },
+      >= 1.0 / 12 && < 1 => 'Mil 1/Wis 1',
       >= 1.0 && < 2 => 'Mil 1/Wis 1.5',
-      >= 2 && <8 => 'Mil 2/Mac 2',
+      >= 2 && < 8 => 'Mil 2/Mac 2',
       > 9 => 'Mac 3/Mil 2',
       _ => 'N/A'
     };
@@ -81,9 +81,9 @@ class AirwayEquipment extends ConsumerWidget {
 
     equipmentSize['FaceMask'] = switch (patient.age ?? -1) {
       < 0 => 'Needs Age',
-      > 0 && < 1.0/12 => '1',
-      > 1.0/12 && < 1 => '2',
-      >=1 && < 6 => '3',
+      > 0 && < 1.0 / 12 => '1',
+      > 1.0 / 12 && < 1 => '2',
+      >= 1 && < 6 => '3',
       >= 6 && < 13 => '4',
       >= 13 => '5+',
       _ => 'N/A'
@@ -101,7 +101,7 @@ class AirwayEquipment extends ConsumerWidget {
       _ => 'N/A',
     };
 
-    equipmentSize['NGT'] = switch ( patient.age ?? -1) {
+    equipmentSize['NGT'] = switch (patient.age ?? -1) {
       < 0 => 'Needs Age',
       >= 0 && < 1 => '8 Fr',
       >= 1 && < 2 => '10 Fr',
@@ -111,10 +111,10 @@ class AirwayEquipment extends ConsumerWidget {
       _ => 'N/A',
     };
 
-    equipmentSize['ChestTube'] = switch ( patient.age ?? -1) {
+    equipmentSize['ChestTube'] = switch (patient.age ?? -1) {
       < 0 => 'Needs Age',
-      >= 0 && < 1/12 => '10-12 Fr',
-      >= 1/12 && < 0.5 => '12-18 Fr',
+      >= 0 && < 1 / 12 => '10-12 Fr',
+      >= 1 / 12 && < 0.5 => '12-18 Fr',
       >= 0.5 && < 2 => '16-20 Fr',
       >= 2 && < 3 => '16-24 Fr',
       >= 4 && < 6 => '20-28 Fr',
@@ -130,29 +130,56 @@ class AirwayEquipment extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Patient patientState = ref.watch(patientDemoProvider);
-    final Map<String,String> equipmentSize = getAirwayEquipmentSize(patientState);
+    final Map<String, String> equipmentSize =
+        getAirwayEquipmentSize(patientState);
 
     return CollapsibleCard(
-      controller: ExpansionTileController(),
-      color: Colors.blue,
-      heading: 'Airway Equipment',
-      initiallyExpanded: false,
-      child: DataTable(
-        rows: [
-          DataRow(cells: [const DataCell(Text('ETT Size (Cuffed)')), DataCell(Text(equipmentSize['ETT'] ?? 'N/A'))]),
-          DataRow(cells: [const DataCell(Text('ETT Depth (Lips)')), DataCell(Text(equipmentSize['ETT_Depth'] ?? 'N/A'))]),
-          DataRow(cells: [const DataCell(Text('DL Blade')), DataCell(Text(equipmentSize['DLBlade'] ?? 'N/A'))]),
-          DataRow(cells: [const DataCell(Text('Face Mask')), DataCell(Text(equipmentSize['FaceMask'] ?? 'N/A'))]),
-          DataRow(cells: [const DataCell(Text('LMA')), DataCell(Text(equipmentSize['LMA'] ?? 'N/A'))]),
-          DataRow(cells: [const DataCell(Text('NG Tube')), DataCell(Text(equipmentSize['NGT'] ?? 'N/A'))]),
-          DataRow(cells: [const DataCell(Text('Chest Tube')), DataCell(Text(equipmentSize['ChestTube'] ?? 'N/A'))]),
-        ],
-        columns: const [
-          DataColumn(label: Expanded(child: Text('Equipment', style: TextStyle(fontStyle: FontStyle.italic)))),
-          DataColumn(label: Expanded(child: Text('Size', style: TextStyle(fontStyle: FontStyle.italic)))),
-        ],
-      )
-    );
+        controller: ExpansibleController(),
+        color: Colors.blue,
+        heading: 'Airway Equipment',
+        initiallyExpanded: false,
+        child: DataTable(
+          rows: [
+            DataRow(cells: [
+              const DataCell(Text('ETT Size (Cuffed)')),
+              DataCell(Text(equipmentSize['ETT'] ?? 'N/A'))
+            ]),
+            DataRow(cells: [
+              const DataCell(Text('ETT Depth (Lips)')),
+              DataCell(Text(equipmentSize['ETT_Depth'] ?? 'N/A'))
+            ]),
+            DataRow(cells: [
+              const DataCell(Text('DL Blade')),
+              DataCell(Text(equipmentSize['DLBlade'] ?? 'N/A'))
+            ]),
+            DataRow(cells: [
+              const DataCell(Text('Face Mask')),
+              DataCell(Text(equipmentSize['FaceMask'] ?? 'N/A'))
+            ]),
+            DataRow(cells: [
+              const DataCell(Text('LMA')),
+              DataCell(Text(equipmentSize['LMA'] ?? 'N/A'))
+            ]),
+            DataRow(cells: [
+              const DataCell(Text('NG Tube')),
+              DataCell(Text(equipmentSize['NGT'] ?? 'N/A'))
+            ]),
+            DataRow(cells: [
+              const DataCell(Text('Chest Tube')),
+              DataCell(Text(equipmentSize['ChestTube'] ?? 'N/A'))
+            ]),
+          ],
+          columns: const [
+            DataColumn(
+                label: Expanded(
+                    child: Text('Equipment',
+                        style: TextStyle(fontStyle: FontStyle.italic)))),
+            DataColumn(
+                label: Expanded(
+                    child: Text('Size',
+                        style: TextStyle(fontStyle: FontStyle.italic)))),
+          ],
+        ));
   }
 }
 
@@ -161,11 +188,11 @@ class VascularEquipment extends ConsumerWidget {
 
   double calculateCentralLineDepth(double height) {
     // Returns calculated central line depth based on height
-    return height > 100 ? (height/10 - 2) : (height/10 -1);
+    return height > 100 ? (height / 10 - 2) : (height / 10 - 1);
   }
 
-  Map<String,String> getVascularEquipmentSize(Patient patient) {
-    final Map<String,String> equipmentSize = {};
+  Map<String, String> getVascularEquipmentSize(Patient patient) {
+    final Map<String, String> equipmentSize = {};
 
     equipmentSize['A-Line'] = switch (patient.weight ?? -1) {
       < 0 => 'Needs Weight',
@@ -184,8 +211,9 @@ class VascularEquipment extends ConsumerWidget {
     };
 
     if (patient.height != null) {
-      equipmentSize['CVCDepth'] = '${calculateCentralLineDepth(patient.height!)} cm';
-    } else  {
+      equipmentSize['CVCDepth'] =
+          '${calculateCentralLineDepth(patient.height!)} cm';
+    } else {
       equipmentSize['CVCDepth'] = 'Needs Height';
     }
 
@@ -195,24 +223,39 @@ class VascularEquipment extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Patient patientState = ref.watch(patientDemoProvider);
-    final Map<String,String> equipmentSize = getVascularEquipmentSize(patientState);
+    final Map<String, String> equipmentSize =
+        getVascularEquipmentSize(patientState);
 
     return CollapsibleCard(
-      controller: ExpansionTileController(),
-      color: Colors.red,
-      heading: 'Vascular Access',
-      initiallyExpanded: false,
-      child: DataTable(
-        rows: [
-          DataRow(cells: [const DataCell(Text('Art Line')), DataCell(Text(equipmentSize['A-Line'] ?? 'N/A'))]),
-          DataRow(cells: [const DataCell(Text('Central Line')), DataCell(Text(equipmentSize['CVC'] ?? 'N/A'))]),
-          DataRow(cells: [const DataCell(Text('Central Line Depth')), DataCell(Text(equipmentSize['CVCDepth'] ?? 'N/A'))]),
-        ],
-        columns: const [
-          DataColumn(label: Expanded(child: Text('Equipment', style: TextStyle(fontStyle: FontStyle.italic)))),
-          DataColumn(label: Expanded(child: Text('Size', style: TextStyle(fontStyle: FontStyle.italic)))),
-        ],
-      )
-    );
+        controller: ExpansibleController(),
+        color: Colors.red,
+        heading: 'Vascular Access',
+        initiallyExpanded: false,
+        child: DataTable(
+          rows: [
+            DataRow(cells: [
+              const DataCell(Text('Art Line')),
+              DataCell(Text(equipmentSize['A-Line'] ?? 'N/A'))
+            ]),
+            DataRow(cells: [
+              const DataCell(Text('Central Line')),
+              DataCell(Text(equipmentSize['CVC'] ?? 'N/A'))
+            ]),
+            DataRow(cells: [
+              const DataCell(Text('Central Line Depth')),
+              DataCell(Text(equipmentSize['CVCDepth'] ?? 'N/A'))
+            ]),
+          ],
+          columns: const [
+            DataColumn(
+                label: Expanded(
+                    child: Text('Equipment',
+                        style: TextStyle(fontStyle: FontStyle.italic)))),
+            DataColumn(
+                label: Expanded(
+                    child: Text('Size',
+                        style: TextStyle(fontStyle: FontStyle.italic)))),
+          ],
+        ));
   }
 }

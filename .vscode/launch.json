@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "wikianesthesia_mobile (Apple Sim)",
+            "type": "dart",
+            "request": "launch",
+            "toolArgs": [
+                "--no-enable-impeller"
+            ]
+        },
+        {
             "name": "Dart: Attach to Process",
             "type": "dart",
             "request": "attach"

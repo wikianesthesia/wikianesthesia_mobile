@@ -9,8 +9,8 @@ import 'package:sherlock/sherlock.dart';
 import 'drug_data_pocketguide.dart';
 
 class DrugCalc extends ConsumerStatefulWidget {
-  final Map<String,dynamic> drug;
-  const DrugCalc({super.key,required this.drug});
+  final Map<String, dynamic> drug;
+  const DrugCalc({super.key, required this.drug});
 
   @override
   ConsumerState<DrugCalc> createState() => _DrugCalcState();
@@ -23,7 +23,7 @@ class _DrugCalcState extends ConsumerState<DrugCalc> {
   late List<String> allRoutes;
 
   late int route;
-  late List<Map<String,dynamic>> allDoses;
+  late List<Map<String, dynamic>> allDoses;
   late String doseString;
   late String preparationString;
 
@@ -34,7 +34,6 @@ class _DrugCalcState extends ConsumerState<DrugCalc> {
   late bool striped;
 
   late DropdownButton routesMenu;
-
 
   @override
   void initState() {
@@ -49,8 +48,8 @@ class _DrugCalcState extends ConsumerState<DrugCalc> {
   }
 
   void buildMenu() {
-      // Initialize the dropdown menu for routes
-      routesMenu = DropdownButton<int>(
+    // Initialize the dropdown menu for routes
+    routesMenu = DropdownButton<int>(
       value: route,
       hint: const Text('Route'),
       items: List.generate(allRoutes.length, (index) {
@@ -88,7 +87,8 @@ class _DrugCalcState extends ConsumerState<DrugCalc> {
 
     preparationString = widget.drug['preparation'] ?? '';
     if (drugClass == 'opioid') {
-      preparationString += '\nEquivalent Dose: ${widget.drug['equivalent'] ?? 'Unknown'}';
+      preparationString +=
+          '\nEquivalent Dose: ${widget.drug['equivalent'] ?? 'Unknown'}';
     }
 
     buildMenu();
@@ -149,7 +149,7 @@ class _DrugCalcState extends ConsumerState<DrugCalc> {
     }
 
     // Update the dose string based on the selected route
-    Map<String,dynamic> dose = allDoses[route];
+    Map<String, dynamic> dose = allDoses[route];
     doseString = "\u2022 ${dose['dose']} ${dose['unit']}";
     String weightType = widget.drug['weight'] ?? 'lbw';
 
@@ -176,16 +176,14 @@ class _DrugCalcState extends ConsumerState<DrugCalc> {
       if (dose['dose'].contains('-')) {
         double lowdose = double.parse(dose['dose'].split('-')[0]);
         double highdose = double.parse(dose['dose'].split('-')[1]);
-        doseString += "\n\u2022 ${(weight * lowdose).round()}-${(weight * highdose).round()} $newUnit";
+        doseString +=
+            "\n\u2022 ${(weight * lowdose).round()}-${(weight * highdose).round()} $newUnit";
       } else {
         double maxDose = double.parse(dose['dose']);
-        doseString += '\n\u2022 ${weight*maxDose.round()} $newUnit';
+        doseString += '\n\u2022 ${weight * maxDose.round()} $newUnit';
       }
-      
     }
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +191,7 @@ class _DrugCalcState extends ConsumerState<DrugCalc> {
     update();
 
     return CollapsibleCardColored(
-      controller: ExpansionTileController(),
+      controller: ExpansibleController(),
       color: color,
       striped: striped,
       heading: name,
@@ -211,11 +209,14 @@ class _DrugCalcState extends ConsumerState<DrugCalc> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                Text(doseString, style: const TextStyle(fontSize: 16)),
-                if (onsetString.isNotEmpty)
-                  Text(onsetString, style: const TextStyle(fontSize: 16)),
-              ],),
-              const Spacer(flex: 8,),
+                  Text(doseString, style: const TextStyle(fontSize: 16)),
+                  if (onsetString.isNotEmpty)
+                    Text(onsetString, style: const TextStyle(fontSize: 16)),
+                ],
+              ),
+              const Spacer(
+                flex: 8,
+              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,18 +224,27 @@ class _DrugCalcState extends ConsumerState<DrugCalc> {
                   routesMenu,
                   if (durationString.isNotEmpty)
                     Text(durationString, style: const TextStyle(fontSize: 16)),
-              ],),
+                ],
+              ),
               const Spacer(),
-            ],),
-          const SizedBox(height: 8.0,),
-          Row(
-            children: [
-              const SizedBox(width: 10),
-              if (preparationString.isNotEmpty)
-                Flexible(child: Text(preparationString, style: const TextStyle(fontStyle: FontStyle.italic,fontSize: 16),))
-            ,]
+            ],
           ),
-          const SizedBox(height: 8.0,),
+          const SizedBox(
+            height: 8.0,
+          ),
+          Row(children: [
+            const SizedBox(width: 10),
+            if (preparationString.isNotEmpty)
+              Flexible(
+                  child: Text(
+                preparationString,
+                style:
+                    const TextStyle(fontStyle: FontStyle.italic, fontSize: 16),
+              )),
+          ]),
+          const SizedBox(
+            height: 8.0,
+          ),
         ],
       ),
     );
@@ -250,7 +260,7 @@ class DrugCalcList extends StatefulWidget {
 
 class _DrugCalcListState extends State<DrugCalcList> {
   // List of drugs to be displayed
-  List<Map<String,dynamic>> _toBeListed = allDrugsPocket;
+  List<Map<String, dynamic>> _toBeListed = allDrugsPocket;
 
   /// SearchBar Widget
   late Widget _searchBar;
@@ -275,10 +285,13 @@ class _DrugCalcListState extends State<DrugCalcList> {
 
   void generateCalcs() {
     List<Widget> allCalcs = [];
+
     /// Generates a ListView of DrugCalc's based on list of scenarios to display
-    allCalcs = _toBeListed.map(
-      (drug) => DrugCalc(drug: drug),
-    ).toList();    
+    allCalcs = _toBeListed
+        .map(
+          (drug) => DrugCalc(drug: drug),
+        )
+        .toList();
 
     _calcsListView = ListView(
       children: allCalcs,
@@ -288,34 +301,42 @@ class _DrugCalcListState extends State<DrugCalcList> {
   void buildSearchBar() {
     _searchBar = Row(
       children: [
-        const SizedBox(width: 15.0,),
+        const SizedBox(
+          width: 15.0,
+        ),
         Expanded(
           child: TextField(
             decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(45.0),
-                borderSide: const BorderSide(
-                  width: 2.0,
-                  color: Color(0xFFFF0000),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(45.0),
+                  borderSide: const BorderSide(
+                    width: 2.0,
+                    color: Color(0xFFFF0000),
+                  ),
                 ),
-              ),
-              hintText: 'Try Searching "PONV"',
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: IconButton( // Gives button at end of SearchBar to clear input
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  _controller.clear();
-                  searchDrugs('');
-                },
-                tooltip: 'Clear',
-              )
-            ),
-            onChanged: (String input) {searchDrugs(input);},
-            onSubmitted: (String input) {searchDrugs(input);},
+                hintText: 'Try Searching "PONV"',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: IconButton(
+                  // Gives button at end of SearchBar to clear input
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    _controller.clear();
+                    searchDrugs('');
+                  },
+                  tooltip: 'Clear',
+                )),
+            onChanged: (String input) {
+              searchDrugs(input);
+            },
+            onSubmitted: (String input) {
+              searchDrugs(input);
+            },
             controller: _controller,
           ),
         ),
-        const SizedBox(width: 15.0,),
+        const SizedBox(
+          width: 15.0,
+        ),
       ],
     );
   }
@@ -328,7 +349,7 @@ class _DrugCalcListState extends State<DrugCalcList> {
       });
     } else {
       /// Searches for the emergency topics using Sherlock
-      List<Result> searchResults = await _sherlock.search(input: input); 
+      List<Result> searchResults = await _sherlock.search(input: input);
       if (searchResults.isNotEmpty) {
         /// If search results are not empty, set the list to the search results
         setState(() {
@@ -348,12 +369,10 @@ class _DrugCalcListState extends State<DrugCalcList> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-        _searchBar,
-        const PatientWidget(),
-        Expanded(child: _calcsListView),
-      ]
-    );
-    
+      _searchBar,
+      const PatientWidget(),
+      Expanded(child: _calcsListView),
+    ]);
   }
 }
 

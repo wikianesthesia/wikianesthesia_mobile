@@ -160,7 +160,7 @@ class _InsulinState extends State<Insulin> {
     };
 
     return CollapsibleCard(
-      controller: ExpansionTileController(),
+      controller: ExpansibleController(),
       color: Colors.green,
       heading: 'Insulin Drip',
       initiallyExpanded: true,

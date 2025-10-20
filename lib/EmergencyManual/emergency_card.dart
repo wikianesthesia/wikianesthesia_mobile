@@ -14,7 +14,7 @@ class EmergencyCard extends StatefulWidget {
 }
 
 class EmergencyCardState extends State<EmergencyCard> {
-  final ExpansionTileController controller = ExpansionTileController();
+  final ExpansibleController controller = ExpansibleController();
   bool isExpanded = true;
 
   void collapse() {

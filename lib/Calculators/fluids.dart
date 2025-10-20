@@ -58,7 +58,7 @@ class _FluidsState extends ConsumerState<Fluids> {
     }
 
     return CollapsibleCard(
-      controller: ExpansionTileController(),
+      controller: ExpansibleController(),
       color: Colors.blue,
       heading: 'Fluids',
       initiallyExpanded: false,
@@ -163,7 +163,7 @@ class _BloodState extends ConsumerState<Blood> {
     }
 
     return CollapsibleCard(
-      controller: ExpansionTileController(),
+      controller: ExpansibleController(),
       color: Colors.red,
       heading: 'Blood',
       initiallyExpanded: false,

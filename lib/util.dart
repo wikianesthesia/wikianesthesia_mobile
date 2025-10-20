@@ -181,7 +181,7 @@ class _BlinkingButtonState extends State<BlinkingButton>
 }
 
 class CollapsibleCard extends StatelessWidget {
-  final ExpansionTileController controller;
+  final ExpansibleController controller;
   final Widget child;
   final String heading;
   final Color color;
@@ -218,7 +218,7 @@ class CollapsibleCard extends StatelessWidget {
 }
 
 class CollapsibleCardColored extends StatelessWidget {
-  final ExpansionTileController controller;
+  final ExpansibleController controller;
   final Widget child;
   final String heading;
   final Color color;
