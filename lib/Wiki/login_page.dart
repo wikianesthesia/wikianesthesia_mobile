@@ -44,27 +44,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     super.initState();
 
     practiceGroupFinder.init(ref);
-
-    // Setup Pull to Refresh Controller
-    if (kIsWeb ||
-        ![TargetPlatform.iOS, TargetPlatform.android]
-            .contains(defaultTargetPlatform)) {
-      pullToRefreshController = null;
-    } else {
-      pullToRefreshController = PullToRefreshController(
-        settings: PullToRefreshSettings(
-          color: Colors.blue,
-        ),
-        onRefresh: () async {
-          if (defaultTargetPlatform == TargetPlatform.android) {
-            webViewController?.reload();
-          } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-            webViewController?.loadUrl(
-                urlRequest: URLRequest(url: await webViewController?.getUrl()));
-          }
-        },
-      );
-    }
   }
 
   Future<void> saveCookies() async {
@@ -218,7 +197,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   url: WebUri(
                       'https://wikianesthesia.org/w/index.php?title=Special:UserLogin&returnto=Asdfasdf')),
               initialSettings: settings,
-              pullToRefreshController: pullToRefreshController,
               onWebViewCreated: (controller) {
                 webViewController = controller;
               },
