@@ -26,7 +26,7 @@ class _LogoutPageState extends ConsumerState<LogoutPage> {
     mediaPlaybackRequiresUserGesture: false,
     allowsInlineMediaPlayback: true,
     iframeAllowFullscreen: true,
-    useShouldOverrideUrlLoading: true,
+    useShouldOverrideUrlLoading: false,
   );
 
   PullToRefreshController? pullToRefreshController;

@@ -30,7 +30,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     mediaPlaybackRequiresUserGesture: false,
     allowsInlineMediaPlayback: true,
     iframeAllowFullscreen: true,
-    useShouldOverrideUrlLoading: true,
+    useShouldOverrideUrlLoading: false,
   );
 
   PullToRefreshController? pullToRefreshController;
@@ -243,6 +243,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   print(consoleMessage);
                 }
               },
+
             ),
             if (_progress < 1.0 || _isLoading)
               Container(
