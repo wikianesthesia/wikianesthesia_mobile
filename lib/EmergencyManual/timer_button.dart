@@ -161,30 +161,51 @@ class MainTimer extends ConsumerWidget {
     final timersState = ref.watch(aclsTimersProvider);
     final ThemeData theme = Theme.of(context);
 
-    ElevatedButton startStop = ElevatedButton(
+    // ElevatedButton startStop = ElevatedButton(
+    //   onPressed: timersState['running'] == 1 ? ref.read(aclsTimersProvider.notifier).stopMain : ref.read(aclsTimersProvider.notifier).startMain,
+    //   child: Row(
+    //     children: [
+    //       Icon(timersState['running'] == 1 ? Icons.pause : Icons.play_arrow, color: theme.colorScheme.onError),
+    //       const SizedBox(width: 4,),
+    //       Text(TimerButton.formatTime(timersState['mainTime'] ?? 0), style: const TextStyle(fontWeight: FontWeight.bold),),
+    //     ],
+    //   ),
+    // );
+
+    // ElevatedButton reset = ElevatedButton(
+    //   onPressed: timersState['pulseChecks']! > 0 ? ref.read(aclsTimersProvider.notifier).resetMain : null,
+    //   style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.error),
+    //   child: Text('Reset',style: TextStyle(color: theme.colorScheme.onError)),
+    // );
+
+    // return Row(
+    //   children: [
+    //     const SizedBox(width: 25,),
+    //     const Text('TOTAL TIME', style: TextStyle(fontWeight: FontWeight.bold),),
+    //     const Spacer(),
+        
+    //     const Spacer(),
+    //     startStop,
+    //     const Spacer(),
+    //     reset,
+    //     const SizedBox(width: 25,),
+    //   ],
+    // );
+
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        side: const BorderSide(color: Colors.white), // Set border color and width
+        padding: const EdgeInsets.only(left: 8, right: 10, top: 2, bottom: 2),
+        // Other style properties like foregroundColor, backgroundColor, etc.
+      ),
       onPressed: timersState['running'] == 1 ? ref.read(aclsTimersProvider.notifier).stopMain : ref.read(aclsTimersProvider.notifier).startMain,
-      style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.error),
-      child: Text(timersState['running'] == 1 ? 'Pause' : 'Start',style: TextStyle(color: theme.colorScheme.onError)),
-    );
-
-    ElevatedButton reset = ElevatedButton(
-      onPressed: timersState['pulseChecks']! > 0 ? ref.read(aclsTimersProvider.notifier).resetMain : null,
-      style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.error),
-      child: Text('Reset',style: TextStyle(color: theme.colorScheme.onError)),
-    );
-
-    return Row(
-      children: [
-        const SizedBox(width: 25,),
-        const Text('TOTAL TIME', style: TextStyle(fontWeight: FontWeight.bold),),
-        const Spacer(),
-        Text(TimerButton.formatTime(timersState['mainTime'] ?? 0), style: const TextStyle(fontWeight: FontWeight.bold),),
-        const Spacer(),
-        startStop,
-        const Spacer(),
-        reset,
-        const SizedBox(width: 25,),
-      ],
+      child: Row(
+        children: [
+          Icon(timersState['running'] == 1 ? Icons.pause : Icons.play_arrow, color: theme.colorScheme.onError),
+          const SizedBox(width: 4,),
+          Text(TimerButton.formatTime(timersState['mainTime'] ?? 0), style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
+        ],
+      ),
     );
   }
 }

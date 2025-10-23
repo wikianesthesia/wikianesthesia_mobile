@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:wikianesthesia_mobile/EmergencyManual/code_log.dart';
 
 import 'package:wikianesthesia_mobile/EmergencyManual/emergency_card.dart';
 import 'package:wikianesthesia_mobile/util.dart';
-import './emergency_drawer.dart';
 import './emergency_topics.dart';
 import './timer_button.dart';
 
@@ -79,9 +79,6 @@ class _EmergencyPageState extends State<EmergencyPage> {
             Expanded(
               child: _allCards,
             ),
-            const SizedBox(height: 5),
-            const MainTimer(),
-            const SizedBox(height: 5),
           ],
         ),
       'ACLS-VFVT' => Column(
@@ -91,9 +88,6 @@ class _EmergencyPageState extends State<EmergencyPage> {
             Expanded(
               child: _allCards,
             ),
-            const SizedBox(height: 5),
-            const MainTimer(),
-            const SizedBox(height: 5),
           ],
         ),
       'HandTs' => Column(
@@ -104,9 +98,6 @@ class _EmergencyPageState extends State<EmergencyPage> {
             Expanded(
               child: _allCards,
             ),
-            const SizedBox(height: 5),
-            const MainTimer(),
-            const SizedBox(height: 5),
           ],
         ),
       _ => Column(
@@ -166,13 +157,14 @@ class _EmergencyPageState extends State<EmergencyPage> {
 
     return parsed;
   }
-
+  
   @override
   Widget build(BuildContext context) {
+    bool isCardiacPage = widget.pageTitle == 'ACLS-AsystolePEA' || widget.pageTitle == 'ACLS-VFVT' || widget.pageTitle == 'HandTs';
     final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-          centerTitle: true,
+          centerTitle: isCardiacPage ? false : true,
           title: Text(
             _barTitle,
             style: TextStyle(color: theme.colorScheme.onError),
@@ -184,39 +176,63 @@ class _EmergencyPageState extends State<EmergencyPage> {
             },
             child: const Icon(Icons.arrow_back, color: Colors.white),
           ),
-          actions: [
-            if (widget.pageTitle == 'ACLS-AsystolePEA' ||
-                widget.pageTitle == 'ACLS-VFVT')
-              ElevatedButton(
-                onPressed: () {
-                  goEmergencyPage(context, 'HandTs');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.errorContainer,
-                ),
-                child: Text(
-                  "H's/T's",
-                  style: TextStyle(
-                      color: theme.colorScheme.onErrorContainer, fontSize: 16),
-                ),
-              ),
-            if (widget.pageTitle == 'HandTs')
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.errorContainer,
-                ),
-                child: Text(
-                  "Back",
-                  style: TextStyle(
-                      color: theme.colorScheme.onErrorContainer, fontSize: 16),
-                ),
-              ),
-          ]),
-      drawer: const EmergencyDrawer(),
+          actions: isCardiacPage ? [
+              const MainTimer(),
+              const SizedBox(width: 10,),
+              if (widget.pageTitle != 'HandTs')
+                const HTButton(),
+              const ShowCodeLog()
+          ] : null,),
       body: _emergencyPage,
+    );
+  }
+}
+
+class ShowCodeLog extends StatelessWidget {
+  const ShowCodeLog({
+    super.key,
+  });
+
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    return IconButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const CodeLog();
+          },
+        );
+      },
+      icon: Icon(Icons.history, color: theme.colorScheme.onError),);
+  }
+}
+
+class HTButton extends StatelessWidget {
+  const HTButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return TextButton(
+      onPressed: () {
+        goEmergencyPage(context, 'HandTs');
+      },
+      style: TextButton.styleFrom(
+        side: const BorderSide(color: Colors.white), // Set border color and width
+        padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+        // Other style properties like foregroundColor, backgroundColor, etc.
+      ),
+      child: Text(
+        "H/T",
+        style: TextStyle(
+            color: theme.colorScheme.onError, fontSize: 16),
+      ),
     );
   }
 }

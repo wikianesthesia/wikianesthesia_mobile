@@ -3,7 +3,6 @@ import 'package:sherlock/result.dart';
 import 'package:sherlock/sherlock.dart';
 
 import '../util.dart';
-import './emergency_drawer.dart';
 import './emergency_topics.dart';
 
 class EmergencyHome extends StatefulWidget {
@@ -309,7 +308,6 @@ class _EmergencyHomeState extends State<EmergencyHome> {
         backgroundColor: theme.colorScheme.error,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      drawer: const EmergencyDrawer(),
       drawerEnableOpenDragGesture: true,
       body: Column(
         children: [

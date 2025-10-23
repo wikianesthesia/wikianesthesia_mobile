@@ -28,8 +28,28 @@ class AclsTimers extends _$AclsTimers{
   int _epiGiven = 0;
   int _shocksGiven = 0;
 
+  /// Records interventions and times administered
+  String _log = '';
+
+  static String removeLastLine(String text) {
+    List<String> lines = text.split('\n\n'); // Split the string into a list of lines
+    if (lines.isEmpty) {
+      return ''; // Handle empty string case
+    }
+    lines.removeLast(); // Remove the last line
+    return lines.join('\n\n'); // Join the remaining lines back with newline characters
+  }
+
+  static String twoDigits(int n) {
+    return n.toString().padLeft(2, "0");
+  }
+
+  static String formatTime(DateTime time) {
+    return "${twoDigits(time.hour)}:${twoDigits(time.minute)}:${twoDigits(time.second)}";
+  }
+
   @override
-  Map<String,int> build() {
+  Map<String,dynamic> build() {
     return {
       'epiTime': _epiTimer.elapsedMilliseconds,
       'pulseTime': _pulseTimer.elapsedMilliseconds,
@@ -39,16 +59,19 @@ class AclsTimers extends _$AclsTimers{
       'epiGiven': _epiGiven,
       'shocksGiven': _shocksGiven,
       'running': _mainTimer.isRunning ? 1 : 0,
+      'log': _log,
     };
   }
   
   void startMain() {
     if (!_mainTimer.isRunning) {
+      DateTime now = DateTime.now();
+      _log += _log.isEmpty ? '**${formatTime(now)}**\tCode Started\n\n' : '**${formatTime(now)}**\tCode Resumed\n\n';
       _mainTimer.start();
       _renderTimer = Timer.periodic(const Duration(milliseconds: 250), render);
-      pulseCheck();
-      if (_pulseChecks >= 2) {
-        _pulseChecks --;
+
+      if (_pulseChecks == 0) {
+        pulseCheck();
       }
     }
 
@@ -64,6 +87,9 @@ class AclsTimers extends _$AclsTimers{
       _shockTimer.stop();
 
       _renderTimer.cancel();
+
+      DateTime now = DateTime.now();
+      _log += '**${formatTime(now)}**\tCode Stopped\n\n';
       render(_renderTimer);
     }
   }
@@ -86,31 +112,44 @@ class AclsTimers extends _$AclsTimers{
     _mainTimer.stop();
     _mainTimer.reset();
 
+    _log = '';
+
     render(_renderTimer);
   }
 
   void pulseCheck() {
-    _pulseTimer.reset();
-    _pulseTimer.start();
     _pulseChecks++;
 
     startMain();
+
+    _pulseTimer.reset();
+    _pulseTimer.start();
+
+    DateTime now = DateTime.now();
+    _log += '**${formatTime(now)}**\tPulse Check #$_pulseChecks\n\n';
+
   }
 
   void giveEpi() {
+    startMain();
+
     _epiTimer.reset();
     _epiTimer.start();
     _epiGiven++;
 
-    startMain();
+    DateTime now = DateTime.now();
+    _log += '**${formatTime(now)}**\tEpi #$_epiGiven\n\n';
   }
 
   void giveShock() {
+    startMain();
     _shockTimer.reset();
     _shockTimer.start();
     _shocksGiven++;
 
-    startMain();
+    DateTime now = DateTime.now();
+    _log += '**${formatTime(now)}**\tShock #$_shocksGiven\n\n';
+
   }
 
   void render(Timer timer) {
