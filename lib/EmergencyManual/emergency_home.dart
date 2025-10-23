@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sherlock/result.dart';
 import 'package:sherlock/sherlock.dart';
 
@@ -51,48 +52,39 @@ class _EmergencyHomeState extends State<EmergencyHome> {
   }
 
   void buildSearchBar() {
-    _searchBar = Row(
-      children: [
-        const SizedBox(
-          width: 15.0,
-        ),
-        Expanded(
-          child: TextField(
-            onTapOutside: (event) {
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
-            decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(45.0),
-                  borderSide: const BorderSide(
-                    width: 2.0,
-                    color: Color(0xFFFF0000),
-                  ),
-                ),
-                hintText: 'Search Scenarios',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: IconButton(
-                  // Gives button at end of SearchBar to clear input
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    _controller.clear();
-                    searchTopics('');
-                  },
-                  tooltip: 'Clear',
-                )),
-            onChanged: (String input) {
-              searchTopics(input);
-            },
-            onSubmitted: (String input) {
-              searchTopics(input);
-            },
-            controller: _controller,
+    _searchBar = TextField(
+      onTapOutside: (event) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 10.0),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: const BorderSide(
+              width: 2.0,
+              color: Colors.white,
+            ),
           ),
-        ),
-        const SizedBox(
-          width: 15.0,
-        ),
-      ],
+          hintText: 'Search Scenarios',
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: IconButton(
+            // Gives button at end of SearchBar to clear input
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              _controller.clear();
+              searchTopics('');
+            },
+            tooltip: 'Clear',
+          )),
+      onChanged: (String input) {
+        searchTopics(input);
+      },
+      onSubmitted: (String input) {
+        searchTopics(input);
+      },
+      controller: _controller,
     );
   }
 
@@ -142,7 +134,7 @@ class _EmergencyHomeState extends State<EmergencyHome> {
       List<Widget> aclsButtons = _toBeListed
           .sublist(0, 6)
           .map(
-            (topic) => ACLSCaseButton(
+            (topic) => CaseCardButton(
               onPressed: () {
                 goEmergencyPage(context, topic['pageTitle']);
               },
@@ -207,7 +199,7 @@ class _EmergencyHomeState extends State<EmergencyHome> {
       List<Widget> otherButtons = _toBeListed
           .sublist(6)
           .map(
-            (topic) => CaseButton(
+            (topic) => CaseCardButton(
               onPressed: () {
                 goEmergencyPage(context, topic['pageTitle']);
               },
@@ -216,11 +208,12 @@ class _EmergencyHomeState extends State<EmergencyHome> {
               iconColor: topic['backgroundColor'],
               label: topic['name'],
               labelColor: Colors.black, //topic['iconColor'],
-              showIcon: true,
+              fontSize: 14,
             ),
           )
           .toList();
 
+      int idxDivide = (otherButtons.length / 2).ceil();
       Widget otherGrid = IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -247,9 +240,23 @@ class _EmergencyHomeState extends State<EmergencyHome> {
               ),
             ),
             Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: otherButtons,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: otherButtons.sublist(0, idxDivide),
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: otherButtons.sublist(idxDivide),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -301,20 +308,33 @@ class _EmergencyHomeState extends State<EmergencyHome> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          'Emergency Manual',
-          style: TextStyle(color: theme.colorScheme.onError),
-        ),
+        title: Text('Emergency Manual',
+            style: TextStyle(
+              color: theme.colorScheme.onPrimary,
+            )),
         backgroundColor: theme.colorScheme.error,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      drawerEnableOpenDragGesture: true,
       body: Column(
         children: [
-          const SizedBox(height: 10),
-          _searchBar,
-          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _searchBar,
+          ),
           Expanded(child: _buttonGrid),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 40,
+            color: theme.colorScheme.error,
+            child: const Center(
+              child: Text('\u00a9 Stanford Anesthesia Cognitive Aid Program, 2021',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontStyle: FontStyle.italic,
+                  )),
+            ),
+          )
         ],
       ),
     );
@@ -352,7 +372,7 @@ class CaseButton extends StatelessWidget {
         onPressed();
       },
       title: Text(label, style: const TextStyle(fontSize: 18)),
-      visualDensity: const VisualDensity(vertical: -3),
+      visualDensity: const VisualDensity(vertical: -4),
       minVerticalPadding: 0,
       dense: true,
       //contentPadding: EdgeInsets.zero,
@@ -368,7 +388,7 @@ class CaseButton extends StatelessWidget {
   }
 }
 
-class ACLSCaseButton extends StatelessWidget {
+class CaseCardButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final Function onPressed;
@@ -377,8 +397,10 @@ class ACLSCaseButton extends StatelessWidget {
   final Color labelColor;
 
   final bool showIcon;
+  final double fontSize;
+  final bool bold;
 
-  const ACLSCaseButton({
+  const CaseCardButton({
     // Required Parameters
     super.key,
     required this.onPressed,
@@ -390,20 +412,24 @@ class ACLSCaseButton extends StatelessWidget {
     this.label = '',
     this.labelColor = Colors.black,
     this.showIcon = false,
+    this.fontSize = 16,
+    this.bold = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        onPressed();
-      },
-      child: Card(
+    return Card(
+      clipBehavior: Clip.hardEdge,
+      child: InkWell(
+        enableFeedback: true,
+        onTap: () {
+          onPressed();
+        },
         child: Padding(
-          padding: const EdgeInsets.all(2.0),
+          padding: const EdgeInsets.all(5.0),
           child: Text(
             label,
-            style: const TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: fontSize, fontWeight: bold ? FontWeight.bold : FontWeight.normal),
             textAlign: TextAlign.center,
           ),
         ),
