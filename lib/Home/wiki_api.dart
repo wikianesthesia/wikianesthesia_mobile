@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
@@ -41,14 +42,19 @@ class WikiAPI {
     // Initialize the secure storage
     secureStorage = const FlutterSecureStorage();
 
-    // Read the logged-in state from secure storage
-    String? loggedInState = await secureStorage.read(key: 'loggedIn');
-    if (loggedInState != null) {
-      loggedIn = loggedInState == 'true';
-      if (loggedIn) {
-        // If logged in, read the username
-        userName = await secureStorage.read(key: 'userName') ?? '';
+    try {
+      // Read the logged-in state from secure storage
+      String? loggedInState = await secureStorage.read(key: 'loggedIn') ;
+      if (loggedInState != null) {
+        loggedIn = loggedInState == 'true';
+        if (loggedIn) {
+          // If logged in, read the username
+          userName = await secureStorage.read(key: 'userName') ?? '';
+        }
       }
+    } on PlatformException {
+      // Workaround for https://github.com/mogol/flutter_secure_storage/issues/43
+      await secureStorage.deleteAll();
     }
 
     return this;
