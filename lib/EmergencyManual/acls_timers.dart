@@ -114,7 +114,7 @@ class AclsTimers extends _$AclsTimers{
 
     _log = '';
 
-    render(_renderTimer);
+    state = build();
   }
 
   void pulseCheck() {

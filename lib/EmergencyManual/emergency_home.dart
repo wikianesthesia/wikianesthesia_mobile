@@ -1,5 +1,5 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:sherlock/result.dart';
 import 'package:sherlock/sherlock.dart';
 
@@ -18,8 +18,9 @@ class _EmergencyHomeState extends State<EmergencyHome> {
 
   /// List of Scenarios to display (initialized as every scenario,
   /// but can be replaced by search results)
-  List<Map<String, dynamic>> _toBeListed = emergencyTopics;
+  List<Map<String, dynamic>> _toBeListed = [...emergencyTopics]; //Copy of emergencyTopics
   bool searchResultsPresent = false;
+  late Widget _buttonGrid;
 
   /// SearchBar Widget
   late Widget _searchBar;
@@ -33,16 +34,6 @@ class _EmergencyHomeState extends State<EmergencyHome> {
     'tags': 2,
     'pageTitle': 2,
   });
-
-  /// GridView of TileButtons
-  Widget _buttonGrid = GridView.extent(
-    primary: false,
-    padding: const EdgeInsets.all(20),
-    crossAxisSpacing: 10,
-    mainAxisSpacing: 10,
-    maxCrossAxisExtent: 300,
-    children: const [],
-  );
 
   @override
   void initState() {
@@ -89,19 +80,8 @@ class _EmergencyHomeState extends State<EmergencyHome> {
   }
 
   void generateTileButtons() {
+    _toBeListed.removeWhere((topic) => topic['pageTitle'] == 'HypoxiaDDx'); // Remove HypoxiaDDx from listing since it's hidden
     List<Widget> allButtons = [];
-
-    /// Generates a GridView of TileButtons based on list of scenarios to display
-
-    // _buttonGrid = GridView.count(
-    //   primary: false,
-    //   padding: const EdgeInsets.all(20),
-    //   crossAxisSpacing: 2,
-    //   mainAxisSpacing: 2,
-    //   crossAxisCount: 2,
-    //   childAspectRatio: 3,
-    //   children: allButtons,
-    // );
 
     if (searchResultsPresent) {
       if (_toBeListed.isEmpty) {
@@ -131,153 +111,14 @@ class _EmergencyHomeState extends State<EmergencyHome> {
         );
       }
     } else {
-      List<Widget> aclsButtons = _toBeListed
-          .sublist(0, 6)
-          .map(
-            (topic) => CaseCardButton(
-              onPressed: () {
-                goEmergencyPage(context, topic['pageTitle']);
-              },
-              icon: topic['icon'],
-              backgroundColor: topic['backgroundColor'],
-              iconColor: topic['backgroundColor'],
-              label: topic['name'],
-              labelColor: Colors.black, //topic['iconColor'],
-              showIcon: false,
-            ),
-          )
-          .toList();
-
-      Widget aclsGrid = Container(
-        decoration: const BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: Colors.grey),
-          ),
-        ),
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              RotatedBox(
-                quarterTurns: 3,
-                child: Container(
-                  color: Colors.red,
-                  child: const Text(
-                    'ACLS',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: aclsButtons.sublist(0, 3),
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: aclsButtons.sublist(3),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-
-      List<Widget> otherButtons = _toBeListed
-          .sublist(6)
-          .map(
-            (topic) => CaseCardButton(
-              onPressed: () {
-                goEmergencyPage(context, topic['pageTitle']);
-              },
-              icon: topic['icon'],
-              backgroundColor: topic['backgroundColor'],
-              iconColor: topic['backgroundColor'],
-              label: topic['name'],
-              labelColor: Colors.black, //topic['iconColor'],
-              fontSize: 14,
-            ),
-          )
-          .toList();
-
-      int idxDivide = (otherButtons.length / 2).ceil();
-      Widget otherGrid = IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            RotatedBox(
-              quarterTurns: 3,
-              child: Container(
-                color: Colors.grey,
-                child: const Row(
-                  children: [
-                    Spacer(),
-                    Text(
-                      'Other Scenarios',
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(width: 25),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: otherButtons.sublist(0, idxDivide),
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: otherButtons.sublist(idxDivide),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-
-      _buttonGrid = SingleChildScrollView(
-        child: Column(
-          children: [
-            aclsGrid,
-            otherGrid,
-          ],
-        ),
-      );
+      _buttonGrid = const AllCasesTable();
     }
   }
 
   void searchTopics(String input) async {
     if (input == '') {
       setState(() {
-        _toBeListed = emergencyTopics;
+        _toBeListed = [...emergencyTopics];
         searchResultsPresent = false;
         generateTileButtons();
       });
@@ -308,34 +149,43 @@ class _EmergencyHomeState extends State<EmergencyHome> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Emergency Manual',
-            style: TextStyle(
-              color: theme.colorScheme.onPrimary,
-            )),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 6.0, right: 0.0, bottom: 15, top: 8.0),
+          child: _searchBar,
+        ),
+            //Text('Emergency Manual',
+            //style: TextStyle(
+            //  color: theme.colorScheme.onPrimary,
+            //)),
         backgroundColor: theme.colorScheme.error,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _searchBar,
-          ),
-          Expanded(child: _buttonGrid),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 40,
-            color: theme.colorScheme.error,
-            child: const Center(
-              child: Text('\u00a9 Stanford Anesthesia Cognitive Aid Program, 2021',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontStyle: FontStyle.italic,
-                  )),
-            ),
-          )
-        ],
+      body: SafeArea(
+        top: false,
+        left: false,
+        child: Column(
+          children: [
+            Expanded(child: _buttonGrid),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              color: theme.colorScheme.error,
+              child: const Padding(
+                padding: EdgeInsets.all(4.0),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Center(
+                    child: Text('\u00a9 Stanford Anesthesia Cognitive Aid Program',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontStyle: FontStyle.italic,
+                        )),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -427,13 +277,371 @@ class CaseCardButton extends StatelessWidget {
         },
         child: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: Text(
-            label,
-            style: TextStyle(fontSize: fontSize, fontWeight: bold ? FontWeight.bold : FontWeight.normal),
-            textAlign: TextAlign.center,
+          child: Align(
+            alignment: Alignment.center,
+            child: Text(
+              label,
+              style: TextStyle(fontSize: fontSize, fontWeight: bold ? FontWeight.bold : FontWeight.normal),
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+class CaseTableEntry extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Function onPressed;
+  final Color iconColor;
+  final Color labelColor;
+
+  final bool showIcon;
+  final double fontSize;
+  final bool bold;
+
+  final double? height;
+  final double? width;
+
+  const CaseTableEntry({
+    // Required Parameters
+    super.key,
+    required this.onPressed,
+    required this.icon,
+    required this.iconColor,
+
+    //Optional Parameters
+    this.label = '',
+    this.labelColor = Colors.black,
+    this.showIcon = false,
+    this.fontSize = 16,
+    this.bold = true,
+    this.height,
+    this.width,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return Material(
+    color: theme.canvasColor,
+      child: InkWell(
+        enableFeedback: true,
+        onTap: () {
+          onPressed();
+        },
+        child: SizedBox(
+          height: height,
+          width: width,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  label,
+                  style: TextStyle(fontSize: fontSize, fontWeight: bold ? FontWeight.bold : FontWeight.normal),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CasesTable extends StatelessWidget {
+  final List<Widget> cases;
+  final int columns;
+
+  const CasesTable({super.key, required this.cases, this.columns = 2});
+
+  @override
+  Widget build(BuildContext context) {
+    int numRows = (cases.length / columns).ceil();
+    return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      border: const TableBorder.symmetric(inside: BorderSide(color: Colors.grey),
+                                          outside: BorderSide(color: Colors.grey),),
+      children: [
+        for (int i = 0; i < numRows; i++)
+          TableRow(
+            children: [
+              for (int j = 0; j < columns; j++)
+                (i + j*numRows) < cases.length
+                    ? cases[i + j*numRows]
+                    : const SizedBox
+                        .shrink(),
+            ],
+          ),
+      ],
+    );
+  }
+}
+
+class AllCasesTable extends StatelessWidget {
+  const AllCasesTable({super.key});
+
+
+  @override
+  Widget build(BuildContext context) {
+    List allTopics = [...emergencyTopics];
+    allTopics.removeWhere((topic) => topic['pageTitle'] == 'HypoxiaDDx'); // Remove HypoxiaDDx from listing since it's hidden
+
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        if (kDebugMode) {
+          print('Max Width: ${constraints.maxWidth}');
+          print('Max Height: ${constraints.maxHeight}');
+        }
+        int columns;
+        if (constraints.maxWidth > 600) {
+          columns = 3;
+        } else if (constraints.maxWidth > 400) {
+          columns = 2;
+        } else {
+          columns = 1;
+        }
+
+        if(kDebugMode) {
+          print('Using $columns columns for Cases Table');
+        }
+        int numRows = (allTopics.length / columns).ceil();
+        double height = constraints.minHeight / numRows;
+
+        if (height < 25) {
+          height = 25;
+        }
+
+        if (kDebugMode) {
+          print('Using height $height for ${allTopics.length} Cases Table entries');
+        }
+
+        final List<Widget> allCases = allTopics
+          .map(
+            (topic) => CaseTableEntry(
+              onPressed: () {
+                goEmergencyPage(context, topic['pageTitle']);
+              },
+              icon: topic['icon'],
+              iconColor: topic['backgroundColor'],
+              label: topic['name'],
+              labelColor: Colors.black, //topic['iconColor'],
+              showIcon: false,
+              height: height,
+            ),
+          )
+          .toList();
+
+        return Scrollbar(
+          child: SingleChildScrollView(
+            child: Table(
+              border: const TableBorder.symmetric(inside: BorderSide(color: Colors.grey)),
+              columnWidths: const {
+                0: IntrinsicColumnWidth(),
+              },
+              defaultColumnWidth: const FlexColumnWidth(1),
+              children: [
+                TableRow(
+                  children: [
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: RotatedBox(
+                        quarterTurns: 3,
+                        child: Container(
+                          color: Colors.red,
+                          child: const FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              'ACLS',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    CasesTable(cases: allCases.sublist(0, 6), columns: columns),
+                  ]
+                ),
+                TableRow(
+                  children: [
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: RotatedBox(
+                        quarterTurns: 3,
+                        child: Container(
+                        color: Colors.grey,
+                        child: const Row(
+                          children: [
+                            Spacer(),
+                            Text(
+                              'Other Scenarios',
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 25),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ),
+                    CasesTable(cases: allCases.sublist(6), columns: columns),
+                  ]
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
+}
+
+/*
+List<Widget> aclsButtons = _toBeListed
+          .sublist(0, 6)
+          .map(
+            (topic) => CaseCardButton(
+              onPressed: () {
+                goEmergencyPage(context, topic['pageTitle']);
+              },
+              icon: topic['icon'],
+              backgroundColor: topic['backgroundColor'],
+              iconColor: topic['backgroundColor'],
+              label: topic['name'],
+              labelColor: Colors.black, //topic['iconColor'],
+              showIcon: false,
+            ),
+          )
+          .toList();
+
+      Widget aclsGrid = Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: Colors.grey),
+          ),
+        ),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              RotatedBox(
+                quarterTurns: 3,
+                child: Container(
+                  color: Colors.red,
+                  child: const Text(
+                    'ACLS',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: aclsButtons.sublist(0, 3).map((e) => Expanded(child: e)).toList(),
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: aclsButtons.sublist(3).map((e) => Expanded(child: e)).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      List<Widget> otherButtons = _toBeListed
+          .sublist(6)
+          .map(
+            (topic) => CaseCardButton(
+              onPressed: () {
+                goEmergencyPage(context, topic['pageTitle']);
+              },
+              icon: topic['icon'],
+              backgroundColor: topic['backgroundColor'],
+              iconColor: topic['backgroundColor'],
+              label: topic['name'],
+              labelColor: Colors.black, //topic['iconColor'],
+              fontSize: 14,
+            ),
+          )
+          .toList();
+
+      int idxDivide = (otherButtons.length / 2).ceil();
+      Widget otherGrid = IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            RotatedBox(
+              quarterTurns: 3,
+              child: Container(
+                color: Colors.grey,
+                child: const Row(
+                  children: [
+                    Spacer(),
+                    Text(
+                      'Other Scenarios',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: 25),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: otherButtons.sublist(0, idxDivide).map((e) => Expanded(child: e)).toList(),
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: otherButtons.sublist(idxDivide).map((e) => Expanded(child: e)).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+      */

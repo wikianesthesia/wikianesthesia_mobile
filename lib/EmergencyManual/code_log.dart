@@ -34,7 +34,34 @@ class CodeLog extends ConsumerWidget {
       ),
       actions: [
         TextButton(
-          child: const Text('Reset',),
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Close'),
+        ),
+      ]
+    );
+  }
+}
+
+class ResetTimersLog extends ConsumerWidget {
+  const ResetTimersLog({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Get Log String from Timer Provider
+    final timersState = ref.watch(aclsTimersProvider);
+
+    String logString = timersState['log'];
+
+    if (logString.isEmpty) {
+      logString = 'No events logged.';
+    }
+
+    return AlertDialog(
+      title: const Text('Reset'),
+      content: const Text('Are you sure you want to reset all timers and clear the log?'),
+      actions: [
+        TextButton(
+          child: const Text('Yes',),
           onPressed: () {
             ref.read(aclsTimersProvider.notifier).resetMain();
             Navigator.of(context).pop();
@@ -42,7 +69,7 @@ class CodeLog extends ConsumerWidget {
         ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Close'),
+          child: const Text('No'),
         ),
       ]
     );

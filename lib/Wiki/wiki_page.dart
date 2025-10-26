@@ -139,18 +139,12 @@ class _WikiPageState extends State<WikiPage> {
               ],
         leading: InkWell(
           onTap: () {
-            context.go(
-              '/',
-            );
+            Navigator.pop(context);
             FocusScope.of(context).unfocus();
           },
           child: const Padding(
             padding: EdgeInsets.only(left: 7.0),
-            child: ImageIcon(
-              AssetImage('assets/wikianesthesia_logo.png'),
-              color: Colors.white,
-              size: 16.0,
-            ),
+            child: Icon(Icons.arrow_back, color: Colors.white),
           ),
         ),
       ),

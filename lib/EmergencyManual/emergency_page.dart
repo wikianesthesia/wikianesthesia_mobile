@@ -165,9 +165,11 @@ class _EmergencyPageState extends State<EmergencyPage> {
     return Scaffold(
       appBar: AppBar(
           centerTitle: isCardiacPage ? false : true,
-          title: Text(
-            _barTitle,
-            style: TextStyle(color: theme.colorScheme.onError),
+          title: FittedBox(
+            child: Text(
+              _barTitle,
+              style: TextStyle(color: theme.colorScheme.onError),
+            ),
           ),
           backgroundColor: theme.colorScheme.error,
           leading: InkWell(
@@ -178,13 +180,50 @@ class _EmergencyPageState extends State<EmergencyPage> {
           ),
           actions: isCardiacPage ? [
               const MainTimer(),
-              const SizedBox(width: 10,),
+              const SizedBox(width: 5,),
               if (widget.pageTitle != 'HandTs')
                 const HTButton(),
-              const ShowCodeLog()
+              if (widget.pageTitle != 'HandTs')
+                const SizedBox(width: 5,),
+              const ShowCodeLog(),
+              const SizedBox(width: 5,),
+              const ShowResetTimers(),
           ] : null,),
       body: _emergencyPage,
     );
+  }
+}
+
+class ShowResetTimers extends StatelessWidget {
+  const ShowResetTimers({
+    super.key,
+  });
+
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    
+
+    return IconButton.outlined(
+      style: OutlinedButton.styleFrom(
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8), // Set border radius
+        ),
+        side: const BorderSide(
+          color: Colors.white, // Your desired outline color
+      )),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const ResetTimersLog();
+          },
+        );
+      },
+      icon:Icon(Icons.history, color: theme.colorScheme.onError),);
   }
 }
 
@@ -198,7 +237,17 @@ class ShowCodeLog extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    return IconButton(
+    
+
+    return IconButton.outlined(
+      style: OutlinedButton.styleFrom(
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8), // Set border radius
+        ),
+        side: const BorderSide(
+          color: Colors.white, // Your desired outline color
+      )),
       onPressed: () {
         showDialog(
           context: context,
@@ -207,7 +256,7 @@ class ShowCodeLog extends StatelessWidget {
           },
         );
       },
-      icon: Icon(Icons.history, color: theme.colorScheme.onError),);
+      icon:Icon(Icons.list, color: theme.colorScheme.onError),);
   }
 }
 
@@ -219,17 +268,20 @@ class HTButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return TextButton(
+    return OutlinedButton(
       onPressed: () {
         goEmergencyPage(context, 'HandTs');
       },
       style: TextButton.styleFrom(
+        padding: const EdgeInsets.all(0),
         side: const BorderSide(color: Colors.white), // Set border color and width
-        padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8), // Set border radius
+        ),
         // Other style properties like foregroundColor, backgroundColor, etc.
       ),
       child: Text(
-        "H/T",
+        "Hs/Ts",
         style: TextStyle(
             color: theme.colorScheme.onError, fontSize: 16),
       ),

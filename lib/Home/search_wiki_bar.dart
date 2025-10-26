@@ -63,6 +63,7 @@ class _WikiSearchViewState extends State<WikiSearchView> {
   @override
   Widget build(BuildContext context) {
     return SearchAnchor(
+      isFullScreen: false,
       builder: (BuildContext context, SearchController controller) {
         return SearchBar(
           controller: controller,
@@ -80,6 +81,11 @@ class _WikiSearchViewState extends State<WikiSearchView> {
           },
           leading: const Icon(Icons.search),
           hintText: 'Search WikiAnesthesia',
+          shape: WidgetStatePropertyAll<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0), // Adjust the radius here
+            ),
+          ),
         );
       },
       suggestionsBuilder:

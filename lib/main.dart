@@ -229,11 +229,16 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
 
   static List<Widget> destinations = const <Widget>[
     NavigationDestination(
-      selectedIcon: Icon(
-        Icons.home,
+      selectedIcon: ImageIcon(  
+        AssetImage('assets/wikianesthesia_logo.png'),
         color: Colors.white,
-      ),
-      icon: Icon(Icons.home_outlined),
+        size: 30.0,
+        ),
+      icon: ImageIcon(  
+        AssetImage('assets/wikianesthesia_logo.png'),
+        color: Colors.black,
+        size: 30.0,
+        ),
       label: 'Home',
     ),
     NavigationDestination(

@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(height: 40),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
                     child: WikiSearchView(),
                   ),
                   Spacer(flex: 3),

@@ -55,6 +55,12 @@ class TimerButton extends StatelessWidget {
 
     if (time / 60000 < frequency) {
       return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8), // Set border radius
+          ),
+          // Other style properties like foregroundColor, backgroundColor, etc.
+        ),
         onPressed: onPressed,
         //style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.primary),
         child: child,
@@ -107,12 +113,14 @@ class ShockButton extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final timersState = ref.watch(aclsTimersProvider);
-    return TimerButton(
-      decoration: const Icon(Icons.electric_bolt),
-      onPressed: ref.read(aclsTimersProvider.notifier).giveShock,
-      numTimes: timersState['shocksGiven'] ?? 0,
-      time: timersState['shockTime'] ?? 0,
-      frequency: 2,
+
+    return ElevatedButton(
+        onPressed: ref.read(aclsTimersProvider.notifier).giveShock,
+        //style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.primary),
+        child: Row(children: [
+          const Icon(Icons.electric_bolt),
+          Text(' ${timersState['shocksGiven'] ?? 0}')
+        ]),
     );
   }
 }
@@ -192,18 +200,20 @@ class MainTimer extends ConsumerWidget {
     //   ],
     // );
 
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: Colors.white), // Set border color and width
-        padding: const EdgeInsets.only(left: 8, right: 10, top: 2, bottom: 2),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.only(left: 5, right: 7, top: 2, bottom: 2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8), // Set border radius
+        ),
         // Other style properties like foregroundColor, backgroundColor, etc.
       ),
       onPressed: timersState['running'] == 1 ? ref.read(aclsTimersProvider.notifier).stopMain : ref.read(aclsTimersProvider.notifier).startMain,
       child: Row(
         children: [
-          Icon(timersState['running'] == 1 ? Icons.pause : Icons.play_arrow, color: theme.colorScheme.onError),
+          Icon(timersState['running'] == 1 ? Icons.pause : Icons.play_arrow, color: timersState['running'] == 1 ? Colors.blueGrey : Colors.green[800],),
           const SizedBox(width: 4,),
-          Text(TimerButton.formatTime(timersState['mainTime'] ?? 0), style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
+          Text(TimerButton.formatTime(timersState['mainTime'] ?? 0), style: const TextStyle(fontWeight: FontWeight.bold),),
         ],
       ),
     );

@@ -10,7 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 const List<Map<String, dynamic>> emergencyTopics = [
   {
-    'name': 'Asystole/PEA',
+    'name': 'Asystole / PEA',
     'pageTitle': 'ACLS-AsystolePEA',
     'tags': 'ACLS,Cardiac Arrest,Code Blue',
     'icon': Icons.heart_broken,
@@ -18,7 +18,7 @@ const List<Map<String, dynamic>> emergencyTopics = [
     'iconColor': Colors.white
   },
   {
-    'name': 'VFib/VTach',
+    'name': 'VFib / VTach',
     'pageTitle': 'ACLS-VFVT',
     'tags': 'ACLS Cardiac Arrest Code Blue VT VF',
     'icon': Icons.heart_broken,
@@ -42,7 +42,7 @@ const List<Map<String, dynamic>> emergencyTopics = [
     'iconColor': Colors.white
   },
   {
-    'name': 'Unstable Tach',
+    'name': 'Unstable SVT',
     'pageTitle': 'UnstableTach',
     'tags':
         'ACLS Arrhythmia Fast heart rate hypotension low blood pressure bp tachycardia VT SVT RVR AFib',
@@ -51,7 +51,7 @@ const List<Map<String, dynamic>> emergencyTopics = [
     'iconColor': Colors.white
   },
   {
-    'name': 'Stable Tach',
+    'name': 'Stable SVT',
     'pageTitle': 'StableTach',
     'tags': 'ACLS Arrhythmia Fast heart rate Tachycardia SVT VT AFib RVR',
     'icon': Icons.monitor_heart,
@@ -157,7 +157,7 @@ const List<Map<String, dynamic>> emergencyTopics = [
     'iconColor': Colors.white
   },
   {
-    'name': 'Hypoxemia (Start here)',
+    'name': 'Hypoxemia',
     'pageTitle': 'Hypoxemia',
     'tags': 'Hypoxia low oxygen o2 sat spo2',
     'icon': FontAwesomeIcons.maskVentilator,
