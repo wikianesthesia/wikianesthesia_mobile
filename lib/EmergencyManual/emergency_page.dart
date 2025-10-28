@@ -256,7 +256,7 @@ class ShowCodeLog extends StatelessWidget {
           },
         );
       },
-      icon:Icon(Icons.list, color: theme.colorScheme.onError),);
+      icon:Icon(Icons.edit_square, color: theme.colorScheme.onError),);
   }
 }
 

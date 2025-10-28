@@ -1,4 +1,4 @@
-import 'package:wikianesthesia_mobile/Directory/directory_drawer.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +9,9 @@ import 'package:sherlock/sherlock.dart';
 import 'package:toastification/toastification.dart';
 
 import 'dart:convert';
+
+import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
+import 'package:wikianesthesia_mobile/Wiki/account_widget.dart';
 
 class CodesPage extends StatefulWidget {
   const CodesPage({super.key});
@@ -163,8 +166,10 @@ class _CodesPageState extends State<CodesPage> {
           'Door Codes', style: TextStyle(color: theme.colorScheme.onPrimary),
         ),
         backgroundColor: theme.colorScheme.primary,
+        leading: IconButton(onPressed: () {context.pop();}, icon: Icon(Icons.arrow_back, color: theme.colorScheme.onPrimary),),
+        actions: const [AccountWidget()],
       ),
-      drawer: const DirectoryDrawer(),
+      endDrawer: const HomeDrawer(),
       body: SafeArea(
         left: false,
         child: Column(

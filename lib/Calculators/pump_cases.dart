@@ -1,4 +1,3 @@
-import 'package:wikianesthesia_mobile/Calculators/calculator_drawer.dart';
 import 'package:wikianesthesia_mobile/Calculators/calculator_scaffold.dart';
 import 'package:wikianesthesia_mobile/util.dart';
 

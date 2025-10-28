@@ -213,9 +213,9 @@ class WikiAPI {
   }
 
   /// Searches WikiAnesthesia API
-  Future<List<SearchResult>> search(String query) async {
+  Future<SearchResultList> search(String query) async {
     if (query == '') {
-      return List<SearchResult>.empty();
+      return SearchResultList.empty();
     }
 
     final queryParams = {
@@ -233,9 +233,9 @@ class WikiAPI {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       if (response.data.isEmpty) {
-        return [];
+        return SearchResultList.empty();
       } else {
-        return SearchResult.fromJson(response.data);
+        return fromSearchJson(response.data);
       }
     } else {
       // If the server did not return a 200 OK response,
@@ -243,24 +243,92 @@ class WikiAPI {
       throw Exception('Failed to access WikiAnesthesia API');
     }
   }
+
+  Future<SearchResultList> fromSearchJson(List<dynamic> body) async {
+    /// Generates list of SearchResult items from a JSON returned from WikiAnesthesia
+    List<String> nameList = body[1].cast<String>();
+    List<String> urlList = body[3].cast<String>();
+
+    return SearchResultList(
+      allTitles: nameList,
+      allURLs: urlList,
+    );
+  }
+
+  /// Searches WikiAnesthesia API
+  Future<List<int>> getArticleScores(List<String> titles) async {
+    if (titles.isEmpty) {
+      return List<int>.empty();
+    }
+
+    final queryParams = {
+      'action': 'articlescores',
+      'format': 'json',
+      'asaction': 'getscores',
+      'titles': titles.join('|'),
+      'origin': '*',
+    };
+
+    // Construct the URI for the API request
+    const String endpoint = 'w/api.php';
+    final response = await _dio.get(endpoint, queryParameters: queryParams);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      if (response.data.isEmpty) {
+        return [];
+      } else {
+        Map<String,dynamic> body = response.data;
+        return fromScoreJson(titles, body);
+      }
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to access WikiAnesthesia API');
+    }
+  }
+
+  List<int> fromScoreJson(List<String> titles,Map<String,dynamic> body) {
+    Map<String,dynamic> entries = body['articlescores']['getscores']['result'];
+    
+    List<int> scores = [];
+
+    for (var title in titles) {
+      var entry = entries[title];
+      if (!entry.isEmpty) {
+        scores.add(int.parse(entry['EditorRating']['main']['value'] ?? '-1'));
+      } else {
+        scores.add(-1);
+      }
+    }
+
+    return scores;
+  }
 }
 
 class SearchResult {
   final String title;
   final String url;
+  final int score;
 
-  const SearchResult({required this.title, required this.url});
+  const SearchResult({required this.title, required this.url, required this.score});
+}
 
-  static List<SearchResult> fromJson(List<dynamic> body) {
-    /// Generates list of SearchResult items from a JSON returned from WikiAnesthesia
-    List<dynamic> nameList = body[1];
-    List<dynamic> urlList = body[3];
+class SearchResultList {
+  final List<String> allTitles;
+  final List<String> allURLs;
 
-    return [
-      for (int i = 0; i < nameList.length; i++)
-        SearchResult(title: nameList[i], url: urlList[i])
-    ];
+  const SearchResultList({required this.allTitles, required this.allURLs});
+
+  bool get isEmpty {
+    return allTitles.isEmpty;
   }
+
+  static empty() {
+    return const SearchResultList(allTitles: [], allURLs: []);
+  }
+
 }
 
 @Riverpod(keepAlive: true)

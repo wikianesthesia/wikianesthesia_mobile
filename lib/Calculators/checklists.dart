@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wikianesthesia_mobile/Calculators/UniSpecificChecklists/hopkins_checklists.dart';
-import 'package:wikianesthesia_mobile/Calculators/calculator_drawer.dart';
 import 'package:wikianesthesia_mobile/Calculators/calculator_scaffold.dart';
 import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
 import 'package:wikianesthesia_mobile/util.dart';

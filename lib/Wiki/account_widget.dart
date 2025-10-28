@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
 import 'package:wikianesthesia_mobile/Wiki/practicegroup.dart';
 import 'package:wikianesthesia_mobile/main.dart';
 // import 'package:worker_manager/worker_manager.dart';
@@ -32,8 +30,6 @@ class AccountWidgetState extends ConsumerState<AccountWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final userName = ref.watch(wikiUserNameProvider);
-    final practiceGroups = ref.watch(wikiPracticeGroupsProvider);
 
     return IconButton(
       onPressed: () {

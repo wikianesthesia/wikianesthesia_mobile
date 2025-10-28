@@ -53,15 +53,19 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Column(
                 children: [
                   Spacer(flex: 3),
-                  ImageIcon(
-                    AssetImage('assets/wikianesthesia_logo.png'),
-                    color: Colors.white,
-                    size: 64.0,
-                  ),
-                  SizedBox(height: 40),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
-                    child: WikiSearchView(),
+                  Column(
+                    children: [
+                      ImageIcon(
+                        AssetImage('assets/wikianesthesia_logo.png'),
+                        color: Colors.white,
+                        size: 64.0,
+                      ),
+                      SizedBox(height: 40),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+                        child: WikiSearchView(),
+                      ),
+                    ],
                   ),
                   Spacer(flex: 3),
                 ],

@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
 import 'package:wikianesthesia_mobile/Home/search_wiki_bar.dart';
+import 'package:wikianesthesia_mobile/Wiki/account_widget.dart';
 
 class WikiPage extends StatefulWidget {
   final String url;
@@ -86,6 +88,7 @@ class _WikiPageState extends State<WikiPage> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
+      endDrawer: const HomeDrawer(),
       appBar: AppBar(
         centerTitle: false,
         toolbarHeight: 80,
@@ -135,6 +138,7 @@ class _WikiPageState extends State<WikiPage> {
                     );
                   },
                 ),
+                const AccountWidget(),
               ],
         leading: InkWell(
           onTap: () {

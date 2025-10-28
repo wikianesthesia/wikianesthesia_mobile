@@ -37,7 +37,7 @@ class HomeDrawer extends ConsumerWidget {
         (e) => ExpansionPanelRadio(
           value: e.value,
           canTapOnHeader: true,
-          headerBuilder: (context, isExpanded) => ListTile(title: Text(e.value)),
+          headerBuilder: (context, isExpanded) => ListTile(title: Text(e.value,)),
           body: Column(
             children: [
               ListTile(
@@ -93,6 +93,32 @@ class HomeDrawer extends ConsumerWidget {
           ),
         )
       ).toList();
+    } else {
+      practiceGroupTiles = [
+        ExpansionPanelRadio(
+          value: 'practicegroups',
+          canTapOnHeader: true,
+          headerBuilder: (context, isExpanded) => const ListTile(title: Text('Practice Groups')),
+          body: Column(
+            children: [
+              ListTile(
+                leading: const Icon(FontAwesomeIcons.solidHospital),
+                title: const Text('Practice Groups List'),
+                onTap: () {
+                  goWikiPage(context, 'https://wikianesthesia.org/wiki/Special:PracticeGroups');
+                },
+              ),
+              ListTile(
+                leading: const Icon(FontAwesomeIcons.book),
+                title: const Text('Practice Groups Guide'),
+                onTap: () {
+                  goWikiPage(context, 'https://wikianesthesia.org/wiki/WikiAnesthesia:Practice_groups_guide');
+                },
+              ),
+            ],
+          ),
+        )
+      ];
     }
 
     return SafeArea(
