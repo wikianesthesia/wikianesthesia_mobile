@@ -8,6 +8,7 @@ class CalculatorDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      left: false,
       child: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,

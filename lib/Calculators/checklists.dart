@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wikianesthesia_mobile/Calculators/UniSpecificChecklists/hopkins_checklists.dart';
 import 'package:wikianesthesia_mobile/Calculators/calculator_drawer.dart';
+import 'package:wikianesthesia_mobile/Calculators/calculator_scaffold.dart';
 import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
 import 'package:wikianesthesia_mobile/util.dart';
 
@@ -445,14 +446,9 @@ class CA1Guide extends ConsumerWidget {
       checklists.addAll(practiceGroupSpecificChecklists[dbKey] ?? []);
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Checklists', style: TextStyle(color: Colors.white)),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
-      drawer: const CalculatorDrawer(),
-      body: ListView(
+    return CalculatorScaffold(
+      title: 'Checklists',
+      child: ListView(
         children: checklists,
       ),
     );

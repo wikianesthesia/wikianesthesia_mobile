@@ -32,11 +32,6 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'Home');
 final _emergencyNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'Emergency');
-final _calculatorNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'Calculator');
-final _accountNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'Account');
-final _practicegroupNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'PracticeGroup');
 
 class MyScrollBehavior extends MaterialScrollBehavior {
   @override
@@ -64,98 +59,61 @@ final GoRouter _router = GoRouter(
                     const NoTransitionPage(child: HomeScreen()),
                 routes: [
                   GoRoute(
-                    path: 'about',
-                    builder: (context, state) => const Placeholder(),
-                  ),
-                  GoRoute(
                     name: 'wikipage',
                     path: 'wikipage/:url',
                     builder: (context, state) =>
                         WikiPage(url: state.pathParameters['url']!),
                   ),
-                ],
-              )
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: _emergencyNavigatorKey,
-            routes: [
-              GoRoute(
-                path: '/emergency',
-                pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: EmergencyHome()),
-                routes: [
                   GoRoute(
-                    name: 'emergencypage',
-                    path: 'emergencypage/:pageTitle',
-                    builder: (context, state) => EmergencyPage(
-                        pageTitle: state.pathParameters['pageTitle']!),
-                  )
-                ],
-              )
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: _calculatorNavigatorKey,
-            routes: [
-              GoRoute(
-                path: '/calculator',
-                pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: CalculatorHome()),
-                routes: [
-                  GoRoute(
-                    path: 'bodycomp',
-                    builder: (context, state) => const DemographicsPage(),
-                  ),
-                  GoRoute(
-                    path: 'equipment',
-                    builder: (context, state) => const EquipmentPage(),
-                  ),
-                  GoRoute(
-                    path: 'fluids',
-                    builder: (context, state) => const FluidsPage(),
-                  ),
-                  GoRoute(
-                    path: 'insulin',
-                    builder: (context, state) => const InsulinPage(),
-                  ),
-                  GoRoute(
-                    path: 'ca1',
-                    builder: (context, state) => const CA1Guide(),
-                  ),
-                  GoRoute(
-                    path: 'pump',
-                    builder: (context, state) => const PumpCaseGuide(),
-                  ),
-                  GoRoute(
-                    path: 'drugs',
-                    builder: (context, state) => const DrugsPage(),
+                    path: '/calculator',
+                    pageBuilder: (context, state) =>
+                        const NoTransitionPage(child: CalculatorHome()),
+                    routes: [
+                      GoRoute(
+                        path: 'bodycomp',
+                        builder: (context, state) => const DemographicsPage(),
+                      ),
+                      GoRoute(
+                        path: 'equipment',
+                        builder: (context, state) => const EquipmentPage(),
+                      ),
+                      GoRoute(
+                        path: 'fluids',
+                        builder: (context, state) => const FluidsPage(),
+                      ),
+                      GoRoute(
+                        path: 'insulin',
+                        builder: (context, state) => const InsulinPage(),
+                      ),
+                      GoRoute(
+                        path: 'ca1',
+                        builder: (context, state) => const CA1Guide(),
+                      ),
+                      GoRoute(
+                        path: 'pump',
+                        builder: (context, state) => const PumpCaseGuide(),
+                      ),
+                      GoRoute(
+                        path: 'drugs',
+                        builder: (context, state) => const DrugsPage(),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: _accountNavigatorKey,
-            routes: [
               GoRoute(
-                  path: '/account',
-                  builder: (context, state) => const AccountHome(),
-                  routes: [
-                    GoRoute(
-                      path: 'login',
-                      builder: (context, state) => const LoginPage(),
-                    ),
-                    GoRoute(
-                      path: 'logout',
-                      builder: (context, state) => const LogoutPage(),
-                    ),
-                  ]),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: _practicegroupNavigatorKey,
-            routes: [
+                path: '/account',
+                builder: (context, state) => const AccountHome(),
+                routes: [
+                  GoRoute(
+                    path: 'login',
+                    builder: (context, state) => const LoginPage(),
+                  ),
+                  GoRoute(
+                    path: 'logout',
+                    builder: (context, state) => const LogoutPage(),
+                  ),
+                ]),
               GoRoute(
                 path: '/practicegroup',
                 builder: (context, state) => const PracticeGroupHome(),
@@ -179,7 +137,25 @@ final GoRouter _router = GoRouter(
                 ],
               ),
             ],
-          )
+          ),
+          StatefulShellBranch(
+            navigatorKey: _emergencyNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/emergency',
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: EmergencyHome()),
+                routes: [
+                  GoRoute(
+                    name: 'emergencypage',
+                    path: 'emergencypage/:pageTitle',
+                    builder: (context, state) => EmergencyPage(
+                        pageTitle: state.pathParameters['pageTitle']!),
+                  )
+                ],
+              )
+            ],
+          ),
         ])
   ],
 );
@@ -249,30 +225,6 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
       icon: Icon(Icons.emergency_outlined),
       label: 'Emergency',
     ),
-    NavigationDestination(
-      selectedIcon: Icon(
-        Icons.construction,
-        color: Colors.white,
-      ),
-      icon: Icon(Icons.construction_outlined),
-      label: 'Tools',
-    ),
-    NavigationDestination(
-      selectedIcon: Icon(
-        Icons.person,
-        color: Colors.white,
-      ),
-      icon: Icon(Icons.person_outlined),
-      label: 'Account',
-    ),
-    NavigationDestination(
-      selectedIcon: Icon(
-        Icons.group,
-        color: Colors.white,
-      ),
-      icon: Icon(Icons.group_outlined),
-      label: 'Group',
-    ),
   ];
 
   static List<NavigationRailDestination> railDestinations =
@@ -293,30 +245,6 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
       icon: Icon(Icons.emergency_outlined),
       label: Text('Emergency'),
     ),
-    NavigationRailDestination(
-      selectedIcon: Icon(
-        Icons.construction,
-        color: Colors.white,
-      ),
-      icon: Icon(Icons.construction_outlined),
-      label: Text('Tools'),
-    ),
-    NavigationRailDestination(
-      selectedIcon: Icon(
-        Icons.person,
-        color: Colors.white,
-      ),
-      icon: Icon(Icons.person_outlined),
-      label: Text('Account'),
-    ),
-    NavigationRailDestination(
-      selectedIcon: Icon(
-        Icons.group,
-        color: Colors.white,
-      ),
-      icon: Icon(Icons.group_outlined),
-      label: Text('Group'),
-    )
   ];
 
   void _gobranch(int index) {
@@ -351,7 +279,7 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
         indicatorColor: primaryColor,
         selectedIndex: navigationShell.currentIndex,
         destinations:
-            hasPracticeGroups ? destinations : destinations.sublist(0, 4),
+            destinations,
       ),
       body: navigationShell,
     );
@@ -362,9 +290,7 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
         body: Row(
       children: [
         NavigationRail(
-          destinations: hasPracticeGroups
-              ? railDestinations
-              : railDestinations.sublist(0, 4),
+          destinations: railDestinations,
           selectedIndex: navigationShell.currentIndex,
           indicatorColor: primaryColor,
           onDestinationSelected: _gobranch,

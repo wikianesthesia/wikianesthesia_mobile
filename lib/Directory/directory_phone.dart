@@ -176,6 +176,7 @@ class _PhonePageState extends State<PhonePage> {
       ),
       drawer: const DirectoryDrawer(),
       body: SafeArea(
+        left: false,
         child: Column(
         children: [
           const SizedBox(height: 10),

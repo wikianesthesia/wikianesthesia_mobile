@@ -20,6 +20,20 @@ final wikiUserNameProvider = NotifierProvider<WikiUserName, String>.internal(
 );
 
 typedef _$WikiUserName = Notifier<String>;
+String _$wikiFullNameHash() => r'f2770dfcde75ab601f73e3cd2e44d9547eb2eee0';
+
+/// See also [WikiFullName].
+@ProviderFor(WikiFullName)
+final wikiFullNameProvider = NotifierProvider<WikiFullName, String>.internal(
+  WikiFullName.new,
+  name: r'wikiFullNameProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$wikiFullNameHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$WikiFullName = Notifier<String>;
 String _$wikiPracticeGroupsHash() =>
     r'7e90b69bb2c59987011770525442483b18b0f60a';
 

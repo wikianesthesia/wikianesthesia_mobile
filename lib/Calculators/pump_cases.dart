@@ -1,4 +1,5 @@
 import 'package:wikianesthesia_mobile/Calculators/calculator_drawer.dart';
+import 'package:wikianesthesia_mobile/Calculators/calculator_scaffold.dart';
 import 'package:wikianesthesia_mobile/util.dart';
 
 import 'package:flutter/material.dart';
@@ -458,15 +459,9 @@ class PumpCaseGuide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pump Case Guide',
-            style: TextStyle(color: Colors.white)),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
-      drawer: const CalculatorDrawer(),
-      body: ListView(
+    return CalculatorScaffold(
+      title: 'Pump Case Guide',
+      child: ListView(
         children: const [
           PreOpOrders(),
           Setup(),

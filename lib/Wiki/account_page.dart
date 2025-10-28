@@ -92,7 +92,7 @@ class AccountHome extends ConsumerWidget {
       ),
       TileButton(
         onPressed: () {
-          context.go('/account/logout');
+          context.push('/account/logout');
         },
         icon: Icons.logout,
         label: 'Logout',
@@ -112,6 +112,7 @@ class AccountHome extends ConsumerWidget {
         backgroundColor: theme.colorScheme.primary,
       ),
       body: SafeArea(
+        left: false,
           child: GridView.extent(
         maxCrossAxisExtent: 300,
         mainAxisSpacing: 10,
@@ -122,7 +123,7 @@ class AccountHome extends ConsumerWidget {
             ? <Widget>[
                 TileButton(
                   onPressed: () {
-                    context.go('/account/login');
+                    context.push('/account/login');
                   },
                   icon: Icons.login,
                   label: 'Login',

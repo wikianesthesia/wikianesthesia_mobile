@@ -94,6 +94,7 @@ class PracticeGroupPage extends ConsumerWidget {
         backgroundColor: theme.colorScheme.primary,
       ),
       body: SafeArea(
+        left: false,
           child: GridView.extent(
         maxCrossAxisExtent: 300,
         mainAxisSpacing: 10,

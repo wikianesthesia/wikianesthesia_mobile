@@ -21,7 +21,7 @@ class CalculatorHome extends StatelessWidget {
             children: <Widget>[
               TileButton(
                 onPressed: () {
-                  context.go('/calculator/bodycomp');
+                  context.push('/calculator/bodycomp');
                 },
                 icon: Icons.accessibility_new,
                 label: 'Body Weights',
@@ -31,7 +31,7 @@ class CalculatorHome extends StatelessWidget {
               ),
               TileButton(
                 onPressed: () {
-                  context.go('/calculator/equipment');
+                  context.push('/calculator/equipment');
                 },
                 icon: Icons.construction,
                 label: 'Equipment',
@@ -41,7 +41,7 @@ class CalculatorHome extends StatelessWidget {
               ),
               TileButton(
                 onPressed: () {
-                  context.go('/calculator/drugs');
+                  context.push('/calculator/drugs');
                 },
                 icon: Icons.medication,
                 label: 'Drugs',
@@ -51,7 +51,7 @@ class CalculatorHome extends StatelessWidget {
               ),
               TileButton(
                 onPressed: () {
-                  context.go('/calculator/fluids');
+                  context.push('/calculator/fluids');
                 },
                 icon: Icons.water_drop,
                 label: 'Fluids/Blood',
@@ -61,7 +61,7 @@ class CalculatorHome extends StatelessWidget {
               ),
               TileButton(
                 onPressed: () {
-                  context.go('/calculator/insulin');
+                  context.push('/calculator/insulin');
                 },
                 icon: FontAwesomeIcons.syringe,
                 label: 'Insulin',
@@ -71,7 +71,7 @@ class CalculatorHome extends StatelessWidget {
               ),
               TileButton(
                 onPressed: () {
-                  context.go('/calculator/ca1');
+                  context.push('/calculator/ca1');
                 },
                 icon: Icons.checklist,
                 label: 'Checklists',
@@ -81,7 +81,7 @@ class CalculatorHome extends StatelessWidget {
               ),
               TileButton(
                 onPressed: () {
-                  context.go('/calculator/pump');
+                  context.push('/calculator/pump');
                 },
                 icon: Icons.favorite,
                 label: 'Pump Cases',

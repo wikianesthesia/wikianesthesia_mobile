@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'calculator_drawer.dart';
+import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
+import 'package:wikianesthesia_mobile/Wiki/account_widget.dart';
 
 class CalculatorScaffold extends StatelessWidget {
   const CalculatorScaffold(
@@ -19,11 +20,14 @@ class CalculatorScaffold extends StatelessWidget {
         ),
         backgroundColor: theme.colorScheme.primary,
         iconTheme: const IconThemeData(color: Colors.white),
+        leading: IconButton(icon: const Icon(Icons.arrow_back),onPressed: () {
+          Navigator.pop(context);
+        },),
+        actions: const [AccountWidget()],
       ),
-      drawer: const CalculatorDrawer(),
-      drawerEdgeDragWidth: MediaQuery.of(context).size.width,
-      drawerEnableOpenDragGesture: true,
-      body: SafeArea(child: child),
+      endDrawer: const HomeDrawer(),
+      drawerEnableOpenDragGesture: true, 
+      body: SafeArea(left: false, child: child),
     );
   }
 }

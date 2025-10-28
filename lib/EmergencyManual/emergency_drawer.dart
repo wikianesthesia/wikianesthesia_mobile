@@ -33,6 +33,7 @@ class EmergencyDrawer extends StatelessWidget {
     listButtons.addAll(allTopics);
 
     return SafeArea(
+      left: false,
       child: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,

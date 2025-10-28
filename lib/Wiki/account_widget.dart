@@ -11,24 +11,22 @@ class AccountWidget extends ConsumerStatefulWidget {
   const AccountWidget({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AccountWidgetState();
+  ConsumerState<ConsumerStatefulWidget> createState() => AccountWidgetState();
 }
 
-class _AccountWidgetState extends ConsumerState<AccountWidget> {
+class AccountWidgetState extends ConsumerState<AccountWidget> {
   final PracticeGroupFinder practiceGroupFinder = PracticeGroupFinder();
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
 
     wikiAPI.loadUsername(ref);
-
+    wikiAPI.loadPracticeGroups(ref);
     practiceGroupFinder.init(ref);
 
-    // TODO: Make it such that this runs in the background and does not block UI
     if (wikiAPI.userName.isNotEmpty) {
-      practiceGroupFinder.start(wikiAPI
-          .userName); // Start the headless webview to fetch practice groups
+      practiceGroupFinder.start(wikiAPI.userName); // Start the headless webview to fetch practice groups
     }
   }
 
@@ -37,52 +35,60 @@ class _AccountWidgetState extends ConsumerState<AccountWidget> {
     final userName = ref.watch(wikiUserNameProvider);
     final practiceGroups = ref.watch(wikiPracticeGroupsProvider);
 
-    if (userName == '') {
-      return OutlinedButton(
-        onPressed: () => context.push('/account/login'),
-        style: ButtonStyle(
-          foregroundColor: WidgetStateProperty.all(Colors.white),
-          side: WidgetStateProperty.all(const BorderSide(color: Colors.white)),
-        ),
-        child: const Text('Log in/Register'),
-      );
-    } else {
-      return PopupMenuButton(
-        itemBuilder: (context) {
-          return <PopupMenuEntry>[
-            PopupMenuItem(
-              child: Text('Logged in: $userName'),
-            ),
-            const PopupMenuDivider(),
-            PopupMenuItem(
-              child: const Text('Account'),
-              onTap: () {
-                context.push('/account');
-              },
-            ),
-            if (practiceGroups.isNotEmpty)
-              PopupMenuItem(
-                child: Text('Practice Group: ${practiceGroups[0][0]}'),
-                onTap: () {
-                  context.push('/practice_group');
-                },
-              ),
-            PopupMenuItem(
-              child: const Text('Log out'),
-              onTap: () {
-                context.push('/account/logout');
-              },
-            ),
-          ];
-        },
-        child: CircleAvatar(
-          backgroundColor: Colors.white,
-          child: Text(
-            userName.isNotEmpty ? userName[0].toUpperCase() : '?',
-            style: const TextStyle(color: Colors.black),
-          ),
-        ),
-      );
-    }
+    return IconButton(
+      onPressed: () {
+        Scaffold.of(context).openEndDrawer();
+      },
+      icon: const Icon(Icons.menu, color: Colors.white)
+    );
   }
+
+  //   if (userName == '') {
+  //     return OutlinedButton(
+  //       onPressed: () => context.push('/account/login'),
+  //       style: ButtonStyle(
+  //         foregroundColor: WidgetStateProperty.all(Colors.white),
+  //         side: WidgetStateProperty.all(const BorderSide(color: Colors.white)),
+  //       ),
+  //       child: const Text('Log in/Register'),
+  //     );
+  //   } else {
+  //     return PopupMenuButton(
+  //       itemBuilder: (context) {
+  //         return <PopupMenuEntry>[
+  //           PopupMenuItem(
+  //             child: Text('Logged in: $userName'),
+  //           ),
+  //           const PopupMenuDivider(),
+  //           PopupMenuItem(
+  //             child: const Text('Account'),
+  //             onTap: () {
+  //               context.push('/account');
+  //             },
+  //           ),
+  //           if (practiceGroups.isNotEmpty)
+  //             PopupMenuItem(
+  //               child: Text('Practice Group: ${practiceGroups[0][0]}'),
+  //               onTap: () {
+  //                 context.push('/practice_group');
+  //               },
+  //             ),
+  //           PopupMenuItem(
+  //             child: const Text('Log out'),
+  //             onTap: () {
+  //               context.push('/account/logout');
+  //             },
+  //           ),
+  //         ];
+  //       },
+  //       child: CircleAvatar(
+  //         backgroundColor: Colors.white,
+  //         child: Text(
+  //           userName.isNotEmpty ? userName[0].toUpperCase() : '?',
+  //           style: const TextStyle(color: Colors.black),
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
 }

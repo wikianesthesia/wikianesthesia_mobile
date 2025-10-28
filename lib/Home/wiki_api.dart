@@ -27,6 +27,7 @@ class WikiAPI {
   late final FlutterSecureStorage secureStorage;
   late bool loggedIn = false;
   String userName = '';
+  String fullName = '';
 
   List<List<String>> practiceGroups = [];
 
@@ -50,6 +51,7 @@ class WikiAPI {
         if (loggedIn) {
           // If logged in, read the username
           userName = await secureStorage.read(key: 'userName') ?? '';
+          fullName = await secureStorage.read(key: 'fullName') ?? '';
         }
       }
     } on PlatformException {
@@ -81,6 +83,9 @@ class WikiAPI {
     userName = await secureStorage.read(key: 'userName') ?? '';
     // Update the Riverpod provider
     ref.read(wikiUserNameProvider.notifier).setUserName(userName);
+
+    fullName = await secureStorage.read(key: 'fullName') ?? '';
+    ref.read(wikiFullNameProvider.notifier).setUserName(fullName);
   }
 
   void clearCookies(WidgetRef ref) async {
@@ -93,9 +98,11 @@ class WikiAPI {
     secureStorage.write(key: 'practiceGroups', value: '');
     secureStorage.write(key: 'practiceGroupsLoaded', value: 'false');
     secureStorage.write(key: 'practiceGroupsLastUpdated', value: '');
+    secureStorage.write(key: 'fullName', value: '');
     // Update the Riverpod provider
     ref.read(wikiUserNameProvider.notifier).setUserName('');
     ref.read(wikiPracticeGroupsProvider.notifier).setPracticeGroups([]);
+    ref.read(wikiFullNameProvider.notifier).setUserName('');
   }
 
   void saveCookies(List<io.Cookie> ioCookies, String userName) async {
@@ -152,7 +159,7 @@ class WikiAPI {
 
   /// Scrapes all of user's Practice Groups from WikiAnesthesia.
   /// Returns as List of List of Strings. First List is the dbkey, second is the shortname, third is the full name.
-  List<List<String>> getPracticeGroups(String html, var notifier) {
+  List<List<String>> getPracticeGroups(String html, var notifierPracticeGroup, var notifierFullName) {
     // Use RegExp to find practice groups in the HTML file of the user profile
     RegExp expSpan = RegExp(
         r'<span data-dbkey="(.*)" data-shortname="(.*)".*>(.*)<\/span>',
@@ -165,6 +172,20 @@ class WikiAPI {
           .toList();
     } else {
       practiceGroups = []; // Return empty list if no practice groups found
+    }
+
+    // Use RegEx to find full name in the HTML file of the user profile
+    expSpan = RegExp(
+        r'<title>(.*) - WikiAnesthesia<\/title>',
+        multiLine: true);
+    matches = expSpan.allMatches(html);
+
+    String fullName = '';
+    if (matches.isNotEmpty) {
+      fullName = matches.first.group(1) ?? '';
+      notifierFullName.setUserName(fullName);
+    } else {
+      notifierFullName.setUserName(''); // Return empty string if no full name found
     }
 
     // Save Practice Groups to secure storage
@@ -183,8 +204,10 @@ class WikiAPI {
       value: DateTime.now().toIso8601String(),
     );
 
+    secureStorage.write(key: 'fullName', value: fullName);
+
     // Update the Riverpod provider
-    notifier.setPracticeGroups(practiceGroups);
+    notifierPracticeGroup.setPracticeGroups(practiceGroups);
 
     return practiceGroups;
   }
@@ -242,6 +265,20 @@ class SearchResult {
 
 @Riverpod(keepAlive: true)
 class WikiUserName extends _$WikiUserName {
+  @override
+  String build() {
+    // Initialize with an empty string or a default value
+    return '';
+  }
+
+  void setUserName(String name) {
+    // Update the state with the new username
+    state = name;
+  }
+}
+
+@Riverpod(keepAlive: true)
+class WikiFullName extends _$WikiFullName {
   @override
   String build() {
     // Initialize with an empty string or a default value

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:wikianesthesia_mobile/Home/search_wiki_bar.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
 import 'package:wikianesthesia_mobile/main.dart';
@@ -95,69 +94,20 @@ class _LogoutPageState extends ConsumerState<LogoutPage> {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
         appBar: AppBar(
-          centerTitle: false,
+          centerTitle: true,
           toolbarHeight: 80,
-          title: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 20.0),
-            child: WikiSearchView(),
-          ),
+          title: Text('Log Out', style: TextStyle(color: theme.colorScheme.onPrimary)),
           titleSpacing: 8.0,
           backgroundColor: theme.colorScheme.primary,
-          actions: kIsWeb
-              ? null
-              : [
-                  FutureBuilder<bool>(
-                    future:
-                        webViewController?.canGoBack() ?? Future.value(false),
-                    builder: (context, snapshot) {
-                      final canGoBack = snapshot.data ?? false;
-                      return IconButton(
-                        icon: const Icon(Icons.arrow_back_ios),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        color: Colors.white,
-                        disabledColor: Colors.grey,
-                        onPressed: canGoBack
-                            ? () {
-                                webViewController?.goBack();
-                              }
-                            : null,
-                      );
-                    },
-                  ),
-                  FutureBuilder<bool>(
-                    future: webViewController?.canGoForward() ??
-                        Future.value(false),
-                    builder: (context, snapshot) {
-                      final canGoBack = snapshot.data ?? false;
-                      return IconButton(
-                        icon: const Icon(Icons.arrow_forward_ios),
-                        color: Colors.white,
-                        disabledColor: Colors.grey,
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        onPressed: canGoBack
-                            ? () {
-                                webViewController?.goForward();
-                              }
-                            : null,
-                      );
-                    },
-                  ),
-                ],
           leading: InkWell(
             onTap: () {
-              context.go(
-                '/',
-              );
-              FocusScope.of(context).unfocus();
+              context.go('/');
             },
             child: const Padding(
               padding: EdgeInsets.only(left: 7.0),
-              child: ImageIcon(
-                AssetImage('assets/wikianesthesia_logo.png'),
+              child: Icon(
+                Icons.arrow_back,
                 color: Colors.white,
-                size: 16.0,
               ),
             ),
           ),
@@ -191,7 +141,7 @@ class _LogoutPageState extends ConsumerState<LogoutPage> {
                     print('User logged out successfully: $url');
                   }
                   clearCookies(); // Clear cookies on logout
-                  Navigator.pop(context);
+                  context.go('/');
                 }
 
                 removeHeaderFooter(controller);

@@ -6,7 +6,7 @@ part of 'acls_timers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$aclsTimersHash() => r'7583a79a494b79fc6c8d618e1155cde190fe36e4';
+String _$aclsTimersHash() => r'e74d38f1fb585930df22c9aa376d80fd70c200fc';
 
 /// See also [AclsTimers].
 @ProviderFor(AclsTimers)

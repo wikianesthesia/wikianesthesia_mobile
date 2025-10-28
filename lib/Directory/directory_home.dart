@@ -17,6 +17,7 @@ class DirectoryHome extends StatelessWidget {
         backgroundColor: theme.colorScheme.primary,
       ),
       body: SafeArea(
+        left: false,
         child: GridView.extent(
           maxCrossAxisExtent: 300,
           mainAxisSpacing: 10,
@@ -25,7 +26,7 @@ class DirectoryHome extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           children: <Widget>[
             TileButton(
-              onPressed: () {context.go('/directory/codes');},
+              onPressed: () {context.push('/directory/codes');},
               icon: Icons.key,
               label: 'Codes',
               backgroundColor: theme.colorScheme.error,
@@ -33,7 +34,7 @@ class DirectoryHome extends StatelessWidget {
               labelColor: theme.colorScheme.onError,
             ),
             TileButton(
-              onPressed: () {context.go('/directory/phone');},
+              onPressed: () {context.push('/directory/phone');},
               icon: Icons.phone,
               label: 'Phone Numbers',
               backgroundColor: theme.colorScheme.primary,

@@ -56,11 +56,12 @@ class TimerButton extends StatelessWidget {
     if (time / 60000 < frequency) {
       return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8), // Set border radius
-          ),
-          // Other style properties like foregroundColor, backgroundColor, etc.
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: Colors.grey, width: 1), // Set border color and width
+          borderRadius: BorderRadius.circular(8), // Set border radius
         ),
+        // Other style properties like foregroundColor, backgroundColor, etc.
+      ),
         onPressed: onPressed,
         //style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.primary),
         child: child,
@@ -115,12 +116,19 @@ class ShockButton extends ConsumerWidget{
     final timersState = ref.watch(aclsTimersProvider);
 
     return ElevatedButton(
-        onPressed: ref.read(aclsTimersProvider.notifier).giveShock,
-        //style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.primary),
-        child: Row(children: [
-          const Icon(Icons.electric_bolt),
-          Text(' ${timersState['shocksGiven'] ?? 0}')
-        ]),
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: Colors.grey, width: 1), // Set border color and width
+          borderRadius: BorderRadius.circular(8), // Set border radius
+        ),
+        // Other style properties like foregroundColor, backgroundColor, etc.
+      ),
+      onPressed: ref.read(aclsTimersProvider.notifier).giveShock,
+      //style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.primary),
+      child: Row(children: [
+        const Icon(Icons.electric_bolt),
+        Text(' ${timersState['shocksGiven'] ?? 0}')
+      ]),
     );
   }
 }
@@ -167,7 +175,6 @@ class MainTimer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final timersState = ref.watch(aclsTimersProvider);
-    final ThemeData theme = Theme.of(context);
 
     // ElevatedButton startStop = ElevatedButton(
     //   onPressed: timersState['running'] == 1 ? ref.read(aclsTimersProvider.notifier).stopMain : ref.read(aclsTimersProvider.notifier).startMain,

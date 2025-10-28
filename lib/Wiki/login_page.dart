@@ -218,7 +218,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     print('User logged in successfully: $url');
                   }
                   await saveCookies(); // Save cookies after login
-                  Navigator.pop(context);
+                  context.go('/');
                 }
 
                 removeHeaderFooter(controller);

@@ -166,6 +166,7 @@ class _CodesPageState extends State<CodesPage> {
       ),
       drawer: const DirectoryDrawer(),
       body: SafeArea(
+        left: false,
         child: Column(
         children: [
           const SizedBox(height: 10),

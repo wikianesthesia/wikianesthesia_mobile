@@ -8,14 +8,19 @@ import 'package:wikianesthesia_mobile/main.dart';
 class PracticeGroupFinder {
   InAppWebViewController? webViewController;
   String url = "";
-  late Notifier notifier;
+  late WidgetRef ref;
+  late Notifier notifierPracticeGroup;
+  late Notifier notifierFullName;
 
-  void init(WidgetRef ref) {
-    notifier = ref.read(wikiPracticeGroupsProvider.notifier);
+  void init(WidgetRef passedRef) {
+    ref = passedRef;
+    notifierPracticeGroup = ref.read(wikiPracticeGroupsProvider.notifier);
+    notifierFullName = ref.read(wikiFullNameProvider.notifier);
   }
 
   Future<void> start(String userName) async {
-    // TODO: If practice groups already loaded, skip
+    await wikiAPI.loadPracticeGroups(ref);
+    
     if (wikiAPI.practiceGroups.isNotEmpty) {
       if (kDebugMode) {
         print('Practice groups already loaded.');
@@ -50,7 +55,7 @@ class PracticeGroupFinder {
       onLoadStop: (controller, url) async {
         String html = await controller.evaluateJavascript(
             source: "document.documentElement.outerHTML;");
-        wikiAPI.getPracticeGroups(html, notifier);
+        wikiAPI.getPracticeGroups(html, notifierPracticeGroup, notifierFullName);
       },
     );
 
