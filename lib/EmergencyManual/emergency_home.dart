@@ -403,7 +403,7 @@ class AllCasesTable extends StatelessWidget {
         int columns;
         if (constraints.maxWidth > 600) {
           columns = 3;
-        } else if (constraints.maxWidth > 400) {
+        } else if (constraints.maxWidth > 250) {
           columns = 2;
         } else {
           columns = 1;
