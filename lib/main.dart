@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:wikianesthesia_mobile/Calculators/Drugs/drug_calcs.dart';
+import 'package:wikianesthesia_mobile/Calculators/calc_page.dart';
 import 'package:wikianesthesia_mobile/Calculators/calculator_home.dart';
 import 'package:wikianesthesia_mobile/Calculators/checklists.dart';
 import 'package:wikianesthesia_mobile/Calculators/fluids.dart';
@@ -14,7 +16,7 @@ import 'package:toastification/toastification.dart';
 
 import 'package:wikianesthesia_mobile/EmergencyManual/emergency_home.dart';
 import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
-import 'package:wikianesthesia_mobile/Wiki/account_page.dart';
+import 'package:wikianesthesia_mobile/Wiki/account_home.dart';
 import 'package:wikianesthesia_mobile/Wiki/login_page.dart';
 import 'package:wikianesthesia_mobile/Wiki/logout_page.dart';
 import 'package:wikianesthesia_mobile/Wiki/practicegroup_home.dart';
@@ -70,6 +72,12 @@ final GoRouter _router = GoRouter(
                         const NoTransitionPage(child: CalculatorHome()),
                     routes: [
                       GoRoute(
+                        name: 'calcpage',
+                        path: 'calcpage/:url',
+                        builder: (context, state) =>
+                            CalcPage(url: state.pathParameters['url']!),
+                      ),
+                      GoRoute(
                         path: 'bodycomp',
                         builder: (context, state) => const DemographicsPage(),
                       ),
@@ -105,6 +113,12 @@ final GoRouter _router = GoRouter(
                 path: '/account',
                 builder: (context, state) => const AccountHome(),
                 routes: [
+                  GoRoute(
+                    name: 'accountpage',
+                    path: 'accountpage/:url',
+                    builder: (context, state) =>
+                        WikiPage(url: state.pathParameters['url']!),
+                  ),
                   GoRoute(
                     path: 'login',
                     builder: (context, state) => const LoginPage(),
@@ -223,7 +237,23 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
         color: Colors.white,
       ),
       icon: Icon(Icons.emergency_outlined),
-      label: 'Emergency',
+      label: 'Emergencies',
+    ),
+    NavigationDestination(
+      selectedIcon: Icon(
+        Icons.calculate,
+        color: Colors.white,
+      ),
+      icon: Icon(Icons.calculate_outlined),
+      label: 'Calculators',
+    ),
+    NavigationDestination(
+      selectedIcon: Icon(
+        Icons.person,
+        color: Colors.white,
+      ),
+      icon: Icon(Icons.person_outline),
+      label: 'Account',
     ),
   ];
 
@@ -243,41 +273,84 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
         color: Colors.white,
       ),
       icon: Icon(Icons.emergency_outlined),
-      label: Text('Emergency'),
+      label: Text('Emergencies'),
     ),
+    NavigationRailDestination(
+      selectedIcon: Icon(
+        Icons.calculate,
+        color: Colors.white,
+      ),
+      icon: Icon(Icons.calculate_outlined),
+      label: Text('Calculators'),
+    ),
+    NavigationRailDestination(
+      selectedIcon: Icon(
+        Icons.person,
+        color: Colors.white,
+      ),
+      icon: Icon(Icons.person_outline),
+      label: Text('Account'),
+    )
   ];
 
-  void _gobranch(int index) {
+  void _gobranch(int index, BuildContext context) {
     /// Defines which main page to set the app to
-
+    /// 
     // Use initialLocation to support going back to the original page by tapping
     // the navigation bar item that is already active
-    navigationShell.goBranch(index,
-        initialLocation: index == navigationShell.currentIndex);
+
+    switch (index) {
+      case 0:
+        context.go('/');
+        break;
+      case 1:
+        context.go('/emergency');
+        break;
+      case 2:
+        context.push('/calculator');
+        break;
+      case 3:
+        context.push('/account');
+      default:
+        context.go('/');
+    }
+  }
+
+  int parseLoc(String location) {
+    /// Parses the current location string to determine which main page the app is on
+    /// return int
+    if (kDebugMode) {
+      print('Current location: $location');
+    }
+    if (location.startsWith('/emergency')) {
+      return 1;
+    } else if (location.startsWith('/calc')) {
+      return 2;
+    } else if (location.startsWith('/account')) {
+      return 3;
+    } else {
+      return 0;
+    }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<List<String>> practiceGroups = ref.watch(wikiPracticeGroupsProvider);
-
-    bool hasPracticeGroups = practiceGroups.isNotEmpty;
-
     /// Builds the bottom navigation bar
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth < 600) {
-        return scaffoldWithNavBar(hasPracticeGroups);
+        return scaffoldWithNavBar(context);
       } else {
-        return scaffoldWithNavRail(hasPracticeGroups);
+        return scaffoldWithNavRail(context);
       }
     });
   }
 
-  Scaffold scaffoldWithNavBar(bool hasPracticeGroups) {
+  Scaffold scaffoldWithNavBar(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
-        onDestinationSelected: _gobranch,
+        onDestinationSelected: (int idx) {_gobranch(idx, context);},
         indicatorColor: primaryColor,
-        selectedIndex: navigationShell.currentIndex,
+        selectedIndex: parseLoc(GoRouterState.of(context).uri.toString()),
         destinations:
             destinations,
       ),
@@ -285,15 +358,15 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     );
   }
 
-  Scaffold scaffoldWithNavRail(bool hasPracticeGroups) {
+  Scaffold scaffoldWithNavRail(BuildContext context) {
     return Scaffold(
         body: Row(
       children: [
         NavigationRail(
           destinations: railDestinations,
-          selectedIndex: navigationShell.currentIndex,
+          selectedIndex: parseLoc(GoRouterState.of(context).uri.toString()),
           indicatorColor: primaryColor,
-          onDestinationSelected: _gobranch,
+          onDestinationSelected: (int idx) {_gobranch(idx, context);},
           labelType: NavigationRailLabelType.all,
         ),
         const VerticalDivider(thickness: 1, width: 1),

@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:wikianesthesia_mobile/Home/search_wiki_bar.dart';
+import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
+import 'package:wikianesthesia_mobile/Wiki/account_widget.dart';
 import 'package:wikianesthesia_mobile/Wiki/practicegroup.dart';
 import 'package:wikianesthesia_mobile/main.dart';
 
@@ -121,72 +122,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
+        endDrawer: const HomeDrawer(),
         appBar: AppBar(
-          centerTitle: false,
+          centerTitle: true,
           toolbarHeight: 80,
-          title: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 20.0),
-            child: WikiSearchView(),
-          ),
+          title: Text('Log In', style: TextStyle(color: theme.colorScheme.onPrimary),),
           titleSpacing: 8.0,
           backgroundColor: theme.colorScheme.primary,
-          actions: kIsWeb
-              ? null
-              : [
-                  FutureBuilder<bool>(
-                    future:
-                        webViewController?.canGoBack() ?? Future.value(false),
-                    builder: (context, snapshot) {
-                      final canGoBack = snapshot.data ?? false;
-                      return IconButton(
-                        icon: const Icon(Icons.arrow_back_ios),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        color: Colors.white,
-                        disabledColor: Colors.grey,
-                        onPressed: canGoBack
-                            ? () {
-                                webViewController?.goBack();
-                              }
-                            : null,
-                      );
-                    },
-                  ),
-                  FutureBuilder<bool>(
-                    future: webViewController?.canGoForward() ??
-                        Future.value(false),
-                    builder: (context, snapshot) {
-                      final canGoBack = snapshot.data ?? false;
-                      return IconButton(
-                        icon: const Icon(Icons.arrow_forward_ios),
-                        color: Colors.white,
-                        disabledColor: Colors.grey,
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        onPressed: canGoBack
-                            ? () {
-                                webViewController?.goForward();
-                              }
-                            : null,
-                      );
-                    },
-                  ),
-                ],
+          actions: const [AccountWidget()],
           leading: InkWell(
             onTap: () {
-              context.go(
-                '/',
-              );
-              FocusScope.of(context).unfocus();
+              Navigator.pop(context);
             },
-            child: const Padding(
-              padding: EdgeInsets.only(left: 7.0),
-              child: ImageIcon(
-                AssetImage('assets/wikianesthesia_logo.png'),
-                color: Colors.white,
-                size: 16.0,
-              ),
-            ),
+            child: const Icon(Icons.arrow_back, color: Colors.white),
           ),
         ),
         body: Stack(
@@ -218,7 +166,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     print('User logged in successfully: $url');
                   }
                   await saveCookies(); // Save cookies after login
-                  context.go('/');
+                  if(context.mounted) {
+                    context.go('/');
+                  }
                 }
 
                 removeHeaderFooter(controller);

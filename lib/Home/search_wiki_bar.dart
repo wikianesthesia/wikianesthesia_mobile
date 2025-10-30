@@ -52,7 +52,7 @@ class _WikiSearchViewState extends State<WikiSearchView> {
             controller.openView();
           },
           leading: const Icon(Icons.search),
-          hintText: 'Search Articles',
+          hintText: 'Search WikiAnesthesia',
           shape: WidgetStatePropertyAll<OutlinedBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0), // Adjust the radius here

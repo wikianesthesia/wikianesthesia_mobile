@@ -118,6 +118,14 @@ void goWikiPage(BuildContext context, url) {
   context.pushNamed('wikipage', pathParameters: {'url': url});
 }
 
+void goCalcPage(BuildContext context, url) {
+  context.pushNamed('calcpage', pathParameters: {'url': url});
+}
+
+void goAccountPage(BuildContext context, url) {
+  context.pushNamed('accountpage', pathParameters: {'url': url});
+}
+
 class BlinkingButton extends StatefulWidget {
   /// Creates a Button that continually blinks a specified color
 

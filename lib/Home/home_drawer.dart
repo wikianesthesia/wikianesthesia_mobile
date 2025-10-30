@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wikianesthesia_mobile/Calculators/all_calculators.dart';
 import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
+import 'package:wikianesthesia_mobile/Wiki/account_home.dart';
 import 'package:wikianesthesia_mobile/util.dart';
 
 class HomeDrawer extends ConsumerWidget {
@@ -18,7 +20,6 @@ class HomeDrawer extends ConsumerWidget {
     bool hasPracticeGroups = ref.watch(wikiPracticeGroupsProvider).isNotEmpty;
 
     List<ExpansionPanelRadio> practiceGroupTiles = [];
-    bool isHopkins = false;
 
     if (hasPracticeGroups) {
       List<List<String>> practiceGroups = ref.watch(wikiPracticeGroupsProvider);
@@ -28,10 +29,6 @@ class HomeDrawer extends ConsumerWidget {
       List<String> shortNames = practiceGroups
           .map((subList) => subList[1])
           .toList();
-
-      if (shortNames.contains('Hopkins')) {
-        isHopkins = true;
-      }
 
       practiceGroupTiles = shortNames.asMap().entries.map(
         (e) => ExpansionPanelRadio(
@@ -44,6 +41,7 @@ class HomeDrawer extends ConsumerWidget {
                 leading: const Icon(Icons.home),
                 title: const Text('Dashboard'),
                 onTap: () {
+                  context.pop();
                   goWikiPage(context, 'https://wikianesthesia.org/wiki/PracticeGroup:${dbKeys[e.key]}');
                 },
               ),
@@ -51,6 +49,7 @@ class HomeDrawer extends ConsumerWidget {
                 leading: const Icon(Icons.folder),
                 title: const Text('Articles'),
                 onTap: () {
+                  context.pop();
                   goWikiPage(context, 'https://wikianesthesia.org/wiki/PracticeGroup:${dbKeys[e.key]}#articles');
                 },
               ),
@@ -58,6 +57,7 @@ class HomeDrawer extends ConsumerWidget {
                 leading: const Icon(Icons.group),
                 title: const Text('Members'),
                 onTap: () {
+                  context.pop();
                   goWikiPage(context, 'https://wikianesthesia.org/wiki/PracticeGroup:${dbKeys[e.key]}#members');
                 },
               ),
@@ -65,6 +65,7 @@ class HomeDrawer extends ConsumerWidget {
                 leading: const Icon(FontAwesomeIcons.solidHospital),
                 title: const Text('Practice Groups List'),
                 onTap: () {
+                  context.pop();
                   goWikiPage(context, 'https://wikianesthesia.org/wiki/Special:PracticeGroups');
                 },
               ),
@@ -72,6 +73,7 @@ class HomeDrawer extends ConsumerWidget {
                 leading: const Icon(FontAwesomeIcons.book),
                 title: const Text('Practice Groups Guide'),
                 onTap: () {
+                  context.pop();
                   goWikiPage(context, 'https://wikianesthesia.org/wiki/WikiAnesthesia:Practice_groups_guide');
                 },
               ),
@@ -79,6 +81,7 @@ class HomeDrawer extends ConsumerWidget {
                 leading: const Icon(Icons.key),
                 title: const Text('Door Codes'),
                 onTap: () {
+                  context.pop();
                   context.push('/practicegroup/codes');
                 },
               ),
@@ -86,6 +89,7 @@ class HomeDrawer extends ConsumerWidget {
                 leading: const Icon(Icons.phone),
                 title: const Text('Phone Numbers'),
                 onTap: () {
+                  context.pop();
                   context.push('/practicegroup/phone');
                 },
               ),
@@ -105,6 +109,7 @@ class HomeDrawer extends ConsumerWidget {
                 leading: const Icon(FontAwesomeIcons.solidHospital),
                 title: const Text('Practice Groups List'),
                 onTap: () {
+                  context.pop();
                   goWikiPage(context, 'https://wikianesthesia.org/wiki/Special:PracticeGroups');
                 },
               ),
@@ -112,6 +117,7 @@ class HomeDrawer extends ConsumerWidget {
                 leading: const Icon(FontAwesomeIcons.book),
                 title: const Text('Practice Groups Guide'),
                 onTap: () {
+                  context.pop();
                   goWikiPage(context, 'https://wikianesthesia.org/wiki/WikiAnesthesia:Practice_groups_guide');
                 },
               ),
@@ -155,7 +161,7 @@ class HomeDrawer extends ConsumerWidget {
               materialGapSize: 3,
               children: practiceGroupTiles + [
                 articlesPanel(context),
-                calcPanel(context, isHopkins),
+                calcPanel(context),
                 helpPanel(context, userName),
                 if (isLoggedIn) accountPanel(context, userName),
               ]
@@ -178,6 +184,7 @@ class HomeDrawer extends ConsumerWidget {
             leading: const Icon(Icons.info),
             title: const Text('About WikiAnesthesia'),
             onTap: () {
+              context.pop();
               goWikiPage(context, 'https://wikianesthesia.org/wiki/WikiAnesthesia:About');
             },
           ),
@@ -185,6 +192,7 @@ class HomeDrawer extends ConsumerWidget {
             leading: const Icon(Icons.question_mark),
             title: const Text('FAQ'),
             onTap: () {
+              context.pop();
               goWikiPage(context, 'https://wikianesthesia.org/wiki/WikiAnesthesia:FAQ');
             },
           ),
@@ -192,6 +200,7 @@ class HomeDrawer extends ConsumerWidget {
             leading: const Icon(FontAwesomeIcons.solidHandshake),
             title: const Text('Get Involved'),
             onTap: () {
+              context.pop();
               goWikiPage(context, 'https://wikianesthesia.org/wiki/WikiAnesthesia:Get_involved');
             },
           ),
@@ -199,6 +208,7 @@ class HomeDrawer extends ConsumerWidget {
             leading: const Icon(Icons.comment),
             title: const Text('Submit Feedback'),
             onTap: () {
+              context.pop();
               launchURL('https://wikianesthesia.org/wiki/WikiAnesthesia:Get_involved');
             },
           ),
@@ -206,6 +216,7 @@ class HomeDrawer extends ConsumerWidget {
             leading: const Icon(FontAwesomeIcons.penToSquare),
             title: const Text('Visual Editor Guide'),
             onTap: () {
+              context.pop();
               goWikiPage(context, 'https://www.mediawiki.org/wiki/Help:VisualEditor/User_guide');
             },
           ),
@@ -213,6 +224,7 @@ class HomeDrawer extends ConsumerWidget {
             leading: const Icon(FontAwesomeIcons.code),
             title: const Text('WikiText Guide'),
             onTap: () {
+              context.pop();
               goWikiPage(context, 'https://en.wikipedia.org/wiki/Help:Wikitext');
             },
           ),
@@ -221,87 +233,87 @@ class HomeDrawer extends ConsumerWidget {
     );
   }
 
-  ExpansionPanelRadio calcPanel(BuildContext context, bool isHopkins) {
-    return ExpansionPanelRadio(
-      headerBuilder: (context, isExpanded) => const ListTile(title: Text('Calculators')),
-      value: 'calculators',
-      canTapOnHeader: true,
-      body: Column(
-        children: [
-          ListTile(
-            leading: const Icon(FontAwesomeIcons.childReaching),
-            title: const Text('Body Composition'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/Body_composition_calculations');
-            },
-          ),
-          ListTile(
-            leading: const Icon(FontAwesomeIcons.heartPulse),
-            title: const Text('Cardiovascular'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/Cardiovascular_calculations');
-            },
-          ),
-          ListTile(
-            leading: const Icon(FontAwesomeIcons.syringe),
-            title: const Text('Drug Dosages'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/Drug_dosage_calculations');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.construction),
-            title: const Text('Equipment Size'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/Equipment_size_calculations');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.water_drop),
-            title: const Text('Fluid Management'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/Fluid_management_calculations');
-            },
-          ),
-          ListTile(
-            leading: const Icon(FontAwesomeIcons.brain),
-            title: const Text('Neuro'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/Neuro_calculations');
-            },
-          ),
-          ListTile(
-            leading: const Icon(FontAwesomeIcons.lungs),
-            title: const Text('Respiratory'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/Respiratory_calculations');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.checklist),
-            title: const Text('Checklists'),
-            onTap: () {
-              context.push('/calculator/ca1');;
-            },
-          ),
-          if (isHopkins) ListTile(
-            leading: const Icon(Icons.favorite),
-            title: const Text('Pump Case'),
-            onTap: () {
-              context.push('/calculator/pump');
-            },
-          ),
-          ListTile(
-            leading: const Icon(FontAwesomeIcons.book),
-            title: const Text('Calculator Guide'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/WikiAnesthesia:Calculators_guide');
-            },
-          ),
-        ],
-      )
-    );
-  }
+  // ExpansionPanelRadio calcPanel(BuildContext context, bool isHopkins) {
+  //   return ExpansionPanelRadio(
+  //     headerBuilder: (context, isExpanded) => const ListTile(title: Text('Calculators')),
+  //     value: 'calculators',
+  //     canTapOnHeader: true,
+  //     body: Column(
+  //       children: [
+  //         ListTile(
+  //           leading: const Icon(FontAwesomeIcons.childReaching),
+  //           title: const Text('Body Composition'),
+  //           onTap: () {
+  //             goWikiPage(context, 'https://wikianesthesia.org/wiki/Body_composition_calculations');
+  //           },
+  //         ),
+  //         ListTile(
+  //           leading: const Icon(FontAwesomeIcons.heartPulse),
+  //           title: const Text('Cardiovascular'),
+  //           onTap: () {
+  //             goWikiPage(context, 'https://wikianesthesia.org/wiki/Cardiovascular_calculations');
+  //           },
+  //         ),
+  //         ListTile(
+  //           leading: const Icon(FontAwesomeIcons.syringe),
+  //           title: const Text('Drug Dosages'),
+  //           onTap: () {
+  //             goWikiPage(context, 'https://wikianesthesia.org/wiki/Drug_dosage_calculations');
+  //           },
+  //         ),
+  //         ListTile(
+  //           leading: const Icon(Icons.construction),
+  //           title: const Text('Equipment Size'),
+  //           onTap: () {
+  //             goWikiPage(context, 'https://wikianesthesia.org/wiki/Equipment_size_calculations');
+  //           },
+  //         ),
+  //         ListTile(
+  //           leading: const Icon(Icons.water_drop),
+  //           title: const Text('Fluid Management'),
+  //           onTap: () {
+  //             goWikiPage(context, 'https://wikianesthesia.org/wiki/Fluid_management_calculations');
+  //           },
+  //         ),
+  //         ListTile(
+  //           leading: const Icon(FontAwesomeIcons.brain),
+  //           title: const Text('Neuro'),
+  //           onTap: () {
+  //             goWikiPage(context, 'https://wikianesthesia.org/wiki/Neuro_calculations');
+  //           },
+  //         ),
+  //         ListTile(
+  //           leading: const Icon(FontAwesomeIcons.lungs),
+  //           title: const Text('Respiratory'),
+  //           onTap: () {
+  //             goWikiPage(context, 'https://wikianesthesia.org/wiki/Respiratory_calculations');
+  //           },
+  //         ),
+  //         ListTile(
+  //           leading: const Icon(Icons.checklist),
+  //           title: const Text('Checklists'),
+  //           onTap: () {
+  //             context.push('/calculator/ca1');;
+  //           },
+  //         ),
+  //         if (isHopkins) ListTile(
+  //           leading: const Icon(Icons.favorite),
+  //           title: const Text('Pump Case'),
+  //           onTap: () {
+  //             context.push('/calculator/pump');
+  //           },
+  //         ),
+  //         ListTile(
+  //           leading: const Icon(FontAwesomeIcons.book),
+  //           title: const Text('Calculator Guide'),
+  //           onTap: () {
+  //             goWikiPage(context, 'https://wikianesthesia.org/wiki/WikiAnesthesia:Calculators_guide');
+  //           },
+  //         ),
+  //       ],
+  //     )
+  //   );
+  // }
 
   ExpansionPanelRadio articlesPanel(BuildContext context) {
     return ExpansionPanelRadio(
@@ -314,6 +326,7 @@ class HomeDrawer extends ConsumerWidget {
             leading: const Icon(FontAwesomeIcons.bookOpen),
             title: const Text('Table of Contents'),
             onTap: () {
+              context.pop();
               goWikiPage(context, 'https://wikianesthesia.org/wiki/Table_of_contents');
             },
           ),
@@ -321,6 +334,7 @@ class HomeDrawer extends ConsumerWidget {
             leading: const Icon(Icons.check_circle),
             title: const Text('Top Articles'),
             onTap: () {
+              context.pop();
               goWikiPage(context, 'https://wikianesthesia.org/wiki/Special:ArticleScores/EditorRating');
             },
           ),
@@ -328,6 +342,7 @@ class HomeDrawer extends ConsumerWidget {
             leading: const Icon(FontAwesomeIcons.medal),
             title: const Text('Top Authors'),
             onTap: () {
+              context.pop();
               goWikiPage(context, 'https://wikianesthesia.org/wiki/Special:ContributionScores');
             },
           ),
@@ -335,6 +350,7 @@ class HomeDrawer extends ConsumerWidget {
             leading: const Icon(FontAwesomeIcons.book),
             title: const Text('Author Guide'),
             onTap: () {
+              context.pop();
               goWikiPage(context, 'https://wikianesthesia.org/wiki/WikiAnesthesia:Author_guide');
             },
           ),
@@ -343,66 +359,7 @@ class HomeDrawer extends ConsumerWidget {
     );
   }
 
-  ExpansionPanelRadio accountPanel(BuildContext context, String userName) {
-    return ExpansionPanelRadio(
-      value: 'account',
-      canTapOnHeader: true,
-      headerBuilder: (context, isExpanded) => const ListTile(title: Text('Account')),
-      body: Column(
-        children: [
-          ListTile(
-            leading: const Icon(FontAwesomeIcons.userDoctor),
-            title: const Text('Profile'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/User:$userName');
-            },
-          ),
-          ListTile(
-            leading: const Icon(FontAwesomeIcons.bookMedical),
-            title: const Text('Authorship'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/Special:Contributions/$userName');
-            },
-          ),
-          ListTile(
-            leading: const Icon(FontAwesomeIcons.award),
-            title: const Text('Achievements'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/Special:UserAchievements');
-            },
-          ),
-          ListTile(
-            leading: const Icon(FontAwesomeIcons.solidClipboard),
-            title: const Text('Personal Notes'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/Special:UserNotes');
-            },
-          ),
-          ListTile(
-            leading: const Icon(FontAwesomeIcons.eye),
-            title: const Text('Watchlist'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/Special:Watchlist');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.thumb_up),
-            title: const Text('Liked Articles'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/w/index.php?title=Special:ArticleScores/Likes/user&value=0&timestamp=1');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Preferences'),
-            onTap: () {
-              goWikiPage(context, 'https://wikianesthesia.org/wiki/Special:Preferences');
-            },
-          ),
-        ],
-      ),
-    );
-  }
+  
 }
 
 class LogInButton extends StatelessWidget {
@@ -429,7 +386,7 @@ class LogInButton extends StatelessWidget {
         ),
       ),
       child: ListTile(
-        tileColor: theme.colorScheme.surface,
+        tileColor: isLoggedIn ? Colors.red[50] : Colors.green[50],
         leading: isLoggedIn ? const Icon(Icons.logout) : const Icon(Icons.login),
         title: isLoggedIn ? const Text('Log out') : const Text('Log in / Register'),
         onTap: () {
