@@ -148,6 +148,11 @@ class AccountMenuTile extends StatelessWidget {
           context.push(accountOption['url']);
         }
       },
+      tileColor: switch (accountOption['name']) {
+        'Log in' => Colors.green[50],
+        'Log out' => Colors.red[50],
+        _ => null,
+      },
     );
     
     // InkWell(
