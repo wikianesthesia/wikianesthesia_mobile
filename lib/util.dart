@@ -183,10 +183,17 @@ class _BlinkingButtonState extends State<BlinkingButton>
 
     return ElevatedButton(
         onPressed: widget.onPressed,
-        style: ElevatedButton.styleFrom(backgroundColor: animation.value),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: animation.value,
+          shape: RoundedRectangleBorder(
+            side: const BorderSide(color: Colors.grey, width: 1), // Set border color and width
+            borderRadius: BorderRadius.circular(8), // Set border radius
+          ),
+        ),
         child: widget.child);
   }
 }
+
 
 class CollapsibleCard extends StatelessWidget {
   final ExpansibleController controller;

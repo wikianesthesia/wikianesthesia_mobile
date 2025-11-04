@@ -1,10 +1,21 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:toastification/toastification.dart';
 import 'package:wikianesthesia_mobile/EmergencyManual/acls_timers.dart';
 
 class CodeLog extends ConsumerWidget {
   const CodeLog({super.key});
+
+  String convertLogString(String logString) {
+    // Convert the log string to a more readable format if necessary
+    // Remove asterisks used for markdown bold/italic
+    String cleanedString = logString.replaceAll('*', '');
+    cleanedString = cleanedString.replaceAll('\n\n', '\n');
+    cleanedString = cleanedString.replaceAll('\t', ' - ');
+    return cleanedString;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,6 +44,18 @@ class CodeLog extends ConsumerWidget {
         ),
       ),
       actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            Clipboard.setData(ClipboardData(text: convertLogString(logString)));
+            // Show a snackbar to confirm copy
+            toastification.show(
+              title: const Text('Copied log to clipboard'),
+              autoCloseDuration: const Duration(seconds: 2),
+            );
+          },
+          child: const Text('Copy'),
+        ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Close'),
