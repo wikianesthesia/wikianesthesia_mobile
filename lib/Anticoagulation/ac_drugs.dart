@@ -51,7 +51,7 @@ List<Map<String,String>> acDrugs = [
     "HoldPrior": "72 hours (CrCl >= 50), 120 hours (CrCl 30-49), or until plasma level is <30 ng/mL (CrCl < 30)",
     "ResumeAfter": "24 hours",
     "HoldPriorCathRemoval": "Contraindicated while catheter in place; 72 hours (CrCl >= 50), 120 hours (CrCl 30-49) if unanticipated administration",
-    "ResumeAfterCathRemoval": ""
+    "ResumeAfterCathRemoval": "24 hours"
   },
   {
     "Generic": "Dabigatran (Low)",
