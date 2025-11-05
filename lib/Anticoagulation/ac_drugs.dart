@@ -121,7 +121,7 @@ List<Map<String,String>> acDrugs = [
     "Brand": "",
     "Tags": "Ibuprofen,Advil,meloxicam,Aspirin, asa",
     "HoldPrior": "No need to hold",
-    "ResumeAfter": "Immediately",
+    "ResumeAfter": "No need to hold",
     "HoldPriorCathRemoval": "No need to hold",
     "ResumeAfterCathRemoval": "No need to hold"
   },
