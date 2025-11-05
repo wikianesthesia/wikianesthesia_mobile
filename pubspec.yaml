@@ -60,13 +60,13 @@ dependencies:
   cookie_jar: ^4.0.8
 
 flutter_launcher_icons:
-  image_path: "assets/wikianesthesia_logo_filled.png"
+  image_path: "assets/AppStoreGraphics/Filled_Icon.png"
   android: true # can specify file name here e.g. "ic_launcher"
   ios: true # can specify file name here e.g. "My-Launcher-Icon"
   adaptive_icon_background: "#006DE5" # only available for Android 8.0 devices and above
-  adaptive_icon_foreground: "assets/wikianesthesia_logo.png" # only available for Android 8.0 devices and above
+  adaptive_icon_foreground: "assets/AppStoreGraphics/Original_Icon.png" # only available for Android 8.0 devices and above
   adaptive_icon_foreground_inset: 16 # only available for Android 8.0 devices and above
-  adaptive_icon_monochrome: "assets/wikianesthesia_logo.png" # only available for Android 13 devices and above
+  adaptive_icon_monochrome: "assets/AppStoreGraphics/Original_Icon.png" # only available for Android 13 devices and above
   min_sdk_android: 21 # android min sdk min:16, default 21
   remove_alpha_ios: true
   background_color_ios: "#006DE5"
@@ -102,10 +102,8 @@ flutter:
   assets:
     - assets/AboutText.md
     - assets/EmergencyText/
-    - assets/Codes.json
     - assets/PhoneNumbers.json
     - assets/wikianesthesia_logo.png
-    - assets/Coags.json
     - assets/AC_Disclaimers.md
   #   - images/a_dot_ham.jpeg
 
