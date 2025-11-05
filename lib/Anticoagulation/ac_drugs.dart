@@ -99,7 +99,7 @@ List<Map<String,String>> acDrugs = [
     "ResumeAfterCathRemoval": "1 hour"
   },
   {
-    "Generic": "LMWH (High)",
+    "Generic": "Low Molecular Weight Heparin (LMWH) (High)",
     "Brand": "Enoxaparin, Lovenox",
     "Tags": "lower molecular weight heparin",
     "HoldPrior": "24 hours after last admin",
@@ -108,7 +108,7 @@ List<Map<String,String>> acDrugs = [
     "ResumeAfterCathRemoval": "4 hours"
   },
   {
-    "Generic": "LMWH (Low)",
+    "Generic": "Low Molecular Weight Heparin (LMWH) (Low)",
     "Brand": "Enoxaparin, Lovenox",
     "Tags": "lower molecular weight heparin,ppx",
     "HoldPrior": "12 hours after last admin",
@@ -323,7 +323,7 @@ List<Map<String,String>> acDrugOptions = [
     "Define": ""
   },
   {
-    "Generic": "LMWH",
+    "Generic": "Low Molecular Weight Heparin (LMWH)",
     "Brand": "Enoxaparin, Lovenox",
     "Tags": "lower molecular weight heparin,ppx",
     "Options": "2",

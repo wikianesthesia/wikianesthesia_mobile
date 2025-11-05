@@ -307,7 +307,7 @@ class DoseLog extends StatelessWidget {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             //backgroundColor: theme.colorScheme.surface,
-            padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14.0),
             alignment: Alignment.centerLeft,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),

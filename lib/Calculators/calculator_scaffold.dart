@@ -14,9 +14,12 @@ class CalculatorScaffold extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          title,
-          style: TextStyle(color: theme.colorScheme.onPrimary),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            title,
+            style: TextStyle(color: theme.colorScheme.onPrimary),
+          ),
         ),
         backgroundColor: theme.colorScheme.primary,
         iconTheme: const IconThemeData(color: Colors.white),
