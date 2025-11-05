@@ -54,36 +54,34 @@ class _ACHome extends State<ACHome> {
   }
 
   void buildSearchBar() {
-    _searchBar = Expanded(
-          child: TextField(
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 10.0),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: const BorderSide(
-                  width: 2.0,
-                  color: Colors.black,
-                ),
-              ),
-              fillColor: Colors.white,
-              filled: true,
-              hintText: 'Search Anticoagulants',
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: IconButton( // Gives button at end of SearchBar to clear input
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  _controller.clear();
-                  searchCodes('');
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                tooltip: 'Clear',
-              )
-            ),
-            onChanged: (String input) {searchCodes(input);},
-            onSubmitted: (String input) {searchCodes(input);},
-            controller: _controller,
+    _searchBar = TextField(
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 10.0),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: const BorderSide(
+            width: 2.0,
+            color: Colors.black,
           ),
-        );
+        ),
+        fillColor: Colors.white,
+        filled: true,
+        hintText: 'Search Anticoagulants',
+        prefixIcon: const Icon(Icons.search),
+        suffixIcon: IconButton( // Gives button at end of SearchBar to clear input
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            _controller.clear();
+            searchCodes('');
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          tooltip: 'Clear',
+        )
+      ),
+      onChanged: (String input) {searchCodes(input);},
+      onSubmitted: (String input) {searchCodes(input);},
+      controller: _controller,
+    );
   }
 
   void searchCodes(String input) async {

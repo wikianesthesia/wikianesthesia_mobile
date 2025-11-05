@@ -36,6 +36,14 @@ const List<Map<String, dynamic>> allCalculators = [
     'type': 'wikipage',
   },
   {
+    'name': 'Insulin Drip',
+    'shortName': 'Insulin',
+    'url': '/calculator/insulin',
+    'icon': FontAwesomeIcons.syringe,
+    'type': 'native',
+    'restrict': 'Hopkins',
+  },
+  {
     'name': 'Equipment Size',
     'shortName': 'Equipment',
     'url': 'https://wikianesthesia.org/wiki/Equipment_size_calculations',
