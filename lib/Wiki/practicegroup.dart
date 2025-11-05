@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
 import 'package:wikianesthesia_mobile/main.dart';
 // import 'package:worker_manager/worker_manager.dart';
@@ -19,13 +20,17 @@ class PracticeGroupFinder {
   }
 
   Future<void> start(String userName) async {
-    await wikiAPI.loadPracticeGroups(ref);
+    List<List<String>> practiceGroups = await wikiAPI.loadPracticeGroups(ref);
     
-    if (wikiAPI.practiceGroups.isNotEmpty) {
+    if (practiceGroups.isNotEmpty) {
       if (kDebugMode) {
         print('Practice groups already loaded.');
       }
       return;
+    } else {
+      if (kDebugMode) {
+        print('Practice groups not loaded. Starting headless webview.');
+      }
     }
 
     if (userName.isEmpty) {

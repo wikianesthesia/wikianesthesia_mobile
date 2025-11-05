@@ -66,6 +66,7 @@ class _EmergencyHomeState extends State<EmergencyHome> {
             onPressed: () {
               _controller.clear();
               searchTopics('');
+              FocusManager.instance.primaryFocus?.unfocus();
             },
             tooltip: 'Clear',
           )),

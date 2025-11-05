@@ -134,6 +134,11 @@ class WikiAPI {
     String? practiceGroupsLastUpdated =
         await secureStorage.read(key: 'practiceGroupsLastUpdated');
 
+    if (kDebugMode) {
+      print('Practice groups loaded: $practiceGroupsLoaded');
+      print('Practice groups last updated: $practiceGroupsLastUpdated');
+    }
+
     if (practiceGroupsLoaded &&
         practiceGroupsLastUpdated != null &&
         DateTime.parse(practiceGroupsLastUpdated)
@@ -146,6 +151,10 @@ class WikiAPI {
       ref
           .read(wikiPracticeGroupsProvider.notifier)
           .setPracticeGroups(practiceGroups);
+
+      if (kDebugMode) {
+        print('Practice Groups: $practiceGroups');
+      }
       return practiceGroups;
     }
 

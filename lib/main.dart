@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:wikianesthesia_mobile/Anticoagulation/ac_home.dart';
 import 'package:wikianesthesia_mobile/Anticoagulation/ac_page.dart';
 import 'package:wikianesthesia_mobile/Calculators/Drugs/drug_calcs.dart';
 import 'package:wikianesthesia_mobile/Calculators/calc_page.dart';
@@ -112,7 +112,7 @@ final GoRouter _router = GoRouter(
                   GoRoute(
                     path: '/anticoagulation',
                     pageBuilder: (context, state) =>
-                        const NoTransitionPage(child: Placeholder()),
+                        const NoTransitionPage(child: ACHome()),
                     routes: [
                       GoRoute(
                         name: 'acpage',
@@ -301,10 +301,10 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     ),
     NavigationRailDestination(
       selectedIcon: Icon(
-        FontAwesomeIcons.dropletSlash,
+        Icons.format_color_reset,
         color: Colors.white,
       ),
-      icon: Icon(FontAwesomeIcons.dropletSlash),
+      icon: Icon(Icons.format_color_reset_outlined),
       label: Text('Coags'),
     ),
     NavigationRailDestination(
@@ -331,12 +331,13 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     // Use initialLocation to support going back to the original page by tapping
     // the navigation bar item that is already active
 
+
     switch (index) {
       case 0:
         context.go('/');
         break;
-      case 1:
-        context.push('/calculator');
+      case 1: 
+        context.go('/calculator');
         break;
       case 2:
         context.go('/anticoagulation');
@@ -345,7 +346,7 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
         context.go('/emergency');
         break;
       case 4:
-        context.push('/account');
+        context.go('/account');
       default:
         context.go('/');
     }
@@ -391,13 +392,15 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
         destinations:
             destinations,
       ),
-      body: navigationShell,
+      body: Builder(
+        builder: (context) => navigationShell,
+      ),
     );
   }
 
   Scaffold scaffoldWithNavRail(BuildContext context) {
     return Scaffold(
-        body: Row(
+        body: Builder(builder: (context) => Row(
       children: [
         NavigationRail(
           destinations: railDestinations,
@@ -409,6 +412,6 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
         const VerticalDivider(thickness: 1, width: 1),
         Expanded(child: navigationShell)
       ],
-    ));
+    )));
   }
 }

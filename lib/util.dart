@@ -126,6 +126,10 @@ void goAccountPage(BuildContext context, url) {
   context.pushNamed('accountpage', pathParameters: {'url': url});
 }
 
+void goACPage(BuildContext context, String drug) {
+  context.pushNamed('acpage', pathParameters: {'drug': drug});
+}
+
 class BlinkingButton extends StatefulWidget {
   /// Creates a Button that continually blinks a specified color
 
