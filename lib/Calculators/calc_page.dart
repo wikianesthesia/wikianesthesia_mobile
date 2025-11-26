@@ -1,14 +1,16 @@
+import 'package:path/path.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
 import 'package:wikianesthesia_mobile/Home/search_wiki_bar.dart';
+import 'package:wikianesthesia_mobile/Offline/offline_server.dart';
 import 'package:wikianesthesia_mobile/Wiki/account_widget.dart';
 
 class CalcPage extends StatefulWidget {
-  final String url;
-  const CalcPage({super.key, required this.url});
+  final String calcName;
+  const CalcPage({super.key, required this.calcName});
 
   @override
   State<CalcPage> createState() => _CalcPageState();
@@ -29,9 +31,15 @@ class _CalcPageState extends State<CalcPage> {
   double _progress = 0; // For progress bar
   bool _isLoading = false;
 
+  OfflineServer offlineServer = OfflineServer();
+  String serverAddress = '';
+  String url = '';
+
   @override
   void initState() {
     super.initState();
+
+    startServer();
 
     if (kIsWeb ||
         ![TargetPlatform.iOS, TargetPlatform.android]
@@ -54,7 +62,24 @@ class _CalcPageState extends State<CalcPage> {
     }
   }
 
-  void removeHeaderFooter(InAppWebViewController controller) async {
+  Future<void> startServer() async {
+    String server = await offlineServer.start();
+    
+    if (widget.calcName.contains('https')) {
+      setState(() {url = widget.calcName;});
+    } else {
+      setState(() {
+        serverAddress = server;
+        url = '$serverAddress/${widget.calcName}.html';
+      });
+    }
+
+    if (kDebugMode) {
+      print('Calculator served at URL: $url');
+    }
+  }
+
+  void removeHeaderFooterCalc(InAppWebViewController controller) async {
     var result = await controller.evaluateJavascript(
       source: '''
         function waitForElement(selector, callback) {
@@ -88,6 +113,36 @@ class _CalcPageState extends State<CalcPage> {
           header.id = 'newContentHeader';
         });
 
+      ''',
+    );
+    if (kDebugMode) {
+      print(result);
+    }
+  }
+
+  void removeHeaderFooter(InAppWebViewController controller) async {
+    var result = await controller.evaluateJavascript(
+      source: '''
+        var elements = document.getElementsByClassName("p-navbar not-collapsible");
+
+        while(elements.length > 0){
+          elements[0].parentNode.removeChild(elements[0]);
+        }
+
+        var header = document.getElementById("contentHeader");
+        console.log('-------------------');
+        header.id = 'newContentHeader';
+        header.style.position = 'relative';
+        header.style.top = '0px';
+
+        document.querySelectorAll('*').forEach(element => {
+          // Get the computed style to check for 'position: sticky'
+          const computedStyle = window.getComputedStyle(element);
+          if (computedStyle.position === 'sticky') {
+          // Change the position to 'static' or 'relative' to remove stickiness
+          element.style.position = 'relative'; 
+          }
+      });
       ''',
     );
     if (kDebugMode) {
@@ -164,9 +219,10 @@ class _CalcPageState extends State<CalcPage> {
       ),
       body: Stack(
         children: [
+          if (url.isNotEmpty)
           InAppWebView(
             key: webViewKey,
-            initialUrlRequest: URLRequest(url: WebUri(widget.url)),
+            initialUrlRequest: URLRequest(url: WebUri(url)),
             initialSettings: settings,
             pullToRefreshController: pullToRefreshController,
             onWebViewCreated: (controller) {
@@ -182,7 +238,11 @@ class _CalcPageState extends State<CalcPage> {
             },
             onLoadStop: (controller, url) async {
               pullToRefreshController?.endRefreshing();
-              removeHeaderFooter(controller);
+              if (basename(url!.path) == '${widget.calcName}.html' && basename(url.path) != 'Calculators_guide.html') {
+                removeHeaderFooterCalc(controller);
+              } else {
+                removeHeaderFooter(controller);
+              }
               setState(() {
                 _isLoading = false;
               });
@@ -213,5 +273,11 @@ class _CalcPageState extends State<CalcPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    offlineServer.stop();
   }
 }

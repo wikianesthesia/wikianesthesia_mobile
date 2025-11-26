@@ -1,3 +1,4 @@
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:wikianesthesia_mobile/Anticoagulation/ac_drugs.dart';
 import 'package:wikianesthesia_mobile/Calculators/calculator_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,10 @@ class _ACPageState extends State<ACPage> {
             DrugInfoTile(title: 'Hold Prior to Catheter Removal', content: drug['HoldPriorCathRemoval'] ?? 'Information not available'),
             const Divider(height: 0),
             DrugInfoTile(title: 'Resume After Catheter Removal', content: drug['ResumeAfterCathRemoval'] ?? 'Information not available'),
+            if (drug['Notes'] != null && drug['Notes']!.isNotEmpty) ...[
+              const Divider(height: 0),
+              DrugInfoTile(title: 'Notes', content: drug['Notes'] ?? 'Information not available'),
+            ]
           ]
         )
       ),
@@ -64,7 +69,10 @@ class DrugInfoTile extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 35.0),
-            child: Text(content, style: const TextStyle(fontSize: 14),),
+            child: MarkdownBody(
+              shrinkWrap: true,
+              data: content
+            ),
           ),
         ],
       ),

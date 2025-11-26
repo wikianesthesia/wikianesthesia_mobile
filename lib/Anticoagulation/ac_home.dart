@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:wikianesthesia_mobile/Anticoagulation/ac_drugs.dart';
 import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
@@ -46,9 +47,9 @@ class _ACHome extends State<ACHome> {
 
   void getCodes() async {
     setState(() { 
-      _toBeListed = sortDrugs(acDrugOptions);
+      _toBeListed = sortDrugs(acDrugs);
       _sherlock = Sherlock(
-        elements: acDrugOptions,
+        elements: acDrugs,
       );
     });
   }
@@ -84,10 +85,11 @@ class _ACHome extends State<ACHome> {
     );
   }
 
+
   void searchCodes(String input) async {
     if (input == '') {
       setState(() {
-        _toBeListed = acDrugOptions;
+        _toBeListed = acDrugs;
       });
     } else {
       /// Searches for the emergency topics using Sherlock
@@ -130,7 +132,7 @@ class _ACHome extends State<ACHome> {
       body: SafeArea(
         left: false,
         child: Padding(
-          padding: const EdgeInsets.only(top: 5.0, left: 2.0, right: 2.0, bottom: 0.0),
+          padding: const EdgeInsets.only(top: 1.0, left: 2.0, right: 2.0, bottom: 0.0),
           child: Scrollbar(
             child: ListView(
               children: [
@@ -187,30 +189,34 @@ class OpenDisclaimers extends StatelessWidget {
 }
 
 class DrugListTile extends StatelessWidget {
-  final Map<String,String> drug;
+  final String drugName;
+  final String brandName;
+  final List<Map<String,String>> doseOptions;
 
   const DrugListTile({
     super.key,
-    required this.drug,
+    required this.drugName,
+    required this.brandName,
+    required this.doseOptions,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        if (drug['Options'] == '1') {
-          goACPage(context, drug['Generic'] as String);
+        if (doseOptions.isEmpty) {
+          goACPage(context, drugName);
         } else {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return DoseLog(drug: drug);
+              return DoseLog(drugName: drugName, doseOptions: doseOptions);
             },
           );
         }
       },
-      title: Text(drug['Generic'] ?? ''),
-      subtitle: Text(drug['Brand'] ?? ''),
+      title: Text(drugName.trim()),
+      subtitle: Text(brandName.trim()),
     );
   }
 }
@@ -223,13 +229,33 @@ class DrugListView extends StatelessWidget {
     required this.drugs,
   });
 
+  List<Widget> buildDrugListTiles() {
+    // Get all unique drug names without dose options
+    List<String> drugNames = drugs.map((drug) => drug['Generic']!.replaceAll(RegExp(r'\([^)]*\)'), '')).toList(); // Remove dose options in parentheses
+    drugNames = drugNames.toSet().toList(); // Remove duplicates
+
+    return drugNames.map((drug) {
+      List<Map<String,String>> allMatches = acDrugs.where((d) => d['Generic']!.startsWith(drug)).toList();
+      if (allMatches.length == 1 && allMatches[0]['Generic'] == drug) {
+        // If only one match and no dose options, pass empty list
+        return DrugListTile(drugName: drug, brandName: allMatches[0]['Brand'] ?? '', doseOptions: const []);
+      } else {
+        // Otherwise get all dose options
+        List<Map<String,String>> doseOptions = allMatches.map((d) => {
+          // Extract dose by removing drug name and trimming parentheses
+          'Dose': d['Generic']!.replaceFirst(drug, '').trim().replaceAll(RegExp(r'^\(|\)$'), ''),
+          'Brand': d['Brand'] ?? '',
+          'Definition': d['Dose'] ?? '',
+        }).toList();
+        return DrugListTile(drugName: drug, brandName: allMatches[0]['Brand'] ?? '', doseOptions: doseOptions);
+      }
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.hardEdge,
-      child: Column(
-        children: ListTile.divideTiles(tiles: drugs.map((drug) => DrugListTile(drug: drug)).toList(), context: context).toList(),
-      ),
+    return Column(
+      children: ListTile.divideTiles(tiles: buildDrugListTiles(), context: context).toList(),
     );
   }
 }
@@ -288,26 +314,21 @@ class _DisclaimersLogState extends State<DisclaimersLog> {
 }
 
 class DoseLog extends StatelessWidget {
-  final Map<String,String> drug;
-  const DoseLog({super.key, required this.drug});
+  final String drugName;
+  final List<Map<String,String>> doseOptions;
+  
+  const DoseLog({super.key, required this.drugName, required this.doseOptions});
 
   @override
   Widget build(BuildContext context) {
-    List<String> doseDefinitions = drug['Define']!.split('\n\n');
-    List<String> doseOptions = [];
-    if (doseDefinitions.length == 2) {
-      doseOptions = ['(Low)', '(High)'];
-    } else if (doseDefinitions.length == 3) {
-      doseOptions = ['(Low)', '(Med)', '(High)'];
-    }
-
-    List<Widget> definitionWidgets = doseDefinitions.map((definition) {
+    final theme = Theme.of(context);
+    List<Widget> definitionWidgets = doseOptions.map((opt) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             //backgroundColor: theme.colorScheme.surface,
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14.0),
+            padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 14.0),
             alignment: Alignment.centerLeft,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
@@ -315,27 +336,46 @@ class DoseLog extends StatelessWidget {
             //side: BorderSide(color: Theme.of(context).colorScheme.primary),
           ),
           onPressed: () {
-            String target = '${drug['Generic'] ?? ''} ${doseOptions[doseDefinitions.indexOf(definition)]}';
+            String target = '$drugName(${opt['Dose']})';
             Navigator.of(context).pop();
             goACPage(context, target);
           },
-          child: MarkdownBody(
-            shrinkWrap: true,
-            data: definition,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                opt['Dose'] ?? '',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface,
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 5,),
+              MarkdownBody(
+                shrinkWrap: true,
+                styleSheet: MarkdownStyleSheet(
+                  h3: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  h3Align: WrapAlignment.center,),
+                data: opt['Definition'] ?? '',
+              ),
+            ],
           ),
         ),
       );
     }).toList();
 
     return AlertDialog(
-      title: Text(drug['Generic'] ?? 'Select Dose'),
+      title: Text(drugName),
       actionsPadding: const EdgeInsets.only(bottom: 8.0, right: 8.0, top: 0.0),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('Select a dose:', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 16),),
+            const Text('Select a dose:', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 18),),
             ...definitionWidgets,
           ]
         ),

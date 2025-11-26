@@ -77,7 +77,7 @@ final GoRouter _router = GoRouter(
                         name: 'calcpage',
                         path: 'calcpage/:url',
                         builder: (context, state) =>
-                            CalcPage(url: state.pathParameters['url']!),
+                            CalcPage(calcName: state.pathParameters['url']!),
                       ),
                       GoRoute(
                         path: 'bodycomp',
