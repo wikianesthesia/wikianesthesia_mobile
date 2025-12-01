@@ -18,6 +18,10 @@ import 'package:toastification/toastification.dart';
 
 import 'package:wikianesthesia_mobile/EmergencyManual/emergency_home.dart';
 import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
+import 'package:wikianesthesia_mobile/Pacemaker/ep_home.dart';
+import 'package:wikianesthesia_mobile/Pacemaker/ep_magnet_device.dart';
+import 'package:wikianesthesia_mobile/Pacemaker/ep_magnet_menu.dart';
+import 'package:wikianesthesia_mobile/Pacemaker/ep_magnet_page.dart';
 import 'package:wikianesthesia_mobile/Wiki/account_home.dart';
 import 'package:wikianesthesia_mobile/Wiki/login_page.dart';
 import 'package:wikianesthesia_mobile/Wiki/logout_page.dart';
@@ -67,6 +71,36 @@ final GoRouter _router = GoRouter(
                     path: 'wikipage/:url',
                     builder: (context, state) =>
                         WikiPage(url: state.pathParameters['url']!),
+                  ),
+                  GoRoute(
+                    path: '/ep',
+                    pageBuilder: (context, state) =>
+                        const NoTransitionPage(child: EPHome()),
+                    routes: [
+                      GoRoute(
+                        name: 'magnet',
+                        path: 'magnet',
+                        builder:(context, state) => const EPMagnetMenu(),
+                        routes: [
+                          GoRoute(
+                            name: 'epmagnetdevice',
+                            path: ':device',
+                            builder: (context, state) => EPMagnetDevice(
+                                device: state.pathParameters['device']!),
+                            routes: [
+                              GoRoute(
+                                name: 'epmagnetpage',
+                                path: ':manufacturer',
+                                builder: (context, state) => EPMagnetPage(
+                                    device: state.pathParameters['device']!,
+                                    manufacturer:
+                                        state.pathParameters['manufacturer']!),
+                              ),
+                            ]
+                          ),
+                        ]
+                      ),
+                    ]
                   ),
                   GoRoute(
                     path: '/calculator',
@@ -366,7 +400,10 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
       return 4;
     } else if (location.startsWith('/anticoagulation')) {
       return 2;
-    } else {
+    } else if (location.startsWith('/ep')) {
+      return 1;
+    }
+    else {
       return 0;
     }
   }

@@ -3,6 +3,8 @@ import 'package:wikianesthesia_mobile/Anticoagulation/ac_drugs.dart';
 import 'package:wikianesthesia_mobile/Calculators/calculator_scaffold.dart';
 import 'package:flutter/material.dart';
 
+// TODO: refactor to stateless widget
+
 class ACPage extends StatefulWidget {
   final String drugName;
   const ACPage({super.key, required this.drugName});

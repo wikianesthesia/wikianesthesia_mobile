@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:wikianesthesia_mobile/Anticoagulation/ac_drugs.dart';
 import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
@@ -346,14 +345,17 @@ class DoseLog extends StatelessWidget {
               Text(
                 opt['Dose'] ?? '',
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
-                  fontStyle: FontStyle.italic,
+                  //fontStyle: FontStyle.italic,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 5,),
+              Padding(
+                padding: const EdgeInsets.only(top: 3.0, bottom: 6.0),
+                child: Divider(color: theme.colorScheme.onSurface.withValues(alpha: 0.3), height: 0),
+              ),
               MarkdownBody(
                 shrinkWrap: true,
                 styleSheet: MarkdownStyleSheet(
@@ -375,7 +377,7 @@ class DoseLog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('Select a dose:', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 18),),
+            //const Text('Select a dose:', style: TextStyle(fontWeight: FontWeight.bold,  fontSize: 20),),
             ...definitionWidgets,
           ]
         ),

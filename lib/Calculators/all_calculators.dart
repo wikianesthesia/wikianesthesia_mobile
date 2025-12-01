@@ -36,6 +36,13 @@ const List<Map<String, dynamic>> allCalculators = [
     'type': 'wikipage',
   },
   {
+    'name': 'Cardiac EP Devices',
+    'shortName': 'EP',
+    'url': '/ep',
+    'icon': FontAwesomeIcons.heartCircleBolt,
+    'type': 'native',
+  },
+  {
     'name': 'Insulin Drip',
     'shortName': 'Insulin',
     'url': '/calculator/insulin',

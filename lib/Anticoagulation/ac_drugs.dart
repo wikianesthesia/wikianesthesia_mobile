@@ -1,10 +1,10 @@
 List<Map<String,String>> acDrugs = [
   {
     "Generic": "Apixaban (High Dose)",
-    "Dose": "\\>= 5 mg BID. If patient has 2 of the following, then >= 2.5 mg BID:\n* Age >= 80\n* Weight <= 60 kg\n* SCr >= 1.5 mg/dL",
+    "Dose": "Patient takes ≥ 5 mg twice daily OR ≥ 2.5 mg twice daily if 2 of the following apply:\n* Age ≥ 80\n* Weight ≤ 60 kg\n* SCr ≥ 1.5 mg/dL",
     "Brand": "Eliquis",
     "Tags": "DOAC, Anti-Xa",
-    "HoldPrior": "**ASRA**: 72 hours (or when residual apixaban plasma level < 30 ng/mL or residual aXa activity plasma level <=0.1 IU/mL)\n\n**ESAIC/ESRA**: 5 half-lives (~60 hours)",
+    "HoldPrior": "**ASRA**: 72 hours (or when residual apixaban plasma level < 30 ng/mL or residual aXa activity plasma level ≤0.1 IU/mL)\n\n**ESAIC/ESRA**: 5 half-lives (~60 hours)",
     "ResumeAfter": "24 hours",
     "HoldPriorCathRemoval": "Not advised per ASRA while catheter in place; 72 hours if unanticipated administration",
     "ResumeAfterCathRemoval": "24 hours",
@@ -12,10 +12,10 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Apixaban (Low Dose)",
-    "Dose": "<= 2.5 mg BID",
+    "Dose": "Patient takes ≤ 2.5 mg twice daily",
     "Brand": "Eliquis",
     "Tags": "DOAC, Anti-Xa",
-    "HoldPrior": "36 hours (or when residual apixaban plasma level < 30 ng/mL or residual aXa activity plasma level <=0.1 IU/mL)",
+    "HoldPrior": "36 hours (or when residual apixaban plasma level < 30 ng/mL or residual aXa activity plasma level ≤0.1 IU/mL)",
     "ResumeAfter": "6 hours",
     "HoldPriorCathRemoval": "Not advised per ASRA while catheter in place; 36 hours if unanticipated administration",
     "ResumeAfterCathRemoval": "6 hours",
@@ -34,10 +34,10 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Rivaroxaban (High Dose)",
-    "Dose": "* >= 20 mg daily(CrCl > 50 mL/min)\n* 15 mg daily (CrCl 15-50 mL/min)",
+    "Dose": "Patient takes ≥ 20 mg daily(CrCl > 50 mL/min) OR 15 mg daily (CrCl 15-50 mL/min)",
     "Brand": "Xarelto",
     "Tags": "DOAC, Anti-Xa",
-    "HoldPrior": "72 hours (or when residual Xarelto plasma level < 30 ng/mL or residual aXa activity plasma level <=0.1 IU/mL)",
+    "HoldPrior": "72 hours (or when residual Xarelto plasma level < 30 ng/mL or residual aXa activity plasma level ≤0.1 IU/mL)",
     "ResumeAfter": "24 hours",
     "HoldPriorCathRemoval": "Not advised per ASRA while catheter in place; 72 hours if unanticipated administration",
     "ResumeAfterCathRemoval": "24 hours",
@@ -45,10 +45,10 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Rivaroxaban (Low Dose)",
-    "Dose": "* <= 10 mg once per day (CrCl > 15 mL/min)",
+    "Dose": "Patient takes ≤ 10 mg once per day (CrCl > 15 mL/min)",
     "Brand": "Xarelto",
     "Tags": "DOAC, Anti-Xa",
-    "HoldPrior": "24 hours (or when residual Xarelto plasma level < 30 ng/mL or residual aXa activity plasma level <=0.1 IU/mL)",
+    "HoldPrior": "24 hours (or when residual Xarelto plasma level < 30 ng/mL or residual aXa activity plasma level ≤0.1 IU/mL)",
     "ResumeAfter": "6 hours. ESAIC/ESRA: Consider prolonged time interval if bloody needle/catheter placement.",
     "HoldPriorCathRemoval": "Not advised per ASRA while catheter in place; 24 hours if unanticipated administration",
     "ResumeAfterCathRemoval": "6 hours",
@@ -56,18 +56,18 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Dabigatran (High Dose)",
-    "Dose": "* >= 150 mg BID\n* 75 BID (CrCl 30-50 ml/min and concomitant use of P-glycoprotein inhibitors)\n* 75 mg BID (CrCl < 30 ml/min)",
+    "Dose": "Patient takes: * ≥ 150 mg twice daily\n* 75 twice daily (CrCl 30-50 ml/min and concomitant use of P-glycoprotein inhibitors)\n* 75 mg twice daily (CrCl < 30 ml/min)",
     "Brand": "Pradaxa",
     "Tags": "Direct Thrombin Inhibitor, DOAC",
-    "HoldPrior": "72 hours (CrCl >= 50 ml/min), 120 hours (CrCl 30-49 ml/min), or until plasma level is <30 ng/mL (CrCl < 30 ml/min)",
+    "HoldPrior": "72 hours (CrCl ≥ 50 ml/min), 120 hours (CrCl 30-49 ml/min), or until plasma level is <30 ng/mL (CrCl < 30 ml/min)",
     "ResumeAfter": "24 hours",
-    "HoldPriorCathRemoval": "Not advised per ASRA while catheter in place; 72 hours (CrCl >= 50), 120 hours (CrCl 30-49) if unanticipated administration",
+    "HoldPriorCathRemoval": "Not advised per ASRA while catheter in place; 72 hours (CrCl ≥ 50), 120 hours (CrCl 30-49) if unanticipated administration",
     "ResumeAfterCathRemoval": "",
     "Notes": ""
   },
   {
     "Generic": "Dabigatran (Low Dose)",
-    "Dose": "<= 110 mg once per day first day followed by 220 mg daily (CrCl > 30 mL/min)",
+    "Dose": "Patient takes ≤ 110 mg once per day first day followed by 220 mg daily (CrCl > 30 mL/min)",
     "Brand": "Pradaxa",
     "Tags": "Direct Thrombin Inhibitor, DOAC",
     "HoldPrior": "48 hours (CrCl > 30 ml/min), or when dabigatran plasma level is <30 ng/mL",
@@ -89,8 +89,8 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Heparin, Sub-Q (Low Dose)",
-    "Dose": "5,000U BID-TID",
-    "Brand": "SQH",
+    "Dose": "Patient takes 5,000U twice or three times",
+    "Brand": "Heparin",
     "Tags": "subcutaneous, SQH, UFH",
     "HoldPrior": "4-6 hours after last SQH admin",
     "ResumeAfter": "Immediately",
@@ -100,8 +100,8 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Heparin, Sub-Q (Med Dose)",
-    "Dose": "7,500-10,000U BID",
-    "Brand": "SQH",
+    "Dose": "Patient takes 7,500-10,000U twice daily",
+    "Brand": "Heparin",
     "Tags": "subcutaneous, SQH, UFH",
     "HoldPrior": "12 hours after last SQH admin",
     "ResumeAfter": "1 hour",
@@ -111,8 +111,8 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Heparin, Sub-Q (High Dose)",
-    "Dose": ">10,000U BID",
-    "Brand": "SQH",
+    "Dose": "Patient takes > 10,000U twice daily",
+    "Brand": "Heparin",
     "Tags": "subcutaneous, SQH, UFH",
     "HoldPrior": "24 hours after last SQH admin",
     "ResumeAfter": "1 hour",
@@ -122,7 +122,7 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Enoxaparin (High Dose)",
-    "Dose": "1 mg/kg every 12 hours or 1.5 mg/kg once daily",
+    "Dose": "Patient takes 1 mg/kg every 12 hours OR 1.5 mg/kg once daily",
     "Brand": "Lovenox",
     "Tags": "low molecular weight heparin, LMWH",
     "HoldPrior": "**ASRA**: 24 hours after last admin.\n\n**ESAIC/ESRA**: Hold 2-3 half-lives (~36 hours) after last administration",
@@ -132,8 +132,8 @@ List<Map<String,String>> acDrugs = [
     "Notes": ""
   },
   {
-    "Generic": "Enoxaparin (Low Dose BID)",
-    "Dose": "30 mg BID",
+    "Generic": "Enoxaparin (Low Dose twice daily)",
+    "Dose": "Patient takes 30 mg twice daily",
     "Brand": "Lovenox",
     "Tags": "low molecular weight heparin, LMWH",
     "HoldPrior": "12 hours after last admin",
@@ -144,7 +144,7 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Enoxaparin (Low Dose Daily)",
-    "Dose": "40 mg daily",
+    "Dose": "Patient takes 40 mg daily",
     "Brand": "Lovenox",
     "Tags": "low molecular weight heparin, LMWH",
     "HoldPrior": "12 hours after last admin",
@@ -156,7 +156,7 @@ List<Map<String,String>> acDrugs = [
   {
     "Generic": "NSAIDs",
     "Dose": "",
-    "Brand": "Advil, Motrin, Mobic, Aleve",
+    "Brand": "Advil, Motrin, Mobic, Aleve, etc.",
     "Tags": "Ibuprofen, meloxicam, naproxen",
     "HoldPrior": "No need to hold",
     "ResumeAfter": "No need to hold",
@@ -254,7 +254,7 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Fondaparinux (Low Dose)",
-    "Dose": "2.5 mg daily",
+    "Dose": "Patient takes 2.5 mg daily",
     "Brand": "Arixtra",
     "Tags": "Anti-Xa",
     "HoldPrior": "* 36 hours (young and normal renal function)\n\n* 42 hours (elderly and normal renal function)\n\n* 58 hours (CrCl 30-50 ml/min)\n\n* Do not do procedure for CrCl < 30 ml/min",
@@ -265,7 +265,7 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Fondaparinux (High Dose)",
-    "Dose": "5-10 mg daily",
+    "Dose": "Patient takes 5-10 mg daily",
     "Brand": "Arixtra",
     "Tags": "Anti-Xa",
     "HoldPrior": "* 70 hours (young and normal renal function)\n* 105 hours (elderly and normal renal function)\n* If placing needle prior to suggested times then ensure anti Xa level < 0.1 \n* Consider not doing procedure if renal function impaired",
@@ -288,7 +288,7 @@ List<Map<String,String>> acDrugs = [
   {
     "Generic": "Herbal Therapy",
     "Dose": "",
-    "Brand": "Garlic, Ginkgo, Ginseng, etc.",
+    "Brand": "Garlic, Ginkgo, Ginseng, etc",
     "Tags": "voodoo",
     "HoldPrior": "No need to hold",
     "ResumeAfter": "No need to hold",
@@ -309,7 +309,7 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Dalteparin (High Dose)",
-    "Dose": "120 IU/kg every 12 hours or 200 IU/kg once daily",
+    "Dose": "Patient takes 120 IU/kg every 12 hours or 200 IU/kg once daily",
     "Brand": "Fragmin",
     "Tags": "low molecular weight heparin, LMWH",
     "HoldPrior": "24 hours after last administration",
@@ -320,7 +320,7 @@ List<Map<String,String>> acDrugs = [
   },
   {
     "Generic": "Dalteparin (Low Dose)",
-    "Dose": "5000 IU once daily",
+    "Dose": "Patient takes 5000 IU once daily",
     "Brand": "Fragmin",
     "Tags": "low molecular weight heparin, LMWH",
     "HoldPrior": "12 hours after last administration",

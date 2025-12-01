@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
@@ -356,5 +357,37 @@ class _CheckboxItemState extends State<CheckboxItem> {
         secondary: widget.icon,
       );
     }
+  }
+}
+
+
+class ExpansionInfoTile extends StatelessWidget {
+  final String title;
+  final String content;
+
+  const ExpansionInfoTile({super.key, required this.title, required this.content});
+
+  @override
+  Widget build(BuildContext context) {
+    const headerStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        initiallyExpanded: true,
+        expandedAlignment: Alignment.centerLeft,
+        tilePadding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
+        childrenPadding: const EdgeInsets.only(top: 0, bottom: 10),
+        title: Text(title, style: headerStyle),
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 35.0),
+            child: MarkdownBody(
+              shrinkWrap: true,
+              data: content
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
