@@ -345,7 +345,7 @@ class DoseLog extends StatelessWidget {
               Text(
                 opt['Dose'] ?? '',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 17,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
                   //fontStyle: FontStyle.italic,
@@ -377,7 +377,7 @@ class DoseLog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            //const Text('Select a dose:', style: TextStyle(fontWeight: FontWeight.bold,  fontSize: 20),),
+            const Text('Select a dose:', style: TextStyle(fontWeight: FontWeight.bold,  fontSize: 20),),
             ...definitionWidgets,
           ]
         ),

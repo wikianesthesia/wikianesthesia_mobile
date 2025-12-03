@@ -27,7 +27,7 @@ const List<Map<String, dynamic>> allEPOptions = [
   {
     'name': 'Device Management Flowcharts',
     'shortName': 'Flowcharts',
-    'url': '/ep/flowcharts',
+    'url': '/ep/flowsheet',
     'icon': FontAwesomeIcons.diagramProject,
     'type': 'native',
   },

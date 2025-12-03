@@ -24,7 +24,7 @@ const Map<String, FlowSheetItem> pacemakerManagement = {
     footnotes: [],
   ),
   'prevInterrogated': FlowSheetItem(
-    question: 'Has the pacemaker been interrogated within 1 yr or has remote monitoring?',
+    question: 'Has the pacemaker been interrogated within 1 year or has remote monitoring?',
     options: ['Yes', 'No'],
     next: {
       'Yes': 'paced',
@@ -58,7 +58,7 @@ const Map<String, FlowSheetItem> pacemakerManagement = {
     footnotes: []
   ),
   'biotronik': FlowSheetItem(
-    question: 'Place magnet and confirm uninterrupted asynchronous pacing at 90 BPM.',
+    question: 'Place magnet. Does device asynchronously pace at 90 BPM continuously for longer than 30 seconds?',
     options: ['Yes','No'],
     next: {'Yes': 'consider',
            'No': 'deviceReprogram'},
@@ -113,8 +113,8 @@ const Map<String, FlowSheetItem> icdManagement = {
     question: 'Has the ICD been interrogated within 6 months or has remote monitoring?',
     options: ['Yes', 'No'],
     next: {
-      'Yes': 'device',
-      'No': 'reprogram'
+      'Yes': 'reprogram',
+      'No': 'interrogate'
     },
     footnotes: [],
   ),
@@ -315,7 +315,7 @@ const Map<String,FlowSheetItem> unknownDeviceManagement = {
     options: ['Yes', 'No'],
     next: {
       'Yes': 'pm',
-      'No': 'icd'
+      'No': 'icd-pm'
     },
     footnotes: []
   ),
@@ -324,26 +324,26 @@ const Map<String,FlowSheetItem> unknownDeviceManagement = {
     options: ['Yes', 'No'],
     next: {
       'Yes': 'pm',
-      'No': 'icd-pm'
+      'No': 'icd'
     },
     footnotes: []
   ),
   'pm': FlowSheetItem(
     question: 'Likely pacemaker. Manage per pacemaker flowchart.',
     options: ['Pacemaker Flowchart'],
-    next: {'Pacemaker Flowchart': '/ep/flowcharts/pm'},
+    next: {'Pacemaker Flowchart': '/ep/flowsheet/pm'},
     footnotes: [1,2,3,14]
   ),
   'icd': FlowSheetItem(
-    question: 'Likely ICD. Follow ICD flowchart with electrocautery precautions.',
+    question: 'Likely ICD vs ICD with Pacemaker. Follow ICD flowchart with electrocautery precautions.',
     options: ['ICD Flowchart'],
-    next: {'ICD Flowchart': '/ep/flowcharts/icd'},
+    next: {'ICD Flowchart': '/ep/flowsheet/icd'},
     footnotes: [1,4,5]
   ),
   'icd-pm': FlowSheetItem(
-    question: 'Likely ICD vs ICD-PM. Follow ICD-PM flowchart with electrocautery precautions.',
+    question: 'Confirmed ICD with Pacemaker. Follow ICD-PM flowchart with electrocautery precautions.',
     options: ['ICD-PM Flowchart'],
-    next: {'ICD-PM Flowchart': '/ep/flowcharts/icd-pm'},
+    next: {'ICD-PM Flowchart': '/ep/flowsheet/icd-pm'},
     footnotes: [1,4,5,9,10]
   ),
 };

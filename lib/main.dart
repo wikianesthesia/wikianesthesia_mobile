@@ -18,8 +18,9 @@ import 'package:toastification/toastification.dart';
 
 import 'package:wikianesthesia_mobile/EmergencyManual/emergency_home.dart';
 import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
+import 'package:wikianesthesia_mobile/Pacemaker/ep_flowsheet_menu.dart';
+import 'package:wikianesthesia_mobile/Pacemaker/ep_flowsheet_page.dart';
 import 'package:wikianesthesia_mobile/Pacemaker/ep_home.dart';
-import 'package:wikianesthesia_mobile/Pacemaker/ep_magnet_device.dart';
 import 'package:wikianesthesia_mobile/Pacemaker/ep_magnet_menu.dart';
 import 'package:wikianesthesia_mobile/Pacemaker/ep_magnet_page.dart';
 import 'package:wikianesthesia_mobile/Wiki/account_home.dart';
@@ -84,22 +85,24 @@ final GoRouter _router = GoRouter(
                         routes: [
                           GoRoute(
                             name: 'epmagnetdevice',
-                            path: ':device',
-                            builder: (context, state) => EPMagnetDevice(
+                            path: ':device/:manufacturer',
+                            builder: (context, state) => EPMagnetPage(
+                                manufacturer: state.pathParameters['manufacturer']!,
                                 device: state.pathParameters['device']!),
-                            routes: [
-                              GoRoute(
-                                name: 'epmagnetpage',
-                                path: ':manufacturer',
-                                builder: (context, state) => EPMagnetPage(
-                                    device: state.pathParameters['device']!,
-                                    manufacturer:
-                                        state.pathParameters['manufacturer']!),
-                              ),
-                            ]
                           ),
                         ]
                       ),
+                      GoRoute(
+                        path: 'flowsheet',
+                        builder: (context, state) => const EPFlowsheetMenu(),
+                        routes: [
+                          GoRoute(
+                            path: ':algo',
+                            builder: (context, state) => EPFlowsheet(
+                                flowsheet: state.pathParameters['algo']!),
+                          ),
+                        ]
+                      )
                     ]
                   ),
                   GoRoute(
