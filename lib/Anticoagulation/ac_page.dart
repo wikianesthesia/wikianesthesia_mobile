@@ -60,24 +60,37 @@ class DrugInfoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const headerStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
-    return Theme(
-      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-      child: ExpansionTile(
-        initiallyExpanded: true,
-        expandedAlignment: Alignment.centerLeft,
-        tilePadding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
-        childrenPadding: const EdgeInsets.only(top: 0, bottom: 10),
-        title: Text(title, style: headerStyle),
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 35.0),
-            child: MarkdownBody(
-              shrinkWrap: true,
-              data: content
-            ),
+
+    return ListTile(
+      title: Text(title, style: headerStyle),
+      subtitle: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+        child: SelectionArea(
+          child: MarkdownBody(
+            shrinkWrap: true,
+            data: content,
           ),
-        ],
+        ),
       ),
     );
+    // return Theme(
+    //   data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+    //   child: ExpansionTile(
+    //     initiallyExpanded: true,
+    //     expandedAlignment: Alignment.centerLeft,
+    //     tilePadding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
+    //     childrenPadding: const EdgeInsets.only(top: 0, bottom: 10),
+    //     title: Text(title, style: headerStyle),
+    //     children: [
+    //       Padding(
+    //         padding: const EdgeInsets.symmetric(horizontal: 35.0),
+    //         child: MarkdownBody(
+    //           shrinkWrap: true,
+    //           data: content
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 }
