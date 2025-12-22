@@ -38,41 +38,39 @@ class EmergencyCardState extends State<EmergencyCard> {
 
   @override
   Widget build(context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Container(
-          decoration: const BoxDecoration(
-              border: Border(left: BorderSide(color: Colors.blue, width: 10))),
-          child: ExpansionTile(
-            controller: controller,
-            initiallyExpanded: isExpanded,
-            title: Text(
-              widget.heading,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            dense: true,
-            childrenPadding: const EdgeInsets.only(bottom: 8.0),
-            children: [
-              Markdown(
-                data: widget.body,
-                listItemCrossAxisAlignment:
-                    MarkdownListItemCrossAxisAlignment.start,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(0),
-                onTapLink: (text, href, title) {
-                  if (href!.length > 4 && href.substring(0, 4) == 'http') {
-                    // Open the link in a webview
-                    launchURL(href);
-                  } else {
-                    context.pushNamed('emergencypage',
-                        pathParameters: {'pageTitle': href});
-                  }
-                },
-                styleSheet: _style,
-              )
-            ],
-          )),
+    return ExpansionTile(
+      controller: controller,
+      shape: const Border(),
+      initiallyExpanded: isExpanded,
+      title: Text(
+        widget.heading,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      dense: true,
+      childrenPadding: const EdgeInsets.only(bottom: 8.0),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Markdown(
+            data: widget.body,
+            listItemCrossAxisAlignment:
+                MarkdownListItemCrossAxisAlignment.start,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
+            onTapLink: (text, href, title) {
+              if (href!.length > 4 && href.substring(0, 4) == 'http') {
+                // Open the link in a webview
+                launchURL(href);
+              } else {
+                context.pushNamed('emergencypage',
+                    pathParameters: {'pageTitle': href});
+              }
+            },
+            styleSheet: _style,
+          ),
+        )
+      ],
     );
   }
 }

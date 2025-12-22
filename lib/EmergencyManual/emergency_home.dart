@@ -1,10 +1,37 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherlock/result.dart';
 import 'package:sherlock/sherlock.dart';
+import 'package:wikianesthesia_mobile/EmergencyManual/acls_home.dart';
+import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
 
 import '../util.dart';
 import './emergency_topics.dart';
+
+class ACLSEmergencyChooser extends ConsumerWidget {
+  const ACLSEmergencyChooser({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<List<String>> practiceGroups = ref.watch(wikiPracticeGroupsProvider);
+    List<String> dbKeys = [];
+
+    if (practiceGroups.isNotEmpty) {
+      dbKeys = practiceGroups
+        .map((subList) => subList[0])
+        .toList();
+    }
+    bool isHopkins = dbKeys.contains('Hopkins');
+
+    if (isHopkins) {
+      return const EmergencyHome();
+    } else {
+      return const ACLSHome();
+    }
+
+  }
+}
 
 class EmergencyHome extends StatefulWidget {
   const EmergencyHome({super.key});

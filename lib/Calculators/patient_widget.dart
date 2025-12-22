@@ -164,7 +164,6 @@ class PatientWidgetNarrow extends StatelessWidget {
       heading: 'Patient Demographics',
       controller: ExpansibleController(),
       initiallyExpanded: false,
-      color: Colors.green,
       child: const Row(
         children: [
           Spacer(flex: 1,),
@@ -186,7 +185,6 @@ class PatientWidgetWide extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
       controller: ExpansibleController(),
-      color: Colors.green,
       heading: 'Demographics',
       initiallyExpanded: true,
       child: const Column(

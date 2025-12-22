@@ -2,7 +2,6 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:wikianesthesia_mobile/Calculators/calculator_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:wikianesthesia_mobile/Pacemaker/ep_responses.dart';
-import 'package:wikianesthesia_mobile/util.dart';
 
 class EPMagnetPage extends StatelessWidget {
   final String device;

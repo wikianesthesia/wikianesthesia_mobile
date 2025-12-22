@@ -50,6 +50,7 @@ class MyScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
+// TODO: Move checklists to guideline
 final GoRouter _router = GoRouter(
   initialLocation: '/',
   navigatorKey: _rootNavigatorKey,
@@ -133,6 +134,17 @@ final GoRouter _router = GoRouter(
                         builder: (context, state) => const InsulinPage(),
                       ),
                       GoRoute(
+                        path: 'drugs',
+                        builder: (context, state) => const DrugsPage(),
+                      ),
+                    ],
+                  ),
+                  GoRoute(
+                    path: '/guidelines',
+                    pageBuilder: (context, state) =>
+                        const NoTransitionPage(child: GuidelinesHome()),
+                    routes: [
+                      GoRoute(
                         path: 'ca1',
                         builder: (context, state) => const CA1Guide(),
                       ),
@@ -140,11 +152,7 @@ final GoRouter _router = GoRouter(
                         path: 'pump',
                         builder: (context, state) => const PumpCaseGuide(),
                       ),
-                      GoRoute(
-                        path: 'drugs',
-                        builder: (context, state) => const DrugsPage(),
-                      ),
-                    ],
+                    ]
                   ),
                   GoRoute(
                     path: '/anticoagulation',
@@ -211,7 +219,7 @@ final GoRouter _router = GoRouter(
               GoRoute(
                 path: '/emergency',
                 pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: EmergencyHome()),
+                    const NoTransitionPage(child: ACLSEmergencyChooser()),
                 routes: [
                   GoRoute(
                     name: 'emergencypage',
@@ -286,27 +294,27 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     ),
     NavigationDestination(
       selectedIcon: Icon(
+        Icons.heart_broken,
+        color: Colors.white,
+      ),
+      icon: Icon(Icons.heart_broken_outlined),
+      label: 'ACLS',
+    ),
+    NavigationDestination(
+      selectedIcon: Icon(
+        Icons.library_books,
+        color: Colors.white,
+      ),
+      icon: Icon(Icons.library_books_outlined),
+      label: 'Guidelines',
+    ),
+    NavigationDestination(
+      selectedIcon: Icon(
         Icons.calculate,
         color: Colors.white,
       ),
       icon: Icon(Icons.calculate_outlined),
       label: 'Calculators',
-    ),
-    NavigationDestination(
-      selectedIcon: Icon(
-        Icons.format_color_reset,
-        color: Colors.white,
-      ),
-      icon: Icon(Icons.format_color_reset_outlined),
-      label: 'Coags',
-    ),
-    NavigationDestination(
-      selectedIcon: Icon(
-        Icons.emergency,
-        color: Colors.white,
-      ),
-      icon: Icon(Icons.emergency_outlined),
-      label: 'Emergencies',
     ),
     NavigationDestination(
       selectedIcon: Icon(
@@ -321,12 +329,33 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
   static List<NavigationRailDestination> railDestinations =
       const <NavigationRailDestination>[
     NavigationRailDestination(
+      selectedIcon: ImageIcon(  
+        AssetImage('assets/wikianesthesia_logo.png'),
+        color: Colors.white,
+        size: 30.0,
+      ),
+      icon: ImageIcon(  
+        AssetImage('assets/wikianesthesia_logo.png'),
+        color: Colors.black,
+        size: 30.0,
+      ),
+      label: Text('Home'),
+    ),
+    NavigationRailDestination(
       selectedIcon: Icon(
-        Icons.home,
+        Icons.heart_broken,
         color: Colors.white,
       ),
-      icon: Icon(Icons.home_outlined),
-      label: Text('Home'),
+      icon: Icon(Icons.heart_broken_outlined),
+      label: Text('ACLS'),
+    ),
+    NavigationRailDestination(
+      selectedIcon: Icon(
+        Icons.library_books,
+        color: Colors.white,
+      ),
+      icon: Icon(Icons.library_books_outlined),
+      label: Text('Guidelines'),
     ),
     NavigationRailDestination(
       selectedIcon: Icon(
@@ -335,22 +364,6 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
       ),
       icon: Icon(Icons.calculate_outlined),
       label: Text('Calculators'),
-    ),
-    NavigationRailDestination(
-      selectedIcon: Icon(
-        Icons.format_color_reset,
-        color: Colors.white,
-      ),
-      icon: Icon(Icons.format_color_reset_outlined),
-      label: Text('Coags'),
-    ),
-    NavigationRailDestination(
-      selectedIcon: Icon(
-        Icons.emergency,
-        color: Colors.white,
-      ),
-      icon: Icon(Icons.emergency_outlined),
-      label: Text('Emergencies'),
     ),
     NavigationRailDestination(
       selectedIcon: Icon(
@@ -374,13 +387,13 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
         context.go('/');
         break;
       case 1: 
-        context.go('/calculator');
+        context.go('/emergency');
         break;
       case 2:
-        context.go('/anticoagulation');
+        context.go('/guidelines');
         break;
       case 3:
-        context.go('/emergency');
+        context.go('/calculator');
         break;
       case 4:
         context.go('/account');
@@ -396,15 +409,17 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
       print('Current location: $location');
     }
     if (location.startsWith('/emergency')) {
-      return 3;
-    } else if (location.startsWith('/calc')) {
       return 1;
+    } else if (location.startsWith('/calc')) {
+      return 3;
     } else if (location.startsWith('/account')) {
       return 4;
     } else if (location.startsWith('/anticoagulation')) {
       return 2;
     } else if (location.startsWith('/ep')) {
-      return 1;
+      return 2;
+    } else if (location.startsWith('/guidelines')) {
+      return 2;
     }
     else {
       return 0;

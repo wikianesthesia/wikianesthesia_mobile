@@ -204,35 +204,28 @@ class CollapsibleCard extends StatelessWidget {
   final ExpansibleController controller;
   final Widget child;
   final String heading;
-  final Color color;
   final bool initiallyExpanded;
 
   const CollapsibleCard(
       {required this.heading,
       required this.child,
       required this.controller,
-      this.color = Colors.blue,
       this.initiallyExpanded = false,
       super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Container(
-          decoration: BoxDecoration(
-              border: Border(left: BorderSide(color: color, width: 10))),
-          child: ExpansionTile(
-            controller: controller,
-            initiallyExpanded: initiallyExpanded,
-            title: Text(
-              heading,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            dense: true,
-            childrenPadding: const EdgeInsets.only(bottom: 8.0),
-            children: [child],
-          )),
+    return ExpansionTile(
+      shape: const Border(),
+      controller: controller,
+      initiallyExpanded: initiallyExpanded,
+      title: Text(
+        heading,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      dense: true,
+      childrenPadding: const EdgeInsets.only(bottom: 8.0),
+      children: [child],
     );
   }
 }
@@ -321,7 +314,7 @@ class CheckboxItem extends StatefulWidget {
   State<CheckboxItem> createState() => _CheckboxItemState();
 }
 
-class _CheckboxItemState extends State<CheckboxItem> {
+class _CheckboxItemState extends State<CheckboxItem> with AutomaticKeepAliveClientMixin {
   bool _value = false;
   @override
   void initState() {
@@ -330,7 +323,12 @@ class _CheckboxItemState extends State<CheckboxItem> {
   }
 
   @override
+  bool get wantKeepAlive => true; // This keeps the state alive
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     if (widget.sublabel == '') {
       return CheckboxListTile(
         title: Text(widget.label),

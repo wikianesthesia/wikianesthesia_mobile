@@ -7,6 +7,7 @@ import 'package:wikianesthesia_mobile/util.dart';
 import './emergency_topics.dart';
 import './timer_button.dart';
 
+
 class EmergencyPage extends StatefulWidget {
   final String pageTitle;
   const EmergencyPage({super.key, required this.pageTitle});
@@ -23,7 +24,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
   String _barTitle = '';
 
   /// List of Emergency Cards to display.
-  List<EmergencyCard> _children = [];
+  List<Widget> _children = [];
 
   /// Widget containing all of the Emergency Cards
   late Widget _allCards;
@@ -39,10 +40,10 @@ class _EmergencyPageState extends State<EmergencyPage> {
     super.initState();
     getText();
     renderWidget();
-    _barTitle = emergencyTopics
+    _barTitle = allEmergencyTopics
         .where((p) => p["pageTitle"] == widget.pageTitle)
         .first['name'];
-  }
+  }  
 
   Future<String> getText() async {
     /// Loads in the Markdown Content
@@ -65,9 +66,14 @@ class _EmergencyPageState extends State<EmergencyPage> {
   }
 
   void renderWidget() {
-    _allCards = SingleChildScrollView(
-      child: Column(
-        children: _children,
+    _allCards = Padding(
+      padding: const EdgeInsets.only(bottom: 5.0, left: 2.0, right: 2.0, top: 0.0),
+      child: Card(
+        child: SingleChildScrollView(
+          child: Column(
+            children: _children,
+          ),
+        ),
       ),
     );
 
@@ -81,7 +87,25 @@ class _EmergencyPageState extends State<EmergencyPage> {
             ),
           ],
         ),
+      'Basic_PEA' => Column(
+          children: [
+            const SizedBox(height: 10),
+            const PEAButtons(),
+            Expanded(
+              child: _allCards,
+            ),
+          ],
+        ),
       'ACLS-VFVT' => Column(
+          children: [
+            const SizedBox(height: 10),
+            const VFButtons(),
+            Expanded(
+              child: _allCards,
+            ),
+          ],
+        ),
+      'Basic_VFVT' => Column(
           children: [
             const SizedBox(height: 10),
             const VFButtons(),
@@ -131,9 +155,9 @@ class _EmergencyPageState extends State<EmergencyPage> {
     };
   }
 
-  List<EmergencyCard> parseText() {
+  List<Widget> parseText() {
     /// Takes the Markdown content and split it into Emergency Cards.
-    List<EmergencyCard> parsed = [];
+    List<Widget> parsed = [];
     List<String> allSteps = _text.split('#');
 
     for (String step in allSteps) {
@@ -153,6 +177,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
       GlobalKey<EmergencyCardState> key = GlobalKey(debugLabel: heading);
       _cardKeys.add(key);
       parsed.add(EmergencyCard(body: body, heading: heading, key: key));
+      parsed.add(const Divider(height: 1));
     }
 
     return parsed;
@@ -160,7 +185,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
   
   @override
   Widget build(BuildContext context) {
-    bool isCardiacPage = widget.pageTitle == 'ACLS-AsystolePEA' || widget.pageTitle == 'ACLS-VFVT' || widget.pageTitle == 'HandTs';
+    bool isCardiacPage = widget.pageTitle == 'ACLS-AsystolePEA' || widget.pageTitle == 'ACLS-VFVT' || widget.pageTitle == 'HandTs' || widget.pageTitle == 'Basic_PEA' || widget.pageTitle == 'Basic_VFVT' || widget.pageTitle == 'Basic_PEA';
     final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(

@@ -11,7 +11,6 @@ class PreOpOrders extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.blue,
         heading: 'Pre-Op Orders',
         initiallyExpanded: false,
         child: const Column(
@@ -59,7 +58,6 @@ class Setup extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.blue,
         heading: 'Setup',
         initiallyExpanded: false,
         child: const Column(
@@ -140,7 +138,6 @@ class Drips extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.blue,
         heading: 'Drips (left to right, top to bottom)',
         initiallyExpanded: false,
         child: const Column(
@@ -192,7 +189,6 @@ class Start extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.green,
         heading: 'Case Start',
         initiallyExpanded: false,
         child: const Column(
@@ -249,7 +245,6 @@ class GoingOn extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.green,
         heading: 'Going Onto Bypass',
         initiallyExpanded: false,
         child: const Column(
@@ -302,7 +297,6 @@ class OnBypass extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.green,
         heading: 'On Bypass',
         initiallyExpanded: false,
         child: const Column(
@@ -355,7 +349,6 @@ class ComingOff extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.green,
         heading: 'Coming Off Bypass',
         initiallyExpanded: false,
         child: const Column(
@@ -412,7 +405,6 @@ class Closing extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.green,
         heading: 'Closing',
         initiallyExpanded: false,
         child: const Column(

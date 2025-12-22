@@ -135,7 +135,6 @@ class AirwayEquipment extends ConsumerWidget {
 
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.blue,
         heading: 'Airway Equipment',
         initiallyExpanded: false,
         child: DataTable(
@@ -228,7 +227,6 @@ class VascularEquipment extends ConsumerWidget {
 
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.red,
         heading: 'Vascular Access',
         initiallyExpanded: false,
         child: DataTable(

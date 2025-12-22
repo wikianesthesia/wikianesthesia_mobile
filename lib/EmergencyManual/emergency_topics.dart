@@ -248,3 +248,52 @@ const List<Map<String, dynamic>> emergencyTopics = [
     'iconColor': Colors.white
   },
 ];
+
+const List<Map<String, dynamic>> aclsTopics = [
+  {
+    'name': 'Asystole / PEA',
+    'pageTitle': 'Basic_PEA',
+    'tags': 'ACLS,Cardiac Arrest,Code Blue',
+    'icon': Icons.heart_broken,
+    'backgroundColor': Colors.red,
+    'iconColor': Colors.white
+  },
+  {
+    'name': 'VFib / VTach',
+    'pageTitle': 'Basic_VFVT',
+    'tags': 'ACLS Cardiac Arrest Code Blue VT VF',
+    'icon': Icons.heart_broken,
+    'backgroundColor': Colors.red,
+    'iconColor': Colors.white
+  },
+  {
+    'name': 'H\'s and T\'s',
+    'pageTitle': 'HandTs',
+    'tags': 'ACLS Cardiac Arrest Code Blue',
+    'icon': Icons.heart_broken,
+    'backgroundColor': Colors.red,
+    'iconColor': Colors.white
+  },
+  {
+    'name': 'Bradycardia',
+    'pageTitle': 'Basic_Brady',
+    'tags': 'ACLS Arrhythmia Slow heart rate',
+    'icon': Icons.monitor_heart,
+    'backgroundColor': Colors.red,
+    'iconColor': Colors.white
+  },
+  {
+    'name': 'Tachycardia',
+    'pageTitle': 'Basic_Tach',
+    'tags': 'ACLS Arrhythmia Fast heart rate Tachycardia SVT VT AFib RVR',
+    'icon': Icons.monitor_heart,
+    'backgroundColor': Colors.red,
+    'iconColor': Colors.white
+  },
+];
+
+
+const List<Map<String, dynamic>> allEmergencyTopics = [
+  ...emergencyTopics,
+  ...aclsTopics,
+];

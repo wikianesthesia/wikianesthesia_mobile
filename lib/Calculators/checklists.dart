@@ -7,6 +7,8 @@ import 'package:wikianesthesia_mobile/util.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+// TODO: make style consistent with rest of app with ExpansionPanelRadio
+
 class PreOp extends ConsumerWidget {
   const PreOp({super.key});
 
@@ -19,7 +21,6 @@ class PreOp extends ConsumerWidget {
 
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.blue,
         heading: 'Pre-Op',
         initiallyExpanded: false,
         child: Column(
@@ -28,7 +29,7 @@ class PreOp extends ConsumerWidget {
               width: 10,
             ),
             const CheckboxItem(
-              label: 'Review H&P, CPO Note',
+              label: 'Review H&P, Pre-Op Clinic Note',
               icon: Icon(Icons.person),
             ),
             const CheckboxItem(
@@ -77,7 +78,6 @@ class StandardSetup extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.blue,
         heading: 'Basic Room Setup',
         initiallyExpanded: false,
         child: const Column(
@@ -222,7 +222,6 @@ class ALine extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.red,
         heading: 'Arterial Line Kit',
         initiallyExpanded: false,
         child: const Column(
@@ -278,7 +277,6 @@ class StandardStart extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.green,
         heading: 'Case Start',
         initiallyExpanded: false,
         child: const Column(
@@ -353,7 +351,6 @@ class Closing extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.green,
         heading: 'Closing/Waking Up',
         initiallyExpanded: false,
         child: const Column(
@@ -418,23 +415,28 @@ class CA1Guide extends ConsumerWidget {
   static const Map<String, List<Widget>> practiceGroupSpecificChecklists = {
     'Hopkins': [
       HopkinsTrauma(),
+      Divider(height: 0),
       HopkinsDitzel(),
+      Divider(height: 0),
       HopkinsNIR(),
     ]
   };
 
   static const List<Widget> defaultChecklists = [
     PreOp(),
+    Divider(height: 0),
     StandardSetup(),
+    Divider(height: 0),
     ALine(),
+    Divider(height: 0),
     StandardStart(),
+    Divider(height: 0),
     Closing(),
   ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Widget> checklists = [];
-    checklists.addAll(defaultChecklists);
+    List<Widget> checklists = defaultChecklists;
 
     List<List<String>> practiceGroups = ref.watch(wikiPracticeGroupsProvider);
     List<String> dbKeys = practiceGroups
@@ -442,13 +444,20 @@ class CA1Guide extends ConsumerWidget {
         .toList(); // Extract the database keys from the practice groups
     // Check if there are any practice group specific checklists to add
     for (var dbKey in dbKeys) {
+      checklists.add(const Divider(height: 0));
       checklists.addAll(practiceGroupSpecificChecklists[dbKey] ?? []);
     }
 
     return CalculatorScaffold(
       title: 'Checklists',
-      child: ListView(
-        children: checklists,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
+        child: Card(
+          child: ListView(
+            shrinkWrap: true,
+            children: checklists,
+          ),
+        ),
       ),
     );
   }

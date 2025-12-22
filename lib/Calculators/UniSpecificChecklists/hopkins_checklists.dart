@@ -9,7 +9,6 @@ class HopkinsTrauma extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.yellow,
         heading: 'Trauma Room Setup',
         initiallyExpanded: false,
         child: const Column(
@@ -88,7 +87,6 @@ class HopkinsDitzel extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.yellow,
         heading: 'Ditzel Room Setup',
         initiallyExpanded: false,
         child: const Column(
@@ -147,7 +145,6 @@ class HopkinsNIR extends StatelessWidget {
   Widget build(BuildContext context) {
     return CollapsibleCard(
         controller: ExpansibleController(),
-        color: Colors.yellow,
         heading: 'Neuro IR Setup (aka 316 aka Hell)',
         initiallyExpanded: false,
         child: const Column(

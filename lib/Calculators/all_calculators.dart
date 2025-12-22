@@ -36,13 +36,6 @@ const List<Map<String, dynamic>> allCalculators = [
     'type': 'wikipage',
   },
   {
-    'name': 'Cardiac EP Devices',
-    'shortName': 'EP',
-    'url': '/ep',
-    'icon': FontAwesomeIcons.heartCircleBolt,
-    'type': 'native',
-  },
-  {
     'name': 'Insulin Drip',
     'shortName': 'Insulin',
     'url': '/calculator/insulin',
@@ -79,26 +72,43 @@ const List<Map<String, dynamic>> allCalculators = [
     'type': 'wikipage',
   },
   {
+    'name': 'Calculator Guide',
+    'shortName': 'Guide',
+    'url': 'Calculators_guide',
+    'icon': FontAwesomeIcons.book,
+    'type': 'wikipage',
+  },
+];
+
+const List<Map<String, dynamic>> allGuidelines = [
+  {
+    'name': 'Anticoagulation Management',
+    'shortName': 'Coags',
+    'url': '/anticoagulation',
+    'icon': Icons.format_color_reset,
+    'type': 'native',
+  },
+  {
+    'name': 'Cardiac EP Devices',
+    'shortName': 'EP',
+    'url': '/ep',
+    'icon': FontAwesomeIcons.heartCircleBolt,
+    'type': 'native',
+  },
+  {
     'name': 'Checklists',
     'shortName': 'Checklists',
-    'url': '/calculator/ca1',
+    'url': '/guidelines/ca1',
     'icon': Icons.checklist,
     'type': 'native',
   },
   {
     'name': 'Pump Case',
     'shortName': 'Pump Case',
-    'url': '/calculator/pump',
+    'url': '/guidelines/pump',
     'icon': Icons.favorite,
     'type': 'native',
     'restrict': 'Hopkins',
-  },
-  {
-    'name': 'Calculator Guide',
-    'shortName': 'Guide',
-    'url': 'Calculators_guide',
-    'icon': FontAwesomeIcons.book,
-    'type': 'wikipage',
   },
 ];
 
@@ -149,6 +159,17 @@ ExpansionPanelRadio calcPanel(BuildContext context) {
   );
 }
 
+ExpansionPanelRadio guidelinesPanel(BuildContext context) {
+  return ExpansionPanelRadio(
+    headerBuilder: (context, isExpanded) => const ListTile(title: Text('Calculators')),
+    value: 'calculators',
+    canTapOnHeader: true,
+    body: Column(
+      children: allGuidelines.map((calc) => CalculatorListTile(calculator: calc)).toList(),
+    )
+  );
+}
+
 class CalculatorIconButton extends StatelessWidget {
   final Map<String,dynamic> calculator;
   const CalculatorIconButton({super.key, required this.calculator});
@@ -194,6 +215,45 @@ class CalculatorGrid extends ConsumerWidget {
           children: ListTile.divideTiles(
             context: context,
             tiles: allCalculators.map((calc) {
+                if (calc.containsKey('restrict') && !dbKeys.contains(calc['restrict'])) {
+                  return null;
+                } else {
+                  return CalculatorIconButton(calculator: calc);
+              }
+            }).where((e) => e != null) // Remove null items
+            .cast<Widget>()
+            .toList(),
+          ).toList()
+        ),
+      ),
+    );
+  }
+}
+
+class GuidelinesGrid extends ConsumerWidget {
+  const GuidelinesGrid({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<List<String>> practiceGroups = ref.watch(wikiPracticeGroupsProvider);
+    List<String> dbKeys = [];
+
+    if (practiceGroups.isNotEmpty) {
+      dbKeys = practiceGroups
+        .map((subList) => subList[0])
+        .toList();
+    }
+
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
+      child: Card(
+        clipBehavior: Clip.hardEdge,
+        child: ListView(
+          shrinkWrap: true,
+          children: ListTile.divideTiles(
+            context: context,
+            tiles: allGuidelines.map((calc) {
                 if (calc.containsKey('restrict') && !dbKeys.contains(calc['restrict'])) {
                   return null;
                 } else {
