@@ -18,6 +18,7 @@ import 'package:toastification/toastification.dart';
 
 import 'package:wikianesthesia_mobile/EmergencyManual/emergency_home.dart';
 import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
+import 'package:wikianesthesia_mobile/LocalAnesthetics/local_calc.dart';
 import 'package:wikianesthesia_mobile/Pacemaker/ep_flowsheet_menu.dart';
 import 'package:wikianesthesia_mobile/Pacemaker/ep_flowsheet_page.dart';
 import 'package:wikianesthesia_mobile/Pacemaker/ep_home.dart';
@@ -50,7 +51,6 @@ class MyScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
-// TODO: Move checklists to guideline
 final GoRouter _router = GoRouter(
   initialLocation: '/',
   navigatorKey: _rootNavigatorKey,
@@ -152,6 +152,10 @@ final GoRouter _router = GoRouter(
                         path: 'pump',
                         builder: (context, state) => const PumpCaseGuide(),
                       ),
+                      GoRoute(
+                        path: 'local',
+                        builder: (context, state) => const LocalPage(),
+                      )
                     ]
                   ),
                   GoRoute(
@@ -302,11 +306,11 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     ),
     NavigationDestination(
       selectedIcon: Icon(
-        Icons.library_books,
+        Icons.construction,
         color: Colors.white,
       ),
-      icon: Icon(Icons.library_books_outlined),
-      label: 'Guidelines',
+      icon: Icon(Icons.construction_outlined),
+      label: 'Tools',
     ),
     NavigationDestination(
       selectedIcon: Icon(
@@ -351,11 +355,11 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     ),
     NavigationRailDestination(
       selectedIcon: Icon(
-        Icons.library_books,
+        Icons.construction,
         color: Colors.white,
       ),
-      icon: Icon(Icons.library_books_outlined),
-      label: Text('Guidelines'),
+      icon: Icon(Icons.construction_outlined),
+      label: Text('Tools'),
     ),
     NavigationRailDestination(
       selectedIcon: Icon(

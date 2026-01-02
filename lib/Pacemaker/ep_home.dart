@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wikianesthesia_mobile/Anticoagulation/disclaimers_log.dart';
 import 'package:wikianesthesia_mobile/Calculators/calculator_scaffold.dart';
 
 class EPHome extends StatelessWidget {
@@ -15,7 +16,6 @@ class EPHome extends StatelessWidget {
   }
 }
 
-// TODO: add disclaimers
 const List<Map<String, dynamic>> allEPOptions = [
   {
     'name': 'Device Magnet Responses',
@@ -31,6 +31,13 @@ const List<Map<String, dynamic>> allEPOptions = [
     'icon': FontAwesomeIcons.diagramProject,
     'type': 'native',
   },
+  {
+    'name': 'Disclaimers, Updates, and References',
+    'shortName': 'Flowcharts',
+    'url': 'EP_Disclaimers',
+    'icon': Icons.info,
+    'type': 'popup',
+  },
 ];
 
 class EPListTile extends StatelessWidget {
@@ -43,7 +50,16 @@ class EPListTile extends StatelessWidget {
       leading: Icon(option['icon']),
       title: Text(option['name']),
       onTap: () {
-        context.push(option['url']);
+        if (option['type'] == 'popup') {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const DisclaimersLog(title: 'EP_Disclaimers');
+            },
+          );
+        } else if (option['type'] == 'native') {
+          context.push(option['url']);
+        }
       },
     );
   }

@@ -83,14 +83,14 @@ const List<Map<String, dynamic>> allCalculators = [
 const List<Map<String, dynamic>> allGuidelines = [
   {
     'name': 'Anticoagulation Management',
-    'shortName': 'Coags',
+    'shortName': 'AC Management',
     'url': '/anticoagulation',
     'icon': Icons.format_color_reset,
     'type': 'native',
   },
   {
     'name': 'Cardiac EP Devices',
-    'shortName': 'EP',
+    'shortName': 'EP Devices',
     'url': '/ep',
     'icon': FontAwesomeIcons.heartCircleBolt,
     'type': 'native',
@@ -100,6 +100,13 @@ const List<Map<String, dynamic>> allGuidelines = [
     'shortName': 'Checklists',
     'url': '/guidelines/ca1',
     'icon': Icons.checklist,
+    'type': 'native',
+  },
+  {
+    'name': 'Local Anesthetic Dosing',
+    'shortName': 'Local Dosing',
+    'url': '/guidelines/local',
+    'icon': FontAwesomeIcons.syringe,
     'type': 'native',
   },
   {
@@ -135,7 +142,7 @@ class CalculatorListTile extends ConsumerWidget {
 
     return ListTile(
       leading: Icon(calculator['icon']),
-      title: Text(calculator['name']),
+      title: Text(calculator['shortName']),
       onTap: () {
         context.pop();
         if (calculator['type'] == 'wikipage') {
@@ -161,8 +168,8 @@ ExpansionPanelRadio calcPanel(BuildContext context) {
 
 ExpansionPanelRadio guidelinesPanel(BuildContext context) {
   return ExpansionPanelRadio(
-    headerBuilder: (context, isExpanded) => const ListTile(title: Text('Calculators')),
-    value: 'calculators',
+    headerBuilder: (context, isExpanded) => const ListTile(title: Text('Tools')),
+    value: 'guidelines',
     canTapOnHeader: true,
     body: Column(
       children: allGuidelines.map((calc) => CalculatorListTile(calculator: calc)).toList(),

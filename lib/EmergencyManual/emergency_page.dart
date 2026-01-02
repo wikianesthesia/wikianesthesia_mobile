@@ -130,22 +130,34 @@ class _EmergencyPageState extends State<EmergencyPage> {
               children: [
                 const Spacer(),
                 ElevatedButton(
-                    onPressed: () {
-                      // Collapse or expand all cards
-                      for (var key in _cardKeys) {
-                        key.currentState!.expand();
-                      }
-                    },
-                    child: const Text('Expand All')),
+                  style: OutlinedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8), // Set border radius
+                    ),
+                  ),
+                  onPressed: () {
+                    // Collapse or expand all cards
+                    for (var key in _cardKeys) {
+                      key.currentState!.expand();
+                    }
+                  },
+                  child: const Text('Expand All')
+                ),
                 const Spacer(),
                 ElevatedButton(
-                    onPressed: () {
-                      // Collapse or expand all cards
-                      for (var key in _cardKeys) {
-                        key.currentState!.collapse();
-                      }
-                    },
-                    child: const Text('Collapse All')),
+                  style: OutlinedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8), // Set border radius
+                    ),
+                  ),
+                  onPressed: () {
+                    // Collapse or expand all cards
+                    for (var key in _cardKeys) {
+                      key.currentState!.collapse();
+                    }
+                  },
+                  child: const Text('Collapse All')
+                ),
                 const Spacer(),
               ],
             ),

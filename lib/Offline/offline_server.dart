@@ -11,7 +11,6 @@ import 'package:shelf_proxy/shelf_proxy.dart';
 import 'package:wikianesthesia_mobile/Offline/asset_maps.dart';
 
 // TODO: Implement HTTPS
-// TODO: Change .plist to allow ClearText on iOS
 
 class OfflineServer {
   /// Starts a local HTTP server to enable offline access to WikiAnesthesia resources.

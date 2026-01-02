@@ -29,36 +29,45 @@ class Patient {
   }
   
   void setAge(String value, String units) {
-    age = switch (units) {
-      'yr' => double.parse(value),
-      'mo' => double.parse(value) / 12,
-      'wk' => double.parse(value) / 48,
-      _ => null,  
-    };
+    if (value.isEmpty || units.isEmpty) {
+      age = null;
+    } else {
+      age = switch (units) {
+        'yr' => double.parse(value),
+        'mo' => double.parse(value) / 12,
+        'wk' => double.parse(value) / 48,
+        _ => null,  
+      };
+    }
     computeWeights();
   }
 
   void setWeight(String value, String units) {
-    weight = switch (units) {
-      'kg' => double.parse(value) ,
-      'lbs' => double.parse(value) / 2.205,
-      'g' => double.parse(value) / 1000,
-      _ => null,
-    };
+    if (value.isEmpty || units.isEmpty) {
+      weight = null;
+    } else {
+      weight = switch (units) {
+        'kg' => double.parse(value) ,
+        'lbs' => double.parse(value) / 2.205,
+        'g' => double.parse(value) / 1000,
+        _ => null,
+      };
+    }
     computeWeights();
   }
 
   void setHeight(String value, String units) {
     if (value == "" || units == "") {
-      return;
+      height = null;
+    } else {
+      height = switch (units) {
+        'cm' => double.parse(value) ,
+        'm' => double.parse(value) / 1000,
+        'in' => double.parse(value) / 2.54,
+        'ft' => double.parse(value) / 30.48,
+        _ => null,
+      };
     }
-    height = switch (units) {
-      'cm' => double.parse(value) ,
-      'm' => double.parse(value) / 1000,
-      'in' => double.parse(value) / 2.54,
-      'ft' => double.parse(value) / 30.48,
-      _ => null,
-    };
     computeWeights();
   }
 
@@ -189,7 +198,7 @@ class Patient {
 class PatientDemo extends _$PatientDemo{
   @override
   Patient build() {
-    return Patient(40,70,170,'M');
+    return Patient(null,null,null,null);
   }
 
   void setDemo(String value, String units, String demo) {

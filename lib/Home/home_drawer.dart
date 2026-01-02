@@ -161,6 +161,7 @@ class HomeDrawer extends ConsumerWidget {
               materialGapSize: 3,
               children: practiceGroupTiles + [
                 articlesPanel(context),
+                guidelinesPanel(context),
                 calcPanel(context),
                 helpPanel(context, userName),
                 if (isLoggedIn) accountPanel(context, userName),

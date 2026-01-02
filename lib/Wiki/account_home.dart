@@ -44,6 +44,20 @@ class AccountHome extends StatelessWidget {
 List<Map<String,dynamic>> allAccountOptions(String userName) {
   return [
     {
+      'name': 'Hopkins Phone Numbers',
+      'url': '/practicegroup/phone',
+      'icon': Icons.favorite,
+      'type': 'native',
+      'restrict': 'Hopkins',
+    },
+    {
+      'name': 'Hopkins Door Codes',
+      'url': '/practicegroup/codes',
+      'icon': Icons.favorite,
+      'type': 'native',
+      'restrict': 'Hopkins',
+    },
+    {
       'type': 'wikipage',
       'url': 'https://wikianesthesia.org/wiki/User:$userName',
       'icon': FontAwesomeIcons.userDoctor,
@@ -103,14 +117,44 @@ List<Map<String,dynamic>> accountLogInOption = [{
       'name': 'Log in',
     }];
 
-class AccountDrawerTile extends StatelessWidget {
+class AccountDrawerTile extends ConsumerWidget {
   /// Account Options for the Drawer
   final Map<String,dynamic> accountOption;
   final String userName;
   const AccountDrawerTile({super.key, required this.userName, required this.accountOption});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<List<String>> practiceGroups = ref.watch(wikiPracticeGroupsProvider);
+
+    List<String> dbKeys = [];
+
+    if (practiceGroups.isNotEmpty) {
+      dbKeys = practiceGroups
+        .map((subList) => subList[0])
+        .toList();
+    }
+
+    // Check to see if calculator is restricted only to certain practice group
+    if (accountOption.containsKey('restrict') && !dbKeys.contains(accountOption['restrict'])) {
+      return const SizedBox.shrink();
+    }
+
+    Color? color;
+
+    color = switch (accountOption['name']) {
+        'Log in' => Colors.green[50],
+        'Log out' => Colors.red[50],
+        _ => null,
+    };
+
+    if (color == null) {
+      if (accountOption.containsKey('restrict')) {
+        color = Colors.blue[50];
+      }
+    }
+
+
     return ListTile(
       leading: Icon(accountOption['icon']),
       title:  Text(accountOption['name']),
@@ -122,21 +166,46 @@ class AccountDrawerTile extends StatelessWidget {
           context.push(accountOption['url']);
         }
       },
-      tileColor: switch (accountOption['name']) {
-        'Log in' => Colors.green[50],
-        'Log out' => Colors.red[50],
-        _ => null,
-      }
+      tileColor: color,
     );
   }
 }
 
-class AccountMenuTile extends StatelessWidget {
+class AccountMenuTile extends ConsumerWidget {
   final Map<String,dynamic> accountOption;
   const AccountMenuTile({super.key, required this.accountOption});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<List<String>> practiceGroups = ref.watch(wikiPracticeGroupsProvider);
+
+    List<String> dbKeys = [];
+
+    if (practiceGroups.isNotEmpty) {
+      dbKeys = practiceGroups
+        .map((subList) => subList[0])
+        .toList();
+    }
+
+    // Check to see if calculator is restricted only to certain practice group
+    if (accountOption.containsKey('restrict') && !dbKeys.contains(accountOption['restrict'])) {
+      return const SizedBox.shrink();
+    }
+
+    Color? color;
+
+    color = switch (accountOption['name']) {
+        'Log in' => Colors.green[50],
+        'Log out' => Colors.red[50],
+        _ => null,
+    };
+
+    if (color == null) {
+      if (accountOption.containsKey('restrict')) {
+        color = Colors.blue[50];
+      }
+    }
+
     return ListTile(
       leading: Icon(accountOption['icon']),
       trailing: const Icon(Icons.chevron_right),
@@ -148,11 +217,7 @@ class AccountMenuTile extends StatelessWidget {
           context.push(accountOption['url']);
         }
       },
-      tileColor: switch (accountOption['name']) {
-        'Log in' => Colors.green[50],
-        'Log out' => Colors.red[50],
-        _ => null,
-      },
+      tileColor: color,
     );
     
     // InkWell(

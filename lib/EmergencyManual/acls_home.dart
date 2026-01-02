@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:wikianesthesia_mobile/EmergencyManual/emergency_home.dart';
 import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
 import 'package:wikianesthesia_mobile/Wiki/account_widget.dart';
 

@@ -1,11 +1,11 @@
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:wikianesthesia_mobile/Anticoagulation/ac_drugs.dart';
+import 'package:wikianesthesia_mobile/Anticoagulation/disclaimers_log.dart';
 import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
 import 'package:wikianesthesia_mobile/Wiki/account_widget.dart';
 import 'package:wikianesthesia_mobile/util.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:sherlock/result.dart';
 import 'package:sherlock/sherlock.dart';
@@ -163,7 +163,7 @@ class OpenDisclaimers extends StatelessWidget {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const DisclaimersLog();
+            return const DisclaimersLog(title: 'AC_Disclaimers');
           },
         );
       },
@@ -255,59 +255,6 @@ class DrugListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: ListTile.divideTiles(tiles: buildDrugListTiles(), context: context).toList(),
-    );
-  }
-}
-
-class DisclaimersLog extends StatefulWidget {
-  const DisclaimersLog({super.key});
-
-  @override
-  State<DisclaimersLog> createState() => _DisclaimersLogState();
-}
-
-class _DisclaimersLogState extends State<DisclaimersLog> {
-  String disclaimerText = '';
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Load the disclaimers from the markdown file
-    loadDisclaimers();
-  }
-
-  void loadDisclaimers() async {
-    final String response = await rootBundle.loadString('assets/AC_Disclaimers.md');
-    setState(() {
-      disclaimerText = response;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context){
-    return Dialog.fullscreen(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Scrollbar(
-              child: Markdown(
-                onTapLink: (text, href, title) {
-                  if (href != null) {
-                    launchURL(href);
-                  }
-                },
-                data: disclaimerText,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
     );
   }
 }

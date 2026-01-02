@@ -1,14 +1,12 @@
 import 'package:wikianesthesia_mobile/Calculators/calculator_scaffold.dart';
 import 'package:wikianesthesia_mobile/Calculators/equipment.dart';
 import 'package:wikianesthesia_mobile/Calculators/patient_demo.dart';
-import 'package:wikianesthesia_mobile/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DemoWidget extends ConsumerStatefulWidget {
   final _textController = TextEditingController();
-  final _unitsController = TextEditingController();
 
   final String name;
   final List<String> units;
@@ -27,14 +25,16 @@ class DemoWidget extends ConsumerStatefulWidget {
 
 class _DemoWidgetState extends ConsumerState<DemoWidget> {
   bool initialized = false;
+  String selectedUnit = '';
 
   @override
   void initState() {
     super.initState();  
+    selectedUnit = widget.defaultUnit;
   }
 
   void update() {
-    ref.read(patientDemoProvider.notifier).setDemo(widget._textController.text, widget._unitsController.text, widget.name);
+    ref.read(patientDemoProvider.notifier).setDemo(widget._textController.text, selectedUnit, widget.name);
   }
 
   @override
@@ -44,7 +44,7 @@ class _DemoWidgetState extends ConsumerState<DemoWidget> {
     // Check if the text controller has been initialized
     if (!initialized) {
       // Set the initial value of the text controller to the current value in the state
-      widget._textController.value = TextEditingValue(text: patientDemo[widget.name].toString());
+      widget._textController.value = TextEditingValue(text: (patientDemo[widget.name] ?? '').toString());
       initialized = true;
     }
 
@@ -54,23 +54,43 @@ class _DemoWidgetState extends ConsumerState<DemoWidget> {
           children: [
             SizedBox(
               width: 60,
-              child: TextField(
+              child: TextFormField(
                 controller: widget._textController,
-                keyboardType: TextInputType.number,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: false),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+                ],
                 maxLines: 1,
                 maxLengthEnforcement: MaxLengthEnforcement.enforced,
                 decoration: InputDecoration(
+                  //contentPadding: const EdgeInsets.all(0),
                   labelText: widget.name,
+                  //isDense: true,
+                  constraints: BoxConstraints.tight(const Size.fromHeight(50)), 
                 ),
                 onChanged: (value) => update(),
               ),
             ),
             const SizedBox(width: 10,),
-            DropdownMenu(
-              controller: widget._unitsController,
-              dropdownMenuEntries: widget.dropdownMenuEntries,
-              initialSelection: widget.defaultUnit,
-              onSelected: (value) => update(),
+            SizedBox(
+              child: DropdownMenu(
+                textAlign: TextAlign.center,
+                width: 85,
+                trailingIcon: Transform.translate(offset: const Offset(5,0), child: const Icon(Icons.arrow_drop_down),),
+                label: const Text(''),
+                inputDecorationTheme: InputDecorationTheme(
+                  //contentPadding: const EdgeInsets.all(0),
+                  //isDense: true,
+                  constraints: BoxConstraints.tight(const Size.fromHeight(50)),
+                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                ),
+                dropdownMenuEntries: widget.dropdownMenuEntries,
+                initialSelection: selectedUnit,
+                onSelected: (value) => setState(() {
+                  selectedUnit = value as String;
+                  update();
+                }),
+              ),
             )
           ],
         )
@@ -108,28 +128,25 @@ class _SexWidgetState extends ConsumerState<SexWidget> {
     // Check if the text controller has been initialized
     if (!initialized) {
       // Set the initial value of the text controller to the current value in the state
-      widget._textController.value = TextEditingValue(text: patientDemo['Sex']);
+      widget._textController.value = TextEditingValue(text: patientDemo['Sex'] ?? '');
       initialized = true;
     }
 
-    return Column(
-      children: [
-        Row(
-          children: [
-            const Text('Sex'),
-            const SizedBox(width: 20,),
-            // Weight Input
-            DropdownMenu(
-              controller: widget._textController,
-              dropdownMenuEntries: const [
-                DropdownMenuEntry(value: 'M', label: 'M'),
-                DropdownMenuEntry(value: 'F', label: 'F'),
-              ],
-              onSelected: (value) => update(ref),
-            )
-          ],
-        )
+    return DropdownMenu(
+      width: 90,
+      label: const Text('Sex'),
+      inputDecorationTheme: InputDecorationTheme(
+          //contentPadding: const EdgeInsets.all(0),
+          //isDense: true,
+          constraints: BoxConstraints.tight(const Size.fromHeight(50)),
+          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+        ),
+      controller: widget._textController,
+      dropdownMenuEntries: const [
+        DropdownMenuEntry(value: 'M', label: 'M'),
+        DropdownMenuEntry(value: 'F', label: 'F'),
       ],
+      onSelected: (value) => update(ref),
     );
   }
 }
@@ -143,11 +160,15 @@ class PatientWidget extends StatelessWidget {
   Widget build(BuildContext context){
     return LayoutBuilder(
       builder: (context,constraints) {
-        if (constraints.maxWidth < 800) {
-          return const PatientWidgetNarrow();
+        Widget choice;
+
+        if (constraints.maxWidth < 650) {
+          choice = const PatientWidgetNarrow();
         } else {
-          return const PatientWidgetWide();
+          choice = const PatientWidgetWide();
         }
+
+        return choice;
       }
     );
   }
@@ -160,18 +181,19 @@ class PatientWidgetNarrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CollapsibleCard(
-      heading: 'Patient Demographics',
-      controller: ExpansibleController(),
-      initiallyExpanded: false,
-      child: const Row(
-        children: [
-          Spacer(flex: 1,),
-          PatientBodyNarrow(),
-          Spacer(flex: 1),
-          CalculatedWeightsNarrow(),
-          Spacer(flex: 1,)
-      ],),
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text('Demographics', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Padding(
+            padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10,),
+            child: PatientBodyNarrow(),
+          ),
+        ),
+        CalculatedWeightsWide(),
+      ],
     );
   }
 }
@@ -183,17 +205,14 @@ class PatientWidgetWide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CollapsibleCard(
-      controller: ExpansibleController(),
-      heading: 'Demographics',
-      initiallyExpanded: true,
-      child: const Column(
-        children: [
-          PatientBodyWide(),
-          SizedBox(height: 10,),
-          CalculatedWeightsWide(),
-        ],
-      ),
+    return const Column(
+      children: [
+        Text('Demographics', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+        SizedBox(height: 10,),
+        PatientBodyWide(),
+        SizedBox(height: 10,),
+        CalculatedWeightsWide(),
+      ],
     );
   }
 }
@@ -245,28 +264,29 @@ class PatientBodyNarrow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        DemoWidget(
-          name: 'Height',
-          units: const ['cm','m','in','ft'],
-          defaultUnit: 'cm',
-          initialVal: '170',
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            DemoWidget(
+              name: 'Height',
+              units: const ['cm','m','in','ft'],
+              defaultUnit: 'cm',
+              initialVal: '170',
+            ),
+            const SizedBox(width: 10),
+            DemoWidget(
+              name: 'Weight',
+              units: const ['kg','lbs','g'],
+              defaultUnit: 'kg',
+              initialVal: '70',
+            ),
+            const SizedBox(width: 10),
+            SexWidget(),
+          ],
         ),
-        DemoWidget(
-          name: 'Weight',
-          units: const ['kg','lbs','g'],
-          defaultUnit: 'kg',
-          initialVal: '70',
-        ),
-        DemoWidget(
-          name: 'Age',
-          units: const ['yr','mo','d'],
-          defaultUnit: 'yr',
-          initialVal: '40',
-        ),
-        SexWidget(),
       ],
     );
   }
@@ -280,41 +300,44 @@ class CalculatedWeightsWide extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Patient patientState = ref.watch(patientDemoProvider);
-    TextStyle defaultStyle = const TextStyle(color: Colors.black, fontSize: 20.0);
-    return Row(
-      children: [
-        const Spacer(flex: 1),
-        RichText(
-          text: TextSpan(
-            style: defaultStyle,
-            children: <TextSpan>[
-              const TextSpan(text: 'BMI: ', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: patientState.bmi?.toStringAsFixed(1) ?? ''),
-            ],
+    TextStyle defaultStyle = const TextStyle(color: Colors.black, fontSize: 15.0);
+    return Center(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          //const SizedBox(width: 20,),
+          RichText(
+            text: TextSpan(
+              style: defaultStyle,
+              children: <TextSpan>[
+                const TextSpan(text: 'BMI: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: patientState.bmi?.toStringAsFixed(1) ?? 'N/A'),
+              ],
+            ),
           ),
-        ),
-        const Spacer(flex: 2),
-        RichText(
-          text: TextSpan(
-            style: defaultStyle,
-            children: <TextSpan>[
-              const TextSpan(text: 'IBW: ', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: patientState.ibw?.toStringAsFixed(1) ?? ''),
-            ],
+          const SizedBox(width: 20,),
+          RichText(
+            text: TextSpan(
+              style: defaultStyle,
+              children: <TextSpan>[
+                const TextSpan(text: 'IBW: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: patientState.ibw != null ? '${patientState.ibw?.toStringAsFixed(1)} kg' : 'N/A'),
+              ],
+            ),
           ),
-        ),
-        const Spacer(flex: 2),
-        RichText(
-          text: TextSpan(
-            style: defaultStyle,
-            children: <TextSpan>[
-              const TextSpan(text: 'LBW: ', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: patientState.lbw?.toStringAsFixed(1) ?? ''),
-            ],
+          const SizedBox(width: 20,),
+          RichText(
+            text: TextSpan(
+              style: defaultStyle,
+              children: <TextSpan>[
+                const TextSpan(text: 'LBW: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: patientState.lbw != null ? '${patientState.lbw?.toStringAsFixed(1)} kg' : 'N/A'),
+              ],
+            ),
           ),
-        ),
-        const Spacer(flex: 1),
-      ],
+          //const SizedBox(width: 20,),
+        ],
+      ),
     );
   }
 }
@@ -327,17 +350,18 @@ class CalculatedWeightsNarrow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Patient patientState = ref.watch(patientDemoProvider);
-    TextStyle defaultStyle = const TextStyle(color: Colors.black, fontSize: 20.0);
+    TextStyle defaultStyle = const TextStyle(color: Colors.black, fontSize: 16.0);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+        const SizedBox(height: 10,),
         RichText(
           text: TextSpan(
             style: defaultStyle,
             children: <TextSpan>[
               const TextSpan(text: 'BMI: ', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: patientState.bmi?.toStringAsFixed(1) ?? ''),
+              TextSpan(text: patientState.bmi?.toStringAsFixed(1) ?? 'N/A'),
             ],
           ),
         ),
@@ -347,7 +371,7 @@ class CalculatedWeightsNarrow extends ConsumerWidget {
             style: defaultStyle,
             children: <TextSpan>[
               const TextSpan(text: 'IBW: ', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: patientState.ibw?.toStringAsFixed(1) ?? ''),
+              TextSpan(text: patientState.ibw != null ? '${patientState.ibw?.toStringAsFixed(1)} kg' : 'N/A'),
             ],
           ),
         ),
@@ -357,7 +381,7 @@ class CalculatedWeightsNarrow extends ConsumerWidget {
             style: defaultStyle,
             children: <TextSpan>[
               const TextSpan(text: 'LBW: ', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: patientState.lbw?.toStringAsFixed(1) ?? ''),
+              TextSpan(text: patientState.lbw != null ? '${patientState.lbw?.toStringAsFixed(1)} kg' : 'N/A'),
             ],
           ),
         ),

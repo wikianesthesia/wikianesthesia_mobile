@@ -7,8 +7,6 @@ import 'package:wikianesthesia_mobile/util.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-// TODO: make style consistent with rest of app with ExpansionPanelRadio
-
 class PreOp extends ConsumerWidget {
   const PreOp({super.key});
 
