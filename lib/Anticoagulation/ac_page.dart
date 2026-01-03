@@ -34,14 +34,14 @@ class _ACPageState extends State<ACPage> {
           shrinkWrap: true,
           children: [
             DrugInfoTile(title: 'Hold Prior to Neuraxial/Nerve Procedure', content: drug['HoldPrior'] ?? 'Information not available'),
-            const Divider(height: 0),
+            const Divider(height: 5),
             DrugInfoTile(title: 'Resume After Neuraxial/Nerve Procedure', content: drug['ResumeAfter'] ?? 'Information not available'),
-            const Divider(height: 0),
+            const Divider(height: 5),
             DrugInfoTile(title: 'Hold Prior to Catheter Removal', content: drug['HoldPriorCathRemoval'] ?? 'Information not available'),
-            const Divider(height: 0),
+            const Divider(height: 5),
             DrugInfoTile(title: 'Resume After Catheter Removal', content: drug['ResumeAfterCathRemoval'] ?? 'Information not available'),
             if (drug['Notes'] != null && drug['Notes']!.isNotEmpty) ...[
-              const Divider(height: 0),
+              const Divider(height: 5),
               DrugInfoTile(title: 'Notes', content: drug['Notes'] ?? 'Information not available'),
             ]
           ]
