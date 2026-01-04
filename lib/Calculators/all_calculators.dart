@@ -58,6 +58,13 @@ const List<Map<String, dynamic>> allCalculators = [
     'type': 'wikipage',
   },
   {
+    'name': 'Local Anesthetic Dosing',
+    'shortName': 'Local Dosing',
+    'url': '/guidelines/local',
+    'icon': FontAwesomeIcons.syringe,
+    'type': 'native',
+  },
+  {
     'name': 'Neuro',
     'shortName': 'Neuro',
     'url': 'Neuro_calculations',
@@ -168,7 +175,7 @@ ExpansionPanelRadio calcPanel(BuildContext context) {
 
 ExpansionPanelRadio guidelinesPanel(BuildContext context) {
   return ExpansionPanelRadio(
-    headerBuilder: (context, isExpanded) => const ListTile(title: Text('Tools')),
+    headerBuilder: (context, isExpanded) => const ListTile(title: Text('Resources')),
     value: 'guidelines',
     canTapOnHeader: true,
     body: Column(

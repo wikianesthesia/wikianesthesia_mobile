@@ -1,6 +1,6 @@
 # First Steps
-* Check surgical field: vagal stimulus vs hypovolemia
-* If suspect vagal, ask surgical team to 
+* Check surgical field: consider vagal stimulus vs hypovolemia
+* If suspect vagal, ask surgical team to pause
 * Monitor EKG Rhythm, Blood Pressure, Pulse Ox, Capnography
 * 100% FiO2, High Flows
 * Run IV Fluids wide open
@@ -22,7 +22,7 @@
 * **Send Labs**: Send ABG, Hgb, electrolytes, and troponin
 * **Vagal Tone**: desufflate abdomen, remove pressure, remove retractors, drain bladder
 * **Auto-PEEP**: Disconnect Circuit
-* **MI**: Check ST segment and T-Waves, 12-Lead EKG, Troponins
+* **MI**: Check 12-Lead EKG for ST segment and T-Waves, Consider drawing troponins
 * **Embolism**: Consider air, gas, thrombotic, or fat embolism
 * **High Spinal**: Give Rapid IV Bolus, administer **Atropine** 0.5-1 mg IV, **Glycopyrollate** 0.2-0.4 mg IV, or **Epinephrine** 10-100 mcg IV
 * **LAST**: Consider **Intralipid** 1.5 cc/kg followed by 0.25 cc/kg/hr . Can repeat bolus 1-2 times q5 min

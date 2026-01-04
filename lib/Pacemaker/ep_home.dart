@@ -11,7 +11,12 @@ class EPHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return const CalculatorScaffold(
       title: 'EP Devices',
-      child: EPGrid(),
+      child: Column(
+        children: [
+          OpenDisclaimers(title: 'EP_Disclaimers'),
+          EPGrid(),
+        ],
+      ),
     );
   }
 }
@@ -30,13 +35,6 @@ const List<Map<String, dynamic>> allEPOptions = [
     'url': '/ep/flowsheet',
     'icon': FontAwesomeIcons.diagramProject,
     'type': 'native',
-  },
-  {
-    'name': 'Disclaimers, Updates, and References',
-    'shortName': 'Flowcharts',
-    'url': 'EP_Disclaimers',
-    'icon': Icons.info,
-    'type': 'popup',
   },
 ];
 
@@ -71,7 +69,7 @@ class EPGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
+      padding: const EdgeInsets.only(bottom: 5.0, left: 2.0, right: 2.0,),
       child: Card(
         clipBehavior: Clip.hardEdge,
         child: ListView(

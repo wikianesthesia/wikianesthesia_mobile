@@ -290,6 +290,17 @@ const List<Map<String, dynamic>> aclsTopics = [
     'backgroundColor': Colors.red,
     'iconColor': Colors.white
   },
+  {
+    'name': 'Stanford Emergency Manual',
+    'type': 'external',
+    'iOSURL': 'itms-apps://apps.apple.com/us/app/emergency-manual/id6446658508',
+    'androidURL': 'https://emergencymanual.stanford.edu/downloads/',
+    'pageTitle': 'Basic_Tach',
+    'tags': 'ACLS Arrhythmia Fast heart rate Tachycardia SVT VT AFib RVR',
+    'icon': Icons.library_books,
+    'backgroundColor': Colors.red,
+    'iconColor': Colors.white
+  },
 ];
 
 

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:wikianesthesia_mobile/Anticoagulation/disclaimers_log.dart';
 import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
 import 'package:wikianesthesia_mobile/Wiki/account_widget.dart';
 
@@ -22,26 +25,45 @@ class ACLSHome extends StatelessWidget {
         actions: const [AccountWidget()],
       ),
       endDrawer: const HomeDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
-        child: Card(
-          clipBehavior: Clip.hardEdge,
-          child: ListView(
-            shrinkWrap: true,
-            children: ListTile.divideTiles(
-              context: context,
-              tiles: allTopics.map((topic) {
-                    return ListTile(
-                      enableFeedback: true,
-                      leading: Icon(topic['icon']),
-                      title: Text(topic['name']),
-                      onTap:() {
-                        goEmergencyPage(context, topic['pageTitle']);
-                      },);
-                }),
-              ).toList()
+      body: Column(
+        children: [
+          const OpenDisclaimers(title: 'ACLS_Disclaimers'),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 2.0),
+            child: Card(
+              clipBehavior: Clip.hardEdge,
+              child: ListView(
+                shrinkWrap: true,
+                children: ListTile.divideTiles(
+                  context: context,
+                  tiles: allTopics.map((topic) {
+                        if (topic['type'] == 'external') {
+                          return ListTile(
+                            enableFeedback: true,
+                            leading: Icon(topic['icon']),
+                            title: Text(topic['name']),
+                            trailing: const Icon(Icons.open_in_new),
+                            onTap:() {
+                              if (Platform.isIOS) {
+                                launchURL(topic['iOSURL']);
+                              } else {
+                                launchURL(topic['androidURL']);
+                              }
+                            },);
+                        }
+                        return ListTile(
+                          enableFeedback: true,
+                          leading: Icon(topic['icon']),
+                          title: Text(topic['name']),
+                          onTap:() {
+                            goEmergencyPage(context, topic['pageTitle']);
+                          },);
+                    }),
+                  ).toList()
+              ),
+            ),
           ),
-        ),
+        ],
       )
     );
   }

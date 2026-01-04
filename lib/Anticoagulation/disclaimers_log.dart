@@ -56,3 +56,45 @@ class _DisclaimersLogState extends State<DisclaimersLog> {
     );
   }
 }
+
+class OpenDisclaimers extends StatelessWidget {
+  final String title;
+  const OpenDisclaimers({
+    super.key,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 0.0),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap
+      ),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return DisclaimersLog(title: title);
+          },
+        );
+      },
+     child: Text('Disclaimers, Updates, and References', style: TextStyle(color: Theme.of(context).colorScheme.primary),)
+    );
+    
+    // Card(
+    //   clipBehavior: Clip.hardEdge,
+    //   child: ListTile(
+    //     onTap: () {
+    //       showDialog(
+    //         context: context,
+    //         builder: (BuildContext context) {
+    //           return const DisclaimersLog();
+    //         },
+    //       );
+    //     },
+    //     title: const Text('Disclaimers and References'),
+    //     leading: const Icon(Icons.info),
+    //   ),);
+  }
+}

@@ -135,7 +135,7 @@ class _ACHome extends State<ACHome> {
           child: Scrollbar(
             child: ListView(
               children: [
-                const OpenDisclaimers(),
+                const OpenDisclaimers(title: 'AC_Disclaimers'),
                 const Divider(height: 0,),
                 DrugListView(drugs: _toBeListed),
               ],
@@ -147,45 +147,7 @@ class _ACHome extends State<ACHome> {
   }
 }
 
-class OpenDisclaimers extends StatelessWidget {
-  const OpenDisclaimers({
-    super.key,
-  });
 
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 0.0),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap
-      ),
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return const DisclaimersLog(title: 'AC_Disclaimers');
-          },
-        );
-      },
-     child: Text('Disclaimers, Updates, and References', style: TextStyle(color: Theme.of(context).colorScheme.primary),)
-    );
-    
-    // Card(
-    //   clipBehavior: Clip.hardEdge,
-    //   child: ListTile(
-    //     onTap: () {
-    //       showDialog(
-    //         context: context,
-    //         builder: (BuildContext context) {
-    //           return const DisclaimersLog();
-    //         },
-    //       );
-    //     },
-    //     title: const Text('Disclaimers and References'),
-    //     leading: const Icon(Icons.info),
-    //   ),);
-  }
-}
 
 class DrugListTile extends StatelessWidget {
   final String drugName;

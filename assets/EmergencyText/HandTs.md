@@ -1,15 +1,12 @@
 # Heart Rate/Vagal Stimulus
-* Stop insufflation of abdomen
-* Remove surgical instruments, retractors
-* Remove pressure from eyes, neck, ears, and brain. Consider foley
+* Ask surgical team to relieve pressure from eyes, brain, abdominal insufflation, etc.
+* Ask surgical team to remove retractors
 
 # Hypovolemia
 * Run IV fluids wide open
 * Check labs, consider transfusion
+* Ask surgeon to relieve pressure from SVC, IVC, and Heart
 * Disconnect circuit if concern for Auto-PEEP
-* Remove compressive sources from SVC/IVC
-* Consider Anaphylaxis
-* Consider High Spinal
 
 # Hypoxemia
 * 100% FiO2, Maximize Flows
@@ -17,6 +14,8 @@
 * Confirm ETT placement with EtCO2
 * Listen to Lung Fields
 * Suction ETT and consider bronchoscopy
+* If Trach, consider discplaced trach
+    * Consult ENT stat if fresh trach < 7d
 
 # Hydrogen - Acidosis
 * Check labs/ABG if feasible
@@ -37,7 +36,7 @@
 
 # Hypothermia
 * Actively warm: forced air, warm IV fluids, warm room
-* Consider ECMO or Bypass
+* Consider ECMO or Bypass if refractory
 
 # Toxins
 * Consider anesthetic overdose
@@ -51,16 +50,15 @@
 * Perform pericardiocentesis
 
 # Tension Pneumothorax
-* **Suspect Tension PTX for displaced trachs**
 * Check for asymmetric breath sounds, distended neck veins, deviated trachea
+* Suspect Tension PTX for displaced trachs
 * Perform empiric needle decompression in 4th/5th intercostal space anterior to the mid-axillary line, vs chest tube if General Surgery available
 * Treatment should NOT be delayed for CXR
 
 # Thrombosis-Coronary
 * Consider TEE/TTE to evaluate ventricular wall motion
-* Consider emergent coronary revascularization
+* Consider emergent cardiology consult
 
 # Thrombosis - Pulmonary
-* Consider TEE/TTE to evaluate right ventricular function and RVSP
 * **tPA** 50 mg bolus
-* Consider emergent mechanical thrombectomy
+* Consider emergent IR consult for thrombectomy

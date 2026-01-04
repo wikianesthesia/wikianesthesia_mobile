@@ -310,7 +310,7 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
         color: Colors.white,
       ),
       icon: Icon(Icons.construction_outlined),
-      label: 'Tools',
+      label: 'Resources',
     ),
     NavigationDestination(
       selectedIcon: Icon(
@@ -359,7 +359,7 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
         color: Colors.white,
       ),
       icon: Icon(Icons.construction_outlined),
-      label: Text('Tools'),
+      label: Text('Resources'),
     ),
     NavigationRailDestination(
       selectedIcon: Icon(

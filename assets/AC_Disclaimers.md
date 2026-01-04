@@ -19,7 +19,7 @@ The information within is based on the WikiAnesthesia Editorial Team's personal 
 * 11/4/2025: Initial Release
 
 ## Editorial Committee
-* Richard K. Kim, MD
+* Chair: Richard K. Kim, MD
 * Chris Rishel, MD, PhD
 * Jeffrey Wang, MD, PhD
 * Tony Wang, MD

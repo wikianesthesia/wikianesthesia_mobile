@@ -26,13 +26,13 @@
 * Likely SVT
 * **Adenosine**. Push 6 mg IV, flush; monitor ECG. May follow with 12 mg IV
 * If not converted, or slowing reveals afib/flutter, rate control: 
-    * **Esmolol** (avoid if WPW, decreased EF, or asthma). 0.5 mg/kg IV over 1 min. May repeat after 1 min. Then infusion of 50-300 mcg/kg/min 
-    * **Metoprolol** (avoid if WPW, decreased EF, or asthma). 1-2.5 mg IV push. May repeat or double after 3-5 min
-    * **Diltiazem** (avoid if WPW, decreased EF, or asthma). 10-20 mg IV over 2 min. May repeat after 5 min. Then infusion of 5-10 mg/hr 
+    * **Esmolol** (avoid if WPW). 0.5 mg/kg IV over 1 min. May repeat after 1 min. Then infusion of 50-300 mcg/kg/min 
+    * **Metoprolol** (avoid if WPW). 1-2.5 mg IV push. May repeat or double after 3-5 min
+    * **Diltiazem** (avoid if WPW). 10-20 mg IV over 2 min. May repeat after 5 min. Then infusion of 5-10 mg/hr 
 * If WPW, **Adenosine** is safe ONLY if narrow and regular (orthodromic). Alternatively, consider **Procainamide** 15 mg/kg IV (up to 1500 mg) administered over 25-30 mins
 
 # Stable: Narrow and Irregular 
-* If normotensive with acceptable EF, start with rate control: 
+* If normotensive, start with rate control: 
     * **Esmolol** 10-20 mg IV. Can consider infusion at 50 - 300 mcg/kg/min
     * **Metoprolol** 1 - 2.5 mg IV push. Can repeat or double after 3 - 5 min
     * **Diltiazem** 10 - 20 mg IV over 2 min. May repeat after 5 min. Then infusion of 5 - 10 mg/hr
@@ -41,7 +41,7 @@
 # Stable: Wide and Regular 
 * Give **Amiodarone** (avoid if WPW) 150 mg IV over 10 min
 * Alternatively, **Lidocaine** 1-1.5 mg/kg IV q3-5 min x3
-* If SVT with aberrancy: **Adenosine** (avoid if WPW or asthma) push 6 mg IV, flush; monitor EKG. May follow with 12 mg IV
+* If SVT with aberrancy: **Adenosine** (avoid if WPW) push 6 mg IV, flush; monitor EKG. May follow with 12 mg IV
 * If WPW, **Procainamide** 15 mg/kg IV (up to 1500 mg) administered over 25-30 mins is first line
 * Prepare for **Synchronized Cardioversion** if refractory
 
@@ -49,4 +49,3 @@
 * If Torsades: Consider **Magnesium Sulfate** 2 g IV over 5 mins
 * If AFib w/ Aberrancy, refer to narrow and irregular and **consult cardiology**
 * If AFib + WPW vs Polymorphic VT, **consult cardiology**
-

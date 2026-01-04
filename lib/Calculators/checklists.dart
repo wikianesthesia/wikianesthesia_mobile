@@ -434,7 +434,8 @@ class CA1Guide extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Widget> checklists = defaultChecklists;
+    List<Widget> checklists = [];
+    checklists.addAll(defaultChecklists);
 
     List<List<String>> practiceGroups = ref.watch(wikiPracticeGroupsProvider);
     List<String> dbKeys = practiceGroups
@@ -451,6 +452,7 @@ class CA1Guide extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
         child: Card(
+          clipBehavior: Clip.hardEdge,
           child: ListView(
             shrinkWrap: true,
             children: checklists,

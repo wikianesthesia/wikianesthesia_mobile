@@ -21,6 +21,7 @@ class _LocalCalcState extends ConsumerState<LocalCalc> {
   List<DesiredDrug> desired = [];
   List<double> desiredMaxDoses = [];
   List<double> desiredRemainingDoses = [];
+  List<double> adminMaxDoses = [];
 
   List<Widget> administeredRows = [];
   List<Widget> desiredRows = [];
@@ -49,17 +50,23 @@ class _LocalCalcState extends ConsumerState<LocalCalc> {
         selectedConc: allLocalAnesthetics[0].concs[0],
         onAdminVolChanged: changeAdminVol,
         onDelete: deleteAdmin,
+        maxDose: 0.0,
       ));
       adminIdxMap[idx] = administeredRows.length - 1;
+      adminMaxDoses.add(0.0);
+      calc();
     });
   }
 
   void changeAdminDrug(String drugName, int index) {
+    String trimmedName = drugName.replaceAll(' w/ Epi', '');
+    bool epi = drugName.contains('w/ Epi');
+
     // Changes the drug at the given index
     int rowIdx = adminIdxMap[index]!;
     setState(() {
-      LocalAnesthetic selectedDrug = allLocalAnesthetics.firstWhere((la) => la.name == drugName, orElse: () => allLocalAnesthetics[0]);
-      administered[index] = AdministeredDrug(drug: selectedDrug, concentration: selectedDrug.concs[0], epi: administered[index].epi, volume: administered[index].volume);
+      LocalAnesthetic selectedDrug = allLocalAnesthetics.firstWhere((la) => la.name == trimmedName, orElse: () => allLocalAnesthetics[0]);
+      administered[index] = AdministeredDrug(drug: selectedDrug, concentration: selectedDrug.concs[0], epi: epi, volume: administered[index].volume);
       administeredRows[rowIdx] = AdminDrugNarrow(
         onAdminDrugChanged: changeAdminDrug,
         selectedDrug: administered[index].drug.name,
@@ -69,6 +76,7 @@ class _LocalCalcState extends ConsumerState<LocalCalc> {
         selectedConc: administered[index].concentration,
         onAdminVolChanged: changeAdminVol,
         onDelete: deleteAdmin,
+        maxDose: 0.0,
       );
       calc();
     });
@@ -90,6 +98,7 @@ class _LocalCalcState extends ConsumerState<LocalCalc> {
 
       // Update the rendered row since checkboxes don't automatically flip
       administeredRows[rowIdx] = AdminDrugNarrow(
+        maxDose: 0.0,
         onAdminDrugChanged: changeAdminDrug,
         selectedDrug: administered[index].drug.name,
         onAdminConcChanged: changeAdminConc,
@@ -163,11 +172,15 @@ class _LocalCalcState extends ConsumerState<LocalCalc> {
   }
 
   void changeDesiredDrug(String drugName, int index) {
+    String trimmedName = drugName.replaceAll(' w/ Epi', '');
+    bool epi = drugName.contains('w/ Epi');
+
     // Changes the drug at the given index
     int rowIdx = desiredIdxMap[index]!;
+    
     setState(() {
-      LocalAnesthetic selectedDrug = allLocalAnesthetics.firstWhere((la) => la.name == drugName, orElse: () => allLocalAnesthetics[0]);
-      desired[index] = DesiredDrug(drug: selectedDrug, concentration: selectedDrug.concs[0], epi: desired[index].epi);
+      LocalAnesthetic selectedDrug = allLocalAnesthetics.firstWhere((la) => la.name == trimmedName, orElse: () => allLocalAnesthetics[0]);
+      desired[index] = DesiredDrug(drug: selectedDrug, concentration: selectedDrug.concs[0], epi: epi);
       desiredRows[rowIdx] = DesiredDrugNarrow(
         index: index,
         changeDrug: changeDesiredDrug,
@@ -241,6 +254,7 @@ class _LocalCalcState extends ConsumerState<LocalCalc> {
       setState(() {
         desiredMaxDoses = List.filled(desired.length, -1, growable: true,);
         desiredRemainingDoses = List.filled(desired.length, -1, growable: true,);
+        adminMaxDoses = List.filled(administered.length, -1, growable: true,);
       });
       renderUI();
       return;
@@ -249,10 +263,12 @@ class _LocalCalcState extends ConsumerState<LocalCalc> {
     setState(() {
       // Calculate total normalized dose for all local anesthetics given
       double totalAdmin = 0;
-      for (var admin in administered) {
+      for (int i = 0; i < administered.length; i++) {
+        var admin = administered[i];
         if (admin.active) {
           double maxDosemg = (admin.epi ? admin.drug.maxDosewEpi : admin.drug.maxDosewoEpi) * dosingWeight;
           double maxDose = maxDosemg / (admin.concentration * 10); // in mL
+          adminMaxDoses[administered.indexOf(admin)] = maxDose;
           totalAdmin += admin.volume / maxDose;
         }
       }
@@ -264,7 +280,7 @@ class _LocalCalcState extends ConsumerState<LocalCalc> {
         desiredMaxDoses[i] = maxDose;
 
         double remainingDose = maxDose * (1 - totalAdmin);
-        if (remainingDose < 0) remainingDose = 0;
+        if (remainingDose < 0) remainingDose = -2; // Indicate overdose
         desiredRemainingDoses[i] = remainingDose;
       }
     });
@@ -275,6 +291,22 @@ class _LocalCalcState extends ConsumerState<LocalCalc> {
   void renderUI() {
     // Renders Desired Drug Rows based on calculated doses
     setState(() {
+      for (int i = 0; i < administered.length; i++) {
+        if (adminIdxMap[i] == null) continue;
+        int rowIdx = adminIdxMap[i]!;
+        administeredRows[rowIdx] = AdminDrugNarrow(
+          index: i,
+          onAdminDrugChanged: changeAdminDrug,
+          selectedDrug: administered[i].drug.name,
+          onAdminConcChanged: changeAdminConc,
+          selectedEpi: administered[i].epi,
+          onAdminEpiChanged: changeAdminEpi,
+          selectedConc: administered[i].concentration,
+          onAdminVolChanged: changeAdminVol,
+          onDelete: deleteAdmin,
+          maxDose: adminMaxDoses[i],
+        );
+      }
       for (int i = 0; i < desired.length; i++) {
         if (desiredIdxMap[i] == null) continue;
         int rowIdx = desiredIdxMap[i]!;
@@ -310,7 +342,24 @@ class _LocalCalcState extends ConsumerState<LocalCalc> {
             children: [
               const PatientWidget(),
               const SizedBox(height: 10),
-              const Divider(),
+                            const Divider(height: 20),
+              const Text('Plan to Administer', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              if (desiredMaxDoses.any((dose) => dose < 0))
+                const ListTile(
+                  leading: Icon(Icons.error, color: Colors.red),
+                  visualDensity: VisualDensity.compact,
+                  
+                  title: Text('Please enter patient weight.', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14)),
+                ),
+              if (patientWeightChoice == 'Total')
+                const ListTile(
+                  visualDensity: VisualDensity.compact,
+                  leading: SizedBox(height: double.infinity, child: Icon(Icons.warning, color: Colors.orange,)),
+                  title: Text('Using total weight instead of LBW.', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14),),
+                ),
+              if (desiredRows.isNotEmpty)
+                ...desiredRows,
+              const Divider(height: 30),
               const Text('Previously Administered', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               if (administeredRows.isNotEmpty)
                 ...administeredRows,
@@ -325,22 +374,7 @@ class _LocalCalcState extends ConsumerState<LocalCalc> {
                 icon: const Icon(Icons.add,color: Colors.green),
                 label: const Text('Add Drug'),
               ),
-              const Divider(),
-              const Text('Plan to Administer', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              if (desiredMaxDoses.any((dose) => dose < 0))
-                const ListTile(
-                  leading: Icon(Icons.error, color: Colors.red),
-                  visualDensity: VisualDensity.compact,
-                  
-                  title: Text('Please enter patient weight.', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14)),
-                ),
-              if (patientWeightChoice == 'Total')
-                const ListTile(
-                  leading: SizedBox(height: double.infinity, child: Icon(Icons.warning, color: Colors.orange,)),
-                  title: Text('Using total weight. Consider inputting height and sex to use LBW', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14),),
-                ),
-              if (desiredRows.isNotEmpty)
-                ...desiredRows,
+
               // ElevatedButton.icon(
               //   style: OutlinedButton.styleFrom(
               //     shape: RoundedRectangleBorder(
@@ -362,27 +396,32 @@ class LASelector extends StatelessWidget {
   final int index;
   final void Function(String,int) onChanged;
   final String selected;
+  final double fontSize;
   
-  const LASelector({super.key, required this.index, required this.onChanged, required this.selected});
+  const LASelector({super.key, required this.index, required this.onChanged, required this.selected, this.fontSize=14});
 
 
   @override
   Widget build(BuildContext context) {
+    final List<String> allLocalwEpi = [];
+    for (var la in allLocalAnesthetics) {
+      allLocalwEpi.add(la.name);
+      allLocalwEpi.add('${la.name} w/ Epi');
+    }
+
     return DropdownMenu(
-      enableSearch: false,
-      enableFilter: false,
-      width: 200,
-      label: const Text('Local', style: TextStyle(fontSize: 16),),
+      label: const Text('Local', style: TextStyle(fontSize: 14),),
       inputDecorationTheme: InputDecorationTheme(
         isDense: true,
         constraints: BoxConstraints.tight(const Size.fromHeight(50)), 
       ),
-      textStyle: const TextStyle(fontSize: 14),
-      dropdownMenuEntries: allLocalAnesthetics.map((la) => DropdownMenuEntry(value: la.name, label: la.name)).toList(),
+      textStyle: TextStyle(fontSize: fontSize, overflow: TextOverflow.ellipsis),
+      dropdownMenuEntries: allLocalwEpi.map((la) => DropdownMenuEntry(value: la, label: la, labelWidget: Text(la,overflow: TextOverflow.ellipsis,))).toList(),
       onSelected: (String? value) {
         onChanged(value ?? allLocalAnesthetics[0].name, index);
       },
       initialSelection: selected,
+    
     );
   }
 }
@@ -397,16 +436,16 @@ class DoseSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownMenu(
-      width: 200,
+      width: 105,
       enableSearch: false,
       enableFilter: false,
-      label: const Text('Concentration', style: TextStyle(fontSize: 16)),
+      label: const Text('Conc %', style: TextStyle(fontSize: 14)),
       inputDecorationTheme: InputDecorationTheme(
         isDense: true,
         constraints: BoxConstraints.tight(const Size.fromHeight(50)), 
       ),
       textStyle: const TextStyle(fontSize: 14),
-      dropdownMenuEntries: drug.concs.map((conc) => DropdownMenuEntry(value: conc, label: '$conc%')).toList(),
+      dropdownMenuEntries: drug.concs.map((conc) => DropdownMenuEntry(value: conc, label: '$conc')).toList(),
       initialSelection: selectedConc,
       onSelected: (double? value) {
         onChanged(value ?? drug.concs[0], index);
@@ -446,19 +485,16 @@ class AdministeredVolumeField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10),
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          isDense: true,
-          constraints: BoxConstraints.tight(const Size.fromHeight(50)), 
-          label: const Text('Volume (mL)'),
-        ),
-        onChanged: (value) {
-          onChanged(double.tryParse(value) ?? 0.0, index);
-        },
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        isDense: true,
+        constraints: BoxConstraints.tight(const Size.fromHeight(50)), 
+        label: const Text('mL'),
       ),
+      onChanged: (value) {
+        onChanged(double.tryParse(value) ?? 0.0, index);
+      },
     );
   }
 }
@@ -477,7 +513,7 @@ class DeleteButton extends StatelessWidget {
       child: Ink(
         color: Colors.red.shade200,
         child: const Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(2.0),
           child: Icon(Icons.delete),
         ),
       ),
@@ -501,6 +537,8 @@ class AdminDrugNarrow extends StatelessWidget {
 
   final void Function(int) onDelete;
 
+  final double maxDose;
+
   const AdminDrugNarrow({super.key,
                          required this.onAdminDrugChanged,
                          required this.selectedDrug,
@@ -510,10 +548,14 @@ class AdminDrugNarrow extends StatelessWidget {
                          required this.onAdminEpiChanged,
                          required this.selectedConc,
                          required this.onAdminVolChanged,
-                         required this.onDelete});
+                         required this.onDelete,
+                         required this.maxDose});
 
   @override
   Widget build(BuildContext context) {
+    LocalAnesthetic drug = allLocalAnesthetics.firstWhere((la) => la.name == selectedDrug, orElse: () => allLocalAnesthetics[0]);
+    double mgkgDose = (selectedEpi ? drug.maxDosewEpi : drug.maxDosewoEpi);
+    
     return Card(
       clipBehavior: Clip.hardEdge,
       child: IntrinsicHeight(
@@ -522,31 +564,21 @@ class AdminDrugNarrow extends StatelessWidget {
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-                child: Table(
-                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                  columnWidths: const {
-                    0: FlexColumnWidth(2),
-                    1: FixedColumnWidth(10),
-                    2: FlexColumnWidth(2),
-                  },
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                child: Column(
                   children: [
-                    TableRow(
+                    Row(
                       children: [
-                        LASelector(index: index, onChanged: onAdminDrugChanged, selected: selectedDrug),
-                        const SizedBox(width: 10),
-                        EpiSelector(index: index, onChanged: onAdminEpiChanged, selected: selectedEpi),
-                      ],
+                            Expanded(child: LASelector(index: index, onChanged: onAdminDrugChanged, selected: selectedEpi ? '$selectedDrug w/ Epi' : selectedDrug, fontSize: 12.5)),
+                            const SizedBox(width: 5),
+                            DoseSelector(index: index, drug: allLocalAnesthetics.firstWhere((la) => la.name == selectedDrug, orElse: () => allLocalAnesthetics[0]), onChanged: onAdminConcChanged, selectedConc: selectedConc),
+                            const SizedBox(width: 5),
+                            SizedBox(height: 50, width: 40,child: AdministeredVolumeField(index: index, onChanged: onAdminVolChanged,)),
+                          ],
                     ),
-                    rowSpacer,
-                    TableRow(
-                      children: [
-                        DoseSelector(index: index, drug: allLocalAnesthetics.firstWhere((la) => la.name == selectedDrug, orElse: () => allLocalAnesthetics[0]), onChanged: onAdminConcChanged, selectedConc: selectedConc),
-                        const SizedBox(width: 10),
-                        AdministeredVolumeField(index: index, onChanged: onAdminVolChanged,),
-                      ],
-                    )
-                  ]
+                    const SizedBox(height: 10),
+                    AdminDrugDoses(maxDose: maxDose, mgkgDose: mgkgDose)
+                  ],
                 ),
               ),
             ),
@@ -559,6 +591,93 @@ class AdminDrugNarrow extends StatelessWidget {
 }
 
 const rowSpacer = TableRow(children: [SizedBox(height: 5), SizedBox(height: 5), SizedBox(height: 5)]);
+
+class DesiredDrugDoses extends StatelessWidget {
+  final double maxDose;
+  final double remainingDose;
+  final double mgkgDose;
+  
+  const DesiredDrugDoses({super.key, required this.maxDose, required this.remainingDose, required this.mgkgDose});
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    return Row(
+      children: [
+        const Spacer(flex: 1),
+        RichText(
+          text: TextSpan(
+            style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color),
+            children: [
+              const TextSpan(text: 'Remaining: ', style: TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: switch (remainingDose) {
+                  -2 => 'OVER',
+                  -1 => 'N/A',
+                  _ => '${remainingDose.toStringAsFixed(1)} mL'
+                },
+                style: switch(remainingDose) {
+                  -2 => const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                  -1 => const TextStyle(fontStyle: FontStyle.italic),
+                  _ => const TextStyle(),
+                },
+              )
+            ],
+          ),
+        ),
+        const Spacer(flex: 1),
+        RichText(
+          text: TextSpan(
+            style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color),
+            children: [
+              const TextSpan(text: 'Max: ', style: TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: switch (maxDose) {
+                  -1 => 'N/A',
+                  _ => '${maxDose.toStringAsFixed(1)} mL (${mgkgDose.toStringAsFixed(1)} mg/kg)'
+                },
+                style: switch(maxDose) {
+                  -1 => const TextStyle(fontStyle: FontStyle.italic),
+                  _ => const TextStyle(),
+                },
+              )
+            ],
+          ),
+        ),
+        const Spacer(flex: 1),
+      ],
+  );
+  }
+}
+
+class AdminDrugDoses extends StatelessWidget {
+  final double maxDose;
+  final double mgkgDose;
+  
+  const AdminDrugDoses({super.key, required this.maxDose, required this.mgkgDose});
+
+  @override
+  Widget build(BuildContext context) {
+    
+    return Center(
+      child: RichText(
+        text: TextSpan(
+          style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodyMedium?.color),
+          children: [
+            const TextSpan(text: 'Max Dose: ', style: TextStyle(fontWeight: FontWeight.bold)),
+            TextSpan(text: switch (maxDose) {
+                -1 => 'N/A',
+                _ => '${maxDose.toStringAsFixed(1)} mL (${mgkgDose.toStringAsFixed(1)} mg/kg)'
+              },
+              style: switch(maxDose) {
+                -1 => const TextStyle(fontStyle: FontStyle.italic),
+                _ => const TextStyle(),
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class DesiredDrugNarrow extends StatelessWidget {
   final int index;
@@ -589,42 +708,23 @@ class DesiredDrugNarrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Table(
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        columnWidths: const {
-          0: IntrinsicColumnWidth(),
-          1: FlexColumnWidth(2),
-          2: IntrinsicColumnWidth(),
-        },
-        children: [
-          TableRow(
-            children: [
-              LASelector(index: index, onChanged: changeDrug, selected: selectedDrug),
-              const SizedBox(width: 10),
-              EpiSelector(index: index, onChanged: changeEpi, selected: selectedEpi),
-            ],
-          ),
-          rowSpacer,
-          TableRow(
-            children: [
-              DoseSelector(index: index, drug: allLocalAnesthetics.firstWhere((la) => la.name == selectedDrug, orElse: () => allLocalAnesthetics[0]), onChanged: changeConc, selectedConc: selectedConc,),
-              const SizedBox(width: 10),
-              Padding(
-                padding: const EdgeInsets.only(left: 5.0),
-                child: MarkdownBody(
-                  shrinkWrap: true,
-                  styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-                    p: const TextStyle(fontSize: 16),
-                  ),
-                  data: '**Max Dose**: ${maxDose > 0 ? '${maxDose.toStringAsFixed(1)} mL' : 'N/A'}  \n**Remaining**: ${remainingDose > 0 ? '${remainingDose.toStringAsFixed(1)} mL' : 'N/A'}'
-                ),
-              ),
-            ],
-          )
-        ]
-      ),
+    final LocalAnesthetic drug = allLocalAnesthetics.firstWhere((la) => la.name == selectedDrug, orElse: () => allLocalAnesthetics[0]);    
+    double mgkgDose = (selectedEpi ? drug.maxDosewEpi : drug.maxDosewoEpi);
+
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Spacer(),
+            LASelector(index: index, onChanged: changeDrug, selected: selectedEpi ? '$selectedDrug w/ Epi' : selectedDrug),
+            const Spacer(),
+            DoseSelector(index: index, drug: allLocalAnesthetics.firstWhere((la) => la.name == selectedDrug, orElse: () => allLocalAnesthetics[0]), onChanged: changeConc, selectedConc: selectedConc,),
+            const Spacer(),
+          ],
+        ),
+        const SizedBox(height: 10),
+        DesiredDrugDoses(maxDose: maxDose, remainingDose: remainingDose, mgkgDose: mgkgDose),
+      ],
     );
     
     // Card(
