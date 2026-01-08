@@ -63,8 +63,9 @@ class _DemoWidgetState extends ConsumerState<DemoWidget> {
                 maxLines: 1,
                 maxLengthEnforcement: MaxLengthEnforcement.enforced,
                 decoration: InputDecoration(
-                  //contentPadding: const EdgeInsets.all(0),
+                  //contentPadding: const EdgeInsets.only(top: 30.0,),
                   labelText: widget.name,
+                  alignLabelWithHint: true,
                   //isDense: true,
                   constraints: BoxConstraints.tight(const Size.fromHeight(50)), 
                 ),
@@ -139,7 +140,8 @@ class _SexWidgetState extends ConsumerState<SexWidget> {
           //contentPadding: const EdgeInsets.all(0),
           //isDense: true,
           constraints: BoxConstraints.tight(const Size.fromHeight(50)),
-          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+          //visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+          alignLabelWithHint: true,
         ),
       controller: widget._textController,
       dropdownMenuEntries: const [
@@ -187,12 +189,8 @@ class PatientWidgetNarrow extends StatelessWidget {
         Text('Demographics', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
         FittedBox(
           fit: BoxFit.scaleDown,
-          child: Padding(
-            padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10,),
-            child: PatientBodyNarrow(),
-          ),
+          child: PatientBodyNarrow(),
         ),
-        CalculatedWeightsWide(),
       ],
     );
   }
@@ -211,7 +209,6 @@ class PatientWidgetWide extends StatelessWidget {
         SizedBox(height: 10,),
         PatientBodyWide(),
         SizedBox(height: 10,),
-        CalculatedWeightsWide(),
       ],
     );
   }
@@ -227,19 +224,18 @@ class PatientBodyWide extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Spacer(flex: 1),
-        DemoWidget(
-          name: 'Height',
-          units: const ['cm','m','in','ft'],
-          defaultUnit: 'cm',
-          initialVal: '170',
-        ),
-        const Spacer(flex: 2),
         DemoWidget(
           name: 'Weight',
           units: const ['kg','lbs','g'],
           defaultUnit: 'kg',
           initialVal: '70',
+        ),
+        const Spacer(flex: 2),
+        DemoWidget(
+          name: 'Height',
+          units: const ['cm','m','in','ft'],
+          defaultUnit: 'cm',
+          initialVal: '170',
         ),
         const Spacer(flex: 2),
         DemoWidget(
@@ -250,7 +246,6 @@ class PatientBodyWide extends StatelessWidget {
         ),
         const Spacer(flex: 2),
         SexWidget(),
-        const Spacer(flex: 1),
       ],
     );
   }
@@ -263,30 +258,24 @@ class PatientBodyNarrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            DemoWidget(
-              name: 'Height',
-              units: const ['cm','m','in','ft'],
-              defaultUnit: 'cm',
-              initialVal: '170',
-            ),
-            const SizedBox(width: 10),
-            DemoWidget(
-              name: 'Weight',
-              units: const ['kg','lbs','g'],
-              defaultUnit: 'kg',
-              initialVal: '70',
-            ),
-            const SizedBox(width: 10),
-            SexWidget(),
-          ],
+        DemoWidget(
+          name: 'Weight',
+          units: const ['kg','lbs','g'],
+          defaultUnit: 'kg',
+          initialVal: '70',
         ),
+        const SizedBox(width: 10),
+        DemoWidget(
+          name: 'Height',
+          units: const ['cm','m','in','ft'],
+          defaultUnit: 'cm',
+          initialVal: '170',
+        ),
+        const SizedBox(width: 10),
+        SexWidget(),
       ],
     );
   }

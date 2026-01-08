@@ -11,7 +11,7 @@ class EPFlowsheetMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CalculatorScaffold(
-      title: 'Device Magnet Responses',
+      title: 'Device Management Flowcharts',
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
         child: Card(

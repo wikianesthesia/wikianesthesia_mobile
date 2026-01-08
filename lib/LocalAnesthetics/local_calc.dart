@@ -334,59 +334,112 @@ class _LocalCalcState extends ConsumerState<LocalCalc> {
       });
     });
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const PatientWidget(),
-              const SizedBox(height: 10),
-                            const Divider(height: 20),
-              const Text('Plan to Administer', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              if (desiredMaxDoses.any((dose) => dose < 0))
-                const ListTile(
-                  leading: Icon(Icons.error, color: Colors.red),
-                  visualDensity: VisualDensity.compact,
-                  
-                  title: Text('Please enter patient weight.', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14)),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const PatientWidget(),
+                    const SizedBox(height: 10),
+                    if (patientWeightChoice == 'Total')
+                      const Center(
+                        child: Row(
+                          children: [
+                            Spacer(),
+                            Icon(Icons.warning, color: Colors.orange,),
+                            SizedBox(width: 10),
+                            Text('Using total weight instead of LBW', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14),),
+                            Spacer(),
+                          ]
+                        ),
+                      ),
+                    if (desiredMaxDoses.any((dose) => dose < 0))
+                      const Center(
+                        child: Row(
+                          children: [
+                            Spacer(),
+                            Icon(Icons.error, color: Colors.red,),
+                            SizedBox(width: 10),
+                            Text('Enter patient weight', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14),),
+                            Spacer(),
+                          ]
+                        ),
+                      ),
+                    // if (patientWeightChoice == 'LBW')
+                    //   Center(
+                    //     child: Row(
+                    //       children: [
+                    //         const Spacer(),
+                    //         Text('LBW: ${patient.lbw!.toStringAsFixed(1)} kg', style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 14),),
+                    //         const Spacer(),
+                    //       ]
+                    //     ),
+                    //   ),
+                  ],
                 ),
-              if (patientWeightChoice == 'Total')
-                const ListTile(
-                  visualDensity: VisualDensity.compact,
-                  leading: SizedBox(height: double.infinity, child: Icon(Icons.warning, color: Colors.orange,)),
-                  title: Text('Using total weight instead of LBW.', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14),),
+              ),
+            ),
+            const Divider(height: 20),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    const Text('Plan to Administer', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    if (desiredRows.isNotEmpty)
+                      ...desiredRows,
+                  ]
                 ),
-              if (desiredRows.isNotEmpty)
-                ...desiredRows,
-              const Divider(height: 30),
-              const Text('Previously Administered', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              if (administeredRows.isNotEmpty)
-                ...administeredRows,
-              const SizedBox(height: 5),
-              ElevatedButton.icon(
-                style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), // Set border radius
+              ),
+            ),
+            const Divider(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      const Text('Previously Administered', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      if (administeredRows.isNotEmpty)
+                        ...administeredRows,
+                      const SizedBox(height: 5),
+                      ElevatedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8), // Set border radius
+                          ),
+                        ),
+                        onPressed: addAdministeredDrug,
+                        icon: const Icon(Icons.add,color: Colors.green),
+                        label: const Text('Add Drug'),
+                      ),
+                    ],
                   ),
                 ),
-                onPressed: addAdministeredDrug,
-                icon: const Icon(Icons.add,color: Colors.green),
-                label: const Text('Add Drug'),
               ),
-
-              // ElevatedButton.icon(
-              //   style: OutlinedButton.styleFrom(
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(8), // Set border radius
-              //     ),
-              //   ),
-              //   onPressed: addDesiredDrug,
-              //   icon: const Icon(Icons.add,color: Colors.green),
-              //   label: const Text('Add Drug')
-              // )
-            ],)
-        ),
+            )
+            
+    
+            // ElevatedButton.icon(
+            //   style: OutlinedButton.styleFrom(
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(8), // Set border radius
+            //     ),
+            //   ),
+            //   onPressed: addDesiredDrug,
+            //   icon: const Icon(Icons.add,color: Colors.green),
+            //   label: const Text('Add Drug')
+            // )
+          ],)
       ),
     );
   }
@@ -576,7 +629,6 @@ class AdminDrugNarrow extends StatelessWidget {
                             SizedBox(height: 50, width: 40,child: AdministeredVolumeField(index: index, onChanged: onAdminVolChanged,)),
                           ],
                     ),
-                    const SizedBox(height: 10),
                     AdminDrugDoses(maxDose: maxDose, mgkgDose: mgkgDose)
                   ],
                 ),
@@ -602,47 +654,41 @@ class DesiredDrugDoses extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    return Row(
+    return Column(
       children: [
-        const Spacer(flex: 1),
-        RichText(
-          text: TextSpan(
-            style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color),
-            children: [
-              const TextSpan(text: 'Remaining: ', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: switch (remainingDose) {
-                  -2 => 'OVER',
-                  -1 => 'N/A',
-                  _ => '${remainingDose.toStringAsFixed(1)} mL'
-                },
-                style: switch(remainingDose) {
-                  -2 => const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                  -1 => const TextStyle(fontStyle: FontStyle.italic),
-                  _ => const TextStyle(),
-                },
-              )
-            ],
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text('Max Dose: ${mgkgDose.toStringAsFixed(1)} mg/kg${maxDose < 0 ? '' : ' (${maxDose.toStringAsFixed(1)} mL)'}',
+            style: const TextStyle(
+              fontSize: 13,
+              fontStyle: FontStyle.italic,
+            ),
+            textAlign: TextAlign.left,
           ),
         ),
-        const Spacer(flex: 1),
-        RichText(
-          text: TextSpan(
-            style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color),
-            children: [
-              const TextSpan(text: 'Max: ', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: switch (maxDose) {
-                  -1 => 'N/A',
-                  _ => '${maxDose.toStringAsFixed(1)} mL (${mgkgDose.toStringAsFixed(1)} mg/kg)'
-                },
-                style: switch(maxDose) {
-                  -1 => const TextStyle(fontStyle: FontStyle.italic),
-                  _ => const TextStyle(),
-                },
-              )
-            ],
+        const Divider(height: 30),
+        Center(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color),
+              children: [
+                const TextSpan(text: 'Remaining Safe Dose: ', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),),
+                TextSpan(text: switch (remainingDose) {
+                    -2 => 'OVER',
+                    -1 => 'N/A',
+                    _ => '${remainingDose.toStringAsFixed(1)} mL'
+                  },
+                  style: switch(remainingDose) {
+                    -2 => const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                    -1 => const TextStyle(fontStyle: FontStyle.italic),
+                    _ => const TextStyle(),
+                  },
+                )
+              ],
+            ),
           ),
         ),
-        const Spacer(flex: 1),
+        const SizedBox(height: 10),
       ],
   );
   }
@@ -656,24 +702,14 @@ class AdminDrugDoses extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    return Center(
-      child: RichText(
-        text: TextSpan(
-          style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodyMedium?.color),
-          children: [
-            const TextSpan(text: 'Max Dose: ', style: TextStyle(fontWeight: FontWeight.bold)),
-            TextSpan(text: switch (maxDose) {
-                -1 => 'N/A',
-                _ => '${maxDose.toStringAsFixed(1)} mL (${mgkgDose.toStringAsFixed(1)} mg/kg)'
-              },
-              style: switch(maxDose) {
-                -1 => const TextStyle(fontStyle: FontStyle.italic),
-                _ => const TextStyle(),
-              },
-            )
-          ],
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Text('Max Dose: ${mgkgDose.toStringAsFixed(1)} mg/kg${maxDose < 0 ? '' : ' (${maxDose.toStringAsFixed(1)} mL)'}',
+        style: const TextStyle(
+          fontSize: 13,
+          fontStyle: FontStyle.italic,
         ),
+        textAlign: TextAlign.left,
       ),
     );
   }
@@ -715,14 +751,11 @@ class DesiredDrugNarrow extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Spacer(),
             LASelector(index: index, onChanged: changeDrug, selected: selectedEpi ? '$selectedDrug w/ Epi' : selectedDrug),
             const Spacer(),
             DoseSelector(index: index, drug: allLocalAnesthetics.firstWhere((la) => la.name == selectedDrug, orElse: () => allLocalAnesthetics[0]), onChanged: changeConc, selectedConc: selectedConc,),
-            const Spacer(),
           ],
         ),
-        const SizedBox(height: 10),
         DesiredDrugDoses(maxDose: maxDose, remainingDose: remainingDose, mgkgDose: mgkgDose),
       ],
     );
