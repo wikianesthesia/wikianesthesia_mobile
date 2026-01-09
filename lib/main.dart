@@ -282,6 +282,7 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
   /// GoRouter Navigation Shell
   final StatefulNavigationShell navigationShell;
 
+  // TODO: Refactor to use enums for navigation indices
   static List<Widget> destinations = const <Widget>[
     NavigationDestination(
       selectedIcon: ImageIcon(  
@@ -298,11 +299,11 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     ),
     NavigationDestination(
       selectedIcon: Icon(
-        Icons.heart_broken,
+        Icons.calculate,
         color: Colors.white,
       ),
-      icon: Icon(Icons.heart_broken_outlined),
-      label: 'ACLS',
+      icon: Icon(Icons.calculate_outlined),
+      label: 'Calculators',
     ),
     NavigationDestination(
       selectedIcon: Icon(
@@ -314,11 +315,11 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     ),
     NavigationDestination(
       selectedIcon: Icon(
-        Icons.calculate,
+        Icons.heart_broken,
         color: Colors.white,
       ),
-      icon: Icon(Icons.calculate_outlined),
-      label: 'Calculators',
+      icon: Icon(Icons.heart_broken_outlined),
+      label: 'ACLS',
     ),
     NavigationDestination(
       selectedIcon: Icon(
@@ -347,11 +348,11 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     ),
     NavigationRailDestination(
       selectedIcon: Icon(
-        Icons.heart_broken,
+        Icons.calculate,
         color: Colors.white,
       ),
-      icon: Icon(Icons.heart_broken_outlined),
-      label: Text('ACLS'),
+      icon: Icon(Icons.calculate_outlined),
+      label: Text('Calculators'),
     ),
     NavigationRailDestination(
       selectedIcon: Icon(
@@ -363,11 +364,11 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     ),
     NavigationRailDestination(
       selectedIcon: Icon(
-        Icons.calculate,
+        Icons.heart_broken,
         color: Colors.white,
       ),
-      icon: Icon(Icons.calculate_outlined),
-      label: Text('Calculators'),
+      icon: Icon(Icons.heart_broken_outlined),
+      label: Text('ACLS'),
     ),
     NavigationRailDestination(
       selectedIcon: Icon(
@@ -390,13 +391,13 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
       case 0:
         context.go('/');
         break;
-      case 1: 
+      case 3: 
         context.go('/emergency');
         break;
       case 2:
         context.go('/guidelines');
         break;
-      case 3:
+      case 1:
         context.go('/calculator');
         break;
       case 4:
@@ -413,9 +414,9 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
       print('Current location: $location');
     }
     if (location.startsWith('/emergency')) {
-      return 1;
-    } else if (location.startsWith('/calc')) {
       return 3;
+    } else if (location.startsWith('/calc')) {
+      return 1;
     } else if (location.startsWith('/account')) {
       return 4;
     } else if (location.startsWith('/anticoagulation')) {
