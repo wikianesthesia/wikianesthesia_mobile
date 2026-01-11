@@ -30,7 +30,7 @@ const List<Map<String, dynamic>> allCalculators = [
   },
   {
     'name': 'Drug Dosages',
-    'shortName': 'Drugs',
+    'shortName': 'Drug Dosing',
     'url': 'Drug_dosage_calculations',
     'icon': FontAwesomeIcons.syringe,
     'type': 'wikipage',

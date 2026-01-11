@@ -11,7 +11,7 @@ Use of this tool is entirely at your own risk. The WikiAnesthesia Foundation ass
 The information within is based on the WikiAnesthesia Editorial Team's personal interpretation of the primary literature and published guidelines, which are freely available as cited below. It is NOT affiliated with, reviewed by, or sponsored by any professional society, including but not limited to the American Society of Anesthesiologists (ASA) or American Heart Association (AHA).
 
 ## Updates
-* 1/1/2026: Initial Release
+* 1/10/2026: Initial Release
 
 ## References
 * Wan EY, *et al*. "Periprocedural Management and Multidisciplinary Care Pathways for Patients With Cardiac Implantable Electronic Devices: A Scientific Statement From the American Heart Association." *Circulation.* 10 July 2024. doi: 10.1161/CIR.0000000000001264. [Link Here](https://www.ahajournals.org/doi/10.1161/CIR.0000000000001264)

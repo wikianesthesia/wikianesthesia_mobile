@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wikianesthesia_mobile/Anticoagulation/disclaimers_log.dart';
 import 'package:wikianesthesia_mobile/Calculators/all_calculators.dart';
 import 'package:wikianesthesia_mobile/Home/wiki_api.dart';
 import 'package:wikianesthesia_mobile/Wiki/account_home.dart';
@@ -190,6 +191,19 @@ class HomeDrawer extends ConsumerWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.phone_android),
+            title: const Text('About this App'),
+            onTap: () {
+              context.pop();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return const DisclaimersLog(title: 'AboutText');
+                },
+              );
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.question_mark),
             title: const Text('FAQ'),
             onTap: () {
@@ -210,7 +224,7 @@ class HomeDrawer extends ConsumerWidget {
             title: const Text('Submit Feedback'),
             onTap: () {
               context.pop();
-              launchURL('https://wikianesthesia.org/wiki/WikiAnesthesia:Get_involved');
+              launchURL('https://wikianesthesia.org/appfeedback');
             },
           ),
           if (userName != '') ListTile(

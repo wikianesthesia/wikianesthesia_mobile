@@ -1,4 +1,4 @@
-*Last updated 11/9/2025*
+*Last updated 1/10/2025*
 
 # Disclaimers, Updates, and References
 ## Medical Information
@@ -11,12 +11,7 @@ Use of this tool is entirely at your own risk. The WikiAnesthesia Foundation ass
 The information within is based on the WikiAnesthesia Editorial Team's personal interpretation of the primary literature and published guidelines, which are freely available as cited below. It is NOT affiliated with, reviewed by, or sponsored by any professional society, including but not limited to the American Society of Regional Anesthesia (ASRA), European Society of Anesthesiology and Intensive Care (ESAIC), or the European Society of Regional Anesthesia (ESRA).
 
 ## Updates
-* 11/9/2025:
-  * Separated LMWH to Enoxaparin and Dalteparin
-  * Added additional considerations for Low Dose Enoxaparin daily vs BID
-  * Clarified specific time windows for Fondaparinux as opposed to generic time ranges
-  * Clarified when to consider using opioid as injectant to facilitate neurologic assessment
-* 11/4/2025: Initial Release
+* 1/10/2025: Initial Release
 
 ## Editorial Committee
 * Chair: Richard K. Kim, MD
