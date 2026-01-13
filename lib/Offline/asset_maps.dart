@@ -17,7 +17,15 @@ const Map<String,String> loadPHPMap = {
     "lang=en&modules=ext.gadget.calculator-core%2Ccalculator-equipmentSize%2Ccalculator-patients-core%2Ccalculator-patients-patientInput%2Ccalculator-search&skin=wikianesthesiaskin&version=1jop2": "load_php_16.js",
     "lang=en&modules=ext.gadget.calculator-core%2Ccalculator-fluidManagement%2Ccalculator-patients-core%2Ccalculator-patients-patientInput%2Ccalculator-search&skin=wikianesthesiaskin&version=17dpi": "load_php_17.js",
     "lang=en&modules=ext.gadget.calculator-core%2Ccalculator-neuro%2Ccalculator-patients-core%2Ccalculator-patients-patientInput%2Ccalculator-search&skin=wikianesthesiaskin&version=11w86": "load_php_18.js",
-    "lang=en&modules=ext.gadget.calculator-bodyComposition%2Ccalculator-core%2Ccalculator-patients-core%2Ccalculator-patients-patientInput%2Ccalculator-respiratory%2Ccalculator-search&skin=wikianesthesiaskin&version=1ya9l": "load_php_19.js"
+    "lang=en&modules=ext.gadget.calculator-bodyComposition%2Ccalculator-core%2Ccalculator-patients-core%2Ccalculator-patients-patientInput%2Ccalculator-respiratory%2Ccalculator-search&skin=wikianesthesiaskin&version=1ya9l": "load_php_19.js",
+    "lang=en&modules=ext.gadget.calculator-equipmentSize&skin=wikianesthesiaskin&version=1pur6": "load_php_21.js",
+    "lang=en&modules=ext.gadget.calculator-cardiovascular&skin=wikianesthesiaskin&version=1ydee": "load_php_22.js",
+    "lang=en&modules=ext.gadget.calculator-neuro&skin=wikianesthesiaskin&version=1comm": "load_php_23.js",
+    "lang=en&modules=ext.visualEditor.core&skin=wikianesthesiaskin&version=y00ki": "load_php_24.js",
+    "lang=en&modules=ext.bootstrap.scripts%7Cext.calculators.math.js%7Cjquery%2Coojs-ui-core%2Coojs-ui-widgets&skin=wikianesthesiaskin&version=fzgqm": "load_php_25.js",
+    "lang=en&modules=ext.gadget.calculator-drugDosage%2Ccalculator-drugs-core%2Ccalculator-drugs-data&skin=wikianesthesiaskin&version=1vubg": "load_php_26.js",
+    "lang=en&modules=ext.gadget.calculator-fluidManagement&skin=wikianesthesiaskin&version=1tjvv": "load_php_27.js",
+    "lang=en&modules=ext.gadget.calculator-respiratory&skin=wikianesthesiaskin&version=nknfm": "load_php_28.js",
 };
 
 const Map<String,String> apiMap = {

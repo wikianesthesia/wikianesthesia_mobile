@@ -38,17 +38,18 @@ class OfflineServer {
 
   Future<int> findPort() async {
     /// Finds open port between 8080 and 8200
-    for (var p = 8080; p < 8200; p++) {
-      try {
-        final server = await ServerSocket.bind(InternetAddress.loopbackIPv4, p);
-        await server.close();
-        return p;
-      } catch (e) {
-        // Port is in use, try next
-        continue;
-      }
-    }
-    throw Exception('No available ports found');
+    // for (var p = 8080; p < 8200; p++) {
+    //   try {
+    //     final server = await ServerSocket.bind(InternetAddress.loopbackIPv4, p);
+    //     await server.close();
+    //     return p;
+    //   } catch (e) {
+    //     // Port is in use, try next
+    //     continue;
+    //   }
+    // }
+    // throw Exception('No available ports found');
+    return 8080; // For simplicity, just use 8080 for now
   }
 
   Future<String> start() async {
@@ -64,8 +65,8 @@ class OfflineServer {
 
     cascade = Cascade()
       .add(_router.call) // Router for specific paths
-      .add(_staticFileHandler) // Default static file handler
-      .add(proxyHandler('https://wikianesthesia.org')); // If can't be found in offline assets, proxy to online site
+      .add(_staticFileHandler); // Default static file handler
+      //.add(proxyHandler('https://wikianesthesia.org')); // If can't be found in offline assets, proxy to online site
 
     server = await shelf_io.serve(logRequests().addHandler(cascade.handler), InternetAddress.loopbackIPv4, port);
 
@@ -80,6 +81,11 @@ class OfflineServer {
     /// Handler for /w/load.php requests (MediaWiki loader)
     final String query = request.url.query;
     final String target = loadPHPMap[query] ?? '';
+    if (kDebugMode) {
+      print('Load Handler: ${request.url}');
+      print('Query: $query');
+      print('Mapped target: $target');
+    }
 
     if (target.isEmpty) {
       return Response.notFound('Resource not found');
@@ -138,6 +144,8 @@ class OfflineServer {
     final String path = request.url.path;
     final String target = 'assets/Offline/$path';
 
+
+
     if (kDebugMode) {
       print('Static file request: $target');
     }
@@ -166,7 +174,7 @@ class OfflineServer {
 
   Future<void> stop() async {
     /// Stops the offline server
-    await server.close(force: false);
+    await server.close(force: true);
     if (kDebugMode) {
       print('Offline server stopped');
     }

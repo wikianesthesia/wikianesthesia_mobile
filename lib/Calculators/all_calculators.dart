@@ -78,13 +78,6 @@ const List<Map<String, dynamic>> allCalculators = [
     'icon': FontAwesomeIcons.lungs,
     'type': 'wikipage',
   },
-  {
-    'name': 'Calculator Guide',
-    'shortName': 'Guide',
-    'url': 'Calculators_guide',
-    'icon': FontAwesomeIcons.book,
-    'type': 'wikipage',
-  },
 ];
 
 const List<Map<String, dynamic>> allGuidelines = [

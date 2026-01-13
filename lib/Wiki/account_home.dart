@@ -102,6 +102,12 @@ List<Map<String,dynamic>> allAccountOptions(String userName) {
       'name': 'Preferences',
     },
     {
+      'type': 'wikipage',
+      'url': 'https://wikianesthesia.org/w/index.php?title=Special:VanishUser',
+      'icon': Icons.delete_forever,
+      'name': 'Delete account',
+    },
+    {
       'type': 'native',
       'url': '/account/logout',
       'icon': Icons.logout,
@@ -145,6 +151,7 @@ class AccountDrawerTile extends ConsumerWidget {
     color = switch (accountOption['name']) {
         'Log in' => Colors.green[50],
         'Log out' => Colors.red[50],
+        'Delete account' => Colors.red[50],
         _ => null,
     };
 
@@ -215,6 +222,8 @@ class AccountMenuTile extends ConsumerWidget {
           goAccountPage(context, accountOption['url']);
         } else if (accountOption['type'] == 'native') {
           context.push(accountOption['url']);
+        } else if (accountOption['type'] == 'external') {
+          launchURL(accountOption['url']);
         }
       },
       tileColor: color,
