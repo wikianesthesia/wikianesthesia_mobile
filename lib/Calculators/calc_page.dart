@@ -244,6 +244,7 @@ class _CalcPageState extends State<CalcPage> {
             },
             onLoadStart: (controller, url) {
               _isLoading = true;
+              removeHeaderFooterCalc(controller);
             },
             onPermissionRequest: (controller, request) async {
               return PermissionResponse(
