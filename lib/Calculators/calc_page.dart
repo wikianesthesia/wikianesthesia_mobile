@@ -217,60 +217,50 @@ class _CalcPageState extends State<CalcPage> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          if (url.isNotEmpty)
-          InAppWebView(
-            key: webViewKey,
-            initialUrlRequest: URLRequest(url: WebUri(url)),
-            initialSettings: settings,
-            pullToRefreshController: pullToRefreshController,
-            onWebViewCreated: (controller) {
-              webViewController = controller;
-            },
-            onLoadStart: (controller, url) {
-              _isLoading = true;
-            },
-            onPermissionRequest: (controller, request) async {
-              return PermissionResponse(
-                  resources: request.resources,
-                  action: PermissionResponseAction.GRANT);
-            },
-            onLoadStop: (controller, url) async {
-              pullToRefreshController?.endRefreshing();
-              if (basename(url!.path) == '${widget.calcName}.html' && basename(url.path) != 'Calculators_guide.html') {
-                removeHeaderFooterCalc(controller);
-              } else {
-                removeHeaderFooter(controller);
-              }
-              setState(() {
-                _isLoading = false;
-              });
-            },
-            onReceivedError: (controller, request, error) {
-              pullToRefreshController?.endRefreshing();
-            },
-            onProgressChanged: (controller, progress) {
-              if (progress == 100) {
-                pullToRefreshController?.endRefreshing();
-              }
-
-              setState(() {
-                _progress = progress / 100;
-              });
-            },
-            onConsoleMessage: (controller, consoleMessage) {
-              if (kDebugMode) {
-                print(consoleMessage);
-              }
-            },
-          ),
-          if (_progress < 1.0 || _isLoading)
-            Container(
-              color: Colors.white,
-              child: Center(child: CircularProgressIndicator(value: _progress)),
-            )
-        ],
+      body: InAppWebView(
+        key: webViewKey,
+        initialUrlRequest: URLRequest(url: WebUri(url)),
+        initialSettings: settings,
+        pullToRefreshController: pullToRefreshController,
+        onWebViewCreated: (controller) {
+          webViewController = controller;
+        },
+        onLoadStart: (controller, url) {
+          _isLoading = true;
+        },
+        onPermissionRequest: (controller, request) async {
+          return PermissionResponse(
+              resources: request.resources,
+              action: PermissionResponseAction.GRANT);
+        },
+        onLoadStop: (controller, url) async {
+          pullToRefreshController?.endRefreshing();
+          if (basename(url!.path) == '${widget.calcName}.html' && basename(url.path) != 'Calculators_guide.html') {
+            removeHeaderFooterCalc(controller);
+          } else {
+            removeHeaderFooter(controller);
+          }
+          setState(() {
+            _isLoading = false;
+          });
+        },
+        onReceivedError: (controller, request, error) {
+          pullToRefreshController?.endRefreshing();
+        },
+        onProgressChanged: (controller, progress) {
+          if (progress == 100) {
+            pullToRefreshController?.endRefreshing();
+          }
+      
+          setState(() {
+            _progress = progress / 100;
+          });
+        },
+        onConsoleMessage: (controller, consoleMessage) {
+          if (kDebugMode) {
+            print(consoleMessage);
+          }
+        },
       ),
     );
   }
