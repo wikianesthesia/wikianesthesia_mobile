@@ -43,10 +43,6 @@ class PreOp extends ConsumerWidget {
               icon: Icon(Icons.history),
             ),
             const CheckboxItem(
-              label: 'Call/Text Attending',
-              icon: Icon(Icons.phone),
-            ),
-            const CheckboxItem(
               label: 'Preop Orders',
               icon: Icon(Icons.medication),
             ),
@@ -283,7 +279,7 @@ class StandardStart extends StatelessWidget {
               width: 10,
             ),
             CheckboxItem(
-              label: 'STOP-ID, Start Data Collection',
+              label: 'Start Case on EMR and Timeout',
               icon: Icon(Icons.monitor_heart),
             ),
             CheckboxItem(
@@ -357,10 +353,6 @@ class Closing extends StatelessWidget {
               width: 10,
             ),
             CheckboxItem(
-              label: 'Text Attending',
-              icon: Icon(Icons.phone),
-            ),
-            CheckboxItem(
               label: 'Give Zofran',
               icon: Icon(Icons.medication),
             ),
@@ -392,10 +384,6 @@ class Closing extends StatelessWidget {
             CheckboxItem(
               label: 'Vent to Spontaneous',
               icon: Icon(Icons.air),
-            ),
-            CheckboxItem(
-              label: 'Call Attending to extubate',
-              icon: Icon(Icons.phone),
             ),
             CheckboxItem(
               label: 'Extubate!',

@@ -65,8 +65,8 @@ class OfflineServer {
 
     cascade = Cascade()
       .add(_router.call) // Router for specific paths
-      .add(_staticFileHandler); // Default static file handler
-      //.add(proxyHandler('https://wikianesthesia.org')); // If can't be found in offline assets, proxy to online site
+      .add(_staticFileHandler) // Default static file handler
+      .add(proxyHandler('https://wikianesthesia.org')); // If can't be found in offline assets, proxy to online site
 
     server = await shelf_io.serve(logRequests().addHandler(cascade.handler), InternetAddress.loopbackIPv4, port);
 

@@ -105,15 +105,19 @@ class _CalcPageState extends State<CalcPage> {
           header.id = 'newContentHeader';
         }
         
-        var elements = document.getElementsByClassName("p-navbar not-collapsible");
+        function removeNavBars() {
+          var elements = document.getElementsByClassName("p-navbar not-collapsible");
 
-        while(elements.length > 0){
-          elements[0].parentNode.removeChild(elements[0]);
-          destickify();
+          while(elements.length > 0){
+            elements[0].parentNode.removeChild(elements[0]); 
+          }
         }
+        removeNavBars();
+        destickify();
         
         // Call myFunction every 500 milliseconds (half a second)
         const intervalId = setInterval(destickify, 500);
+        const otherIntervalId = setInterval(removeNavBars, 500);
 
 
         
@@ -244,7 +248,7 @@ class _CalcPageState extends State<CalcPage> {
             },
             onLoadStart: (controller, url) {
               _isLoading = true;
-              removeHeaderFooterCalc(controller);
+              //removeHeaderFooterCalc(controller);
             },
             onPermissionRequest: (controller, request) async {
               return PermissionResponse(
