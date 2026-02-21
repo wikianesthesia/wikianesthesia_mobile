@@ -112,24 +112,16 @@ class _CalcPageState extends State<CalcPage> {
             elements[0].parentNode.removeChild(elements[0]); 
           }
         }
-        removeNavBars();
-        destickify();
+        // removeNavBars();
+        // destickify();
         
         // Call myFunction every 500 milliseconds (half a second)
-        const intervalId = setInterval(destickify, 500);
+        //const intervalId = setInterval(destickify, 500);
         const otherIntervalId = setInterval(removeNavBars, 500);
 
 
         
-        waitForElement("calculator-patients-patientInput", () => {
-          console.log('-------------------');
-          console.log('Found calculator-patients-patientInput');
-          var header = document.getElementById("contentHeader");
-          header.style.top = '0px';
-          header.style.position = 'relative';
-          var header = document.getElementById("contentHeader");
-          header.id = 'newContentHeader';
-        });
+        waitForElement("calculator-patients-patientInput", () => destickify());
 
       ''',
     );
