@@ -266,7 +266,7 @@ const Map<String,FlowSheetItem> leadlessPMManagement = {
     question: 'What device?',
     options: ['Micra','Aveir'],
     next: {
-      'Micra': 'medtronic',
+      'Micra': 'micra',
       'Aveir': 'aveir'
     },
     footnotes: []
