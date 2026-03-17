@@ -1,12 +1,13 @@
 import 'package:path/path.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BackButton;
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
 import 'package:wikianesthesia_mobile/Home/search_wiki_bar.dart';
 import 'package:wikianesthesia_mobile/Offline/offline_server.dart';
 import 'package:wikianesthesia_mobile/Wiki/account_widget.dart';
+import 'package:wikianesthesia_mobile/Wiki/wiki_page.dart';
 
 class CalcPage extends StatefulWidget {
   final String calcName;
@@ -21,6 +22,7 @@ class _CalcPageState extends State<CalcPage> {
 
   InAppWebViewController? webViewController;
   InAppWebViewSettings settings = InAppWebViewSettings(
+    transparentBackground: true,
     isInspectable: kDebugMode,
     mediaPlaybackRequiresUserGesture: false,
     allowsInlineMediaPlayback: true,
@@ -181,18 +183,7 @@ class _CalcPageState extends State<CalcPage> {
                   future: webViewController?.canGoBack() ?? Future.value(false),
                   builder: (context, snapshot) {
                     final canGoBack = snapshot.data ?? false;
-                    return IconButton(
-                      icon: const Icon(Icons.arrow_back_ios),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      color: Colors.white,
-                      disabledColor: Colors.grey,
-                      onPressed: canGoBack
-                          ? () {
-                              webViewController?.goBack();
-                            }
-                          : null,
-                    );
+                    return BackButton(canGoBack: canGoBack, webViewController: webViewController);
                   },
                 ),
                 FutureBuilder<bool>(
@@ -200,20 +191,10 @@ class _CalcPageState extends State<CalcPage> {
                       webViewController?.canGoForward() ?? Future.value(false),
                   builder: (context, snapshot) {
                     final canGoBack = snapshot.data ?? false;
-                    return IconButton(
-                      icon: const Icon(Icons.arrow_forward_ios),
-                      color: Colors.white,
-                      disabledColor: Colors.grey,
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      onPressed: canGoBack
-                          ? () {
-                              webViewController?.goForward();
-                            }
-                          : null,
-                    );
+                    return ForwardButton(canGoBack: canGoBack, webViewController: webViewController);
                   },
                 ),
+                ShareButton(webViewController: webViewController),
                 const AccountWidget(),
               ],
         leading: InkWell(
@@ -227,56 +208,60 @@ class _CalcPageState extends State<CalcPage> {
           ),
         ),
       ),
-      body: Stack(
+      body: Column(
         children: [
+          if(_isLoading && _progress < 1.0)
+            LinearProgressIndicator(value: _progress),
           if (url.isNotEmpty)
-          InAppWebView(
-            key: webViewKey,
-            initialUrlRequest: URLRequest(url: WebUri(url)),
-            initialSettings: settings,
-            pullToRefreshController: pullToRefreshController,
-            onWebViewCreated: (controller) {
-              webViewController = controller;
-            },
-            onLoadStart: (controller, url) {
-              _isLoading = true;
-              //removeHeaderFooterCalc(controller);
-            },
-            onPermissionRequest: (controller, request) async {
-              return PermissionResponse(
-                  resources: request.resources,
-                  action: PermissionResponseAction.GRANT);
-            },
-            onLoadStop: (controller, url) async {
-              pullToRefreshController?.endRefreshing();
-              if (basename(url!.path) == '${widget.calcName}.html' && basename(url.path) != 'Calculators_guide.html') {
-                removeHeaderFooterCalc(controller);
-              } else {
-                removeHeaderFooter(controller);
-              }
-              setState(() {
-                _isLoading = false;
-              });
-            },
-            onReceivedError: (controller, request, error) {
-              pullToRefreshController?.endRefreshing();
-              
-            },
-            onProgressChanged: (controller, progress) {
-              if (progress == 100) {
-                pullToRefreshController?.endRefreshing();
-              }
-
-              setState(() {
-                _progress = progress / 100;
-              });
-            },
-            onConsoleMessage: (controller, consoleMessage) {
-              if (kDebugMode) {
-                print(consoleMessage);
-              }
-            },
-          ),
+            Expanded(
+              child: InAppWebView(
+                key: webViewKey,
+                initialUrlRequest: URLRequest(url: WebUri(url)),
+                initialSettings: settings,
+                pullToRefreshController: pullToRefreshController,
+                onWebViewCreated: (controller) {
+                  webViewController = controller;
+                },
+                onLoadStart: (controller, url) {
+                  _isLoading = true;
+                  //removeHeaderFooterCalc(controller);
+                },
+                onPermissionRequest: (controller, request) async {
+                  return PermissionResponse(
+                      resources: request.resources,
+                      action: PermissionResponseAction.GRANT);
+                },
+                onLoadStop: (controller, url) async {
+                  pullToRefreshController?.endRefreshing();
+                  if (basename(url!.path) == '${widget.calcName}.html' && basename(url.path) != 'Calculators_guide.html') {
+                    removeHeaderFooterCalc(controller);
+                  } else {
+                    removeHeaderFooter(controller);
+                  }
+                  setState(() {
+                    _isLoading = false;
+                  });
+                },
+                onReceivedError: (controller, request, error) {
+                  pullToRefreshController?.endRefreshing();
+                  
+                },
+                onProgressChanged: (controller, progress) {
+                  if (progress == 100) {
+                    pullToRefreshController?.endRefreshing();
+                  }
+                
+                  setState(() {
+                    _progress = progress / 100;
+                  });
+                },
+                onConsoleMessage: (controller, consoleMessage) {
+                  if (kDebugMode) {
+                    print(consoleMessage);
+                  }
+                },
+              ),
+            ),
           // if (_progress < 1.0 || _isLoading)
           //   Container(
           //     color: Colors.transparent,

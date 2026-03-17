@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wikianesthesia_mobile/Home/home_drawer.dart';
 import 'package:wikianesthesia_mobile/Home/search_wiki_bar.dart';
 import 'package:wikianesthesia_mobile/Wiki/account_widget.dart';
@@ -19,6 +20,7 @@ class _WikiPageState extends State<WikiPage> {
 
   InAppWebViewController? webViewController;
   InAppWebViewSettings settings = InAppWebViewSettings(
+    transparentBackground: true,
     isInspectable: kDebugMode,
     mediaPlaybackRequiresUserGesture: false,
     allowsInlineMediaPlayback: true,
@@ -100,23 +102,11 @@ class _WikiPageState extends State<WikiPage> {
         backgroundColor: theme.colorScheme.primary,
         actions: kIsWeb
             ? null
-            : [
-                FutureBuilder<bool>(
+            : [ FutureBuilder<bool>(
                   future: webViewController?.canGoBack() ?? Future.value(false),
                   builder: (context, snapshot) {
                     final canGoBack = snapshot.data ?? false;
-                    return IconButton(
-                      icon: const Icon(Icons.arrow_back_ios),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      color: Colors.white,
-                      disabledColor: Colors.grey,
-                      onPressed: canGoBack
-                          ? () {
-                              webViewController?.goBack();
-                            }
-                          : null,
-                    );
+                    return BackButton(canGoBack: canGoBack, webViewController: webViewController);
                   },
                 ),
                 FutureBuilder<bool>(
@@ -124,20 +114,10 @@ class _WikiPageState extends State<WikiPage> {
                       webViewController?.canGoForward() ?? Future.value(false),
                   builder: (context, snapshot) {
                     final canGoBack = snapshot.data ?? false;
-                    return IconButton(
-                      icon: const Icon(Icons.arrow_forward_ios),
-                      color: Colors.white,
-                      disabledColor: Colors.grey,
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      onPressed: canGoBack
-                          ? () {
-                              webViewController?.goForward();
-                            }
-                          : null,
-                    );
+                    return ForwardButton(canGoBack: canGoBack, webViewController: webViewController);
                   },
                 ),
+                ShareButton(webViewController: webViewController),
                 const AccountWidget(),
               ],
         leading: InkWell(
@@ -151,57 +131,162 @@ class _WikiPageState extends State<WikiPage> {
           ),
         ),
       ),
-      body: Stack(
+      body: Column(
         children: [
-          InAppWebView(
-            key: webViewKey,
-            initialUrlRequest: URLRequest(url: WebUri(widget.url)),
-            initialSettings: settings,
-            pullToRefreshController: pullToRefreshController,
-            onWebViewCreated: (controller) {
-              webViewController = controller;
-            },
-            onLoadStart: (controller, url) {
-              _isLoading = true;
-            },
-            onPermissionRequest: (controller, request) async {
-              return PermissionResponse(
-                  resources: request.resources,
-                  action: PermissionResponseAction.GRANT);
-            },
-            onLoadStop: (controller, url) async {
-              pullToRefreshController?.endRefreshing();
-
-              removeHeaderFooter(controller);
-              setState(() {
-                _isLoading = false;
-              });
-            },
-            onReceivedError: (controller, request, error) {
-              pullToRefreshController?.endRefreshing();
-            },
-            onProgressChanged: (controller, progress) {
-              if (progress == 100) {
-                pullToRefreshController?.endRefreshing();
-              }
-
-              setState(() {
-                _progress = progress / 100;
-              });
-            },
-            onConsoleMessage: (controller, consoleMessage) {
-              if (kDebugMode) {
-                print(consoleMessage);
-              }
-            },
-          ),
           if (_progress < 1.0 || _isLoading)
-            Container(
-              color: Colors.white,
-              child: Center(child: CircularProgressIndicator(value: _progress)),
-            )
+            LinearProgressIndicator(value:_progress),
+          Expanded(
+            child: InAppWebView(
+              key: webViewKey,
+              initialUrlRequest: URLRequest(url: WebUri(widget.url)),
+              initialSettings: settings,
+              pullToRefreshController: pullToRefreshController,
+              onWebViewCreated: (controller) {
+                webViewController = controller;
+              },
+              onLoadStart: (controller, url) {
+                _isLoading = true;
+              },
+              onPermissionRequest: (controller, request) async {
+                return PermissionResponse(
+                    resources: request.resources,
+                    action: PermissionResponseAction.GRANT);
+              },
+              onLoadStop: (controller, url) async {
+                pullToRefreshController?.endRefreshing();
+            
+                removeHeaderFooter(controller);
+                setState(() {
+                  _isLoading = false;
+                });
+              },
+              onReceivedError: (controller, request, error) {
+                pullToRefreshController?.endRefreshing();
+              },
+              onProgressChanged: (controller, progress) {
+                if (progress == 100) {
+                  pullToRefreshController?.endRefreshing();
+                }
+            
+                setState(() {
+                  _progress = progress / 100;
+                });
+              },
+              onConsoleMessage: (controller, consoleMessage) {
+                if (kDebugMode) {
+                  print(consoleMessage);
+                }
+              },
+            ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+class ShareButton extends StatelessWidget {
+  const ShareButton({
+    super.key,
+    required this.webViewController,
+  });
+
+  final InAppWebViewController? webViewController;
+
+  @override
+  Widget build(BuildContext context) {
+    Icon shareIcon = (defaultTargetPlatform == TargetPlatform.iOS)
+        ? const Icon(Icons.ios_share)
+        : const Icon(Icons.share);
+
+    return IconButton(
+      style: IconButton.styleFrom(
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8), // Set border radius
+        ),
+        // side: const BorderSide(
+        //   color: Colors.white, // Your desired outline color
+        // )
+      ),
+      onPressed: () async {
+        if (webViewController != null) {
+          WebUri? currentUri = await webViewController!.getUrl()!;
+          String url = currentUri.toString();
+          url = url.replaceAll('http://localhost:8080/', 'https://wikianesthesia.org/wiki/');
+          url = url.replaceAll('.html', '');
+          SharePlus.instance.share(ShareParams(uri: Uri.parse(url)));
+        }
+      },
+      color: Colors.white,
+      padding: const EdgeInsets.all(5),
+      constraints: const BoxConstraints(),
+      icon: shareIcon);
+  }
+}
+
+class ForwardButton extends StatelessWidget {
+  const ForwardButton({
+    super.key,
+    required this.canGoBack,
+    required this.webViewController,
+  });
+
+  final bool canGoBack;
+  final InAppWebViewController? webViewController;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      style: IconButton.styleFrom(
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8), // Set border radius
+        ),
+      ),
+      icon: const Icon(Icons.arrow_forward_ios),
+      color: Colors.white,
+      disabledColor: Colors.grey,
+      padding: const EdgeInsets.all(5),
+      constraints: const BoxConstraints(),
+      onPressed: canGoBack
+          ? () {
+              webViewController?.goForward();
+            }
+          : null,
+    );
+  }
+}
+
+class BackButton extends StatelessWidget {
+  const BackButton({
+    super.key,
+    required this.canGoBack,
+    required this.webViewController,
+  });
+
+  final bool canGoBack;
+  final InAppWebViewController? webViewController;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      padding: const EdgeInsets.all(5),
+      style: IconButton.styleFrom(
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8), // Set border radius
+        ),
+      ),
+      icon: const Icon(Icons.arrow_back_ios),
+      constraints: const BoxConstraints(),
+      color: Colors.white,
+      disabledColor: Colors.grey,
+      onPressed: canGoBack
+          ? () {
+              webViewController?.goBack();
+            }
+          : null,
     );
   }
 }
