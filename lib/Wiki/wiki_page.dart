@@ -211,11 +211,15 @@ class ShareButton extends StatelessWidget {
       ),
       onPressed: () async {
         if (webViewController != null) {
-          WebUri? currentUri = await webViewController!.getUrl()!;
+          final box = context.findRenderObject() as RenderBox?;
+          // Calculate the position and size of the widget triggering the share action
+          final Rect sharePositionOrigin = box!.localToGlobal(Offset.zero) & box.size;
+          
+          WebUri? currentUri = await webViewController!.getUrl();
           String url = currentUri.toString();
           url = url.replaceAll('http://localhost:8080/', 'https://wikianesthesia.org/wiki/');
           url = url.replaceAll('.html', '');
-          SharePlus.instance.share(ShareParams(uri: Uri.parse(url)));
+          SharePlus.instance.share(ShareParams(uri: Uri.parse(url), sharePositionOrigin: sharePositionOrigin));
         }
       },
       color: Colors.white,
