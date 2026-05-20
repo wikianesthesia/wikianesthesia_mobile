@@ -108,6 +108,7 @@ flutter:
     - assets/AboutText.md
     - assets/EmergencyText/
     - assets/PhoneNumbers.json
+    - assets/Codes.json
     - assets/wikianesthesia_logo.png
     - assets/AC_Disclaimers.md
     - assets/EP_Disclaimers.md

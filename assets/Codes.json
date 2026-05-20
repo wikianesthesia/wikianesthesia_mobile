@@ -69,9 +69,19 @@
     "Tags": "ob"
   },
   {
+    "Item": "L&D Anesthesia Lounge",
+    "Code": "0218",
+    "Tags": "ob"
+  },
+  {
     "Item": "Mens Locker Room",
     "Code": "1234",
     "Tags": "Male"
+  },
+  {
+    "Item": "NCCU Call Room",
+    "Code": "3535",
+    "Tags": "Neuro critical care call room"
   },
   {
     "Item": "NCCU Fellow Room",
